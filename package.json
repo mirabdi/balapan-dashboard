@@ -4,20 +4,27 @@
   "private": true,
   "dependencies": {
     "@syncfusion/ej2": "^19.4.48",
+    "@syncfusion/ej2-react-buttons": "19.4",
     "@syncfusion/ej2-react-calendars": "^19.4.48",
     "@syncfusion/ej2-react-charts": "^19.4.50",
     "@syncfusion/ej2-react-dropdowns": "^19.4.52",
     "@syncfusion/ej2-react-grids": "^19.4.50",
     "@syncfusion/ej2-react-inputs": "^19.4.52",
     "@syncfusion/ej2-react-kanban": "^19.4.48",
+    "@syncfusion/ej2-react-notifications": "19.4",
     "@syncfusion/ej2-react-popups": "^19.4.52",
     "@syncfusion/ej2-react-richtexteditor": "^19.4.50",
     "@syncfusion/ej2-react-schedule": "^19.4.50",
+    "@syncfusion/ej2-react-spreadsheet": "^19.4.56",
+    "axios": "^1.6.8",
+    "leaflet": "^1.9.4",
     "react": "^17.0.2",
+    "react-beautiful-dnd": "^13.1.1",
     "react-dom": "^17.0.2",
     "react-icons": "^4.3.1",
+    "react-leaflet": "^3.2.5",
     "react-router-dom": "^6.2.1",
-    "react-scripts": "5.0.0"
+    "react-scripts": "^5.0.1"
   },
   "scripts": {
     "start": "react-scripts start",

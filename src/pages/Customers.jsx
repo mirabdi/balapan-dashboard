@@ -28,7 +28,7 @@ const Customers = () => {
         enableHover={false}
         allowPaging
         pageSettings={{ pageCount: 5 }}
-        selectionSettings={selectionsettings}
+        selectionSettings={{ persistSelection: true }}
         toolbar={toolbarOptions}
         editSettings={editing}
         allowSorting
