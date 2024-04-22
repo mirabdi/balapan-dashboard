@@ -6,13 +6,13 @@ import { useLoaderData, Await } from 'react-router-dom';
 import { useStateContext} from '../../../contexts/ContextProvider';
 
 function Employees() {
-  let title = "Активные баннеры";
+  let title = "Активные сотрудники";
   const url = new URL(window.location.href);
   const lastSegment = url.pathname.split('/').pop();
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const { rightModal, setRightModal, showToast} = useStateContext();
   if(lastSegment === 'archived'){
-    title = "Архивные баннеры";
+    title = "Архивные сотрудники";
   }
   const { employees } = useLoaderData();
   return (
@@ -23,7 +23,7 @@ function Employees() {
         </Await>
       </Suspense>
       {rightModal && selectedEmployee &&
-        <RightModal title={"Пост: "+selectedEmployee.title} afterClose={()=>setSelectedEmployee(null)}>
+        <RightModal title={"Cотрудник: "+selectedEmployee.name} afterClose={()=>setSelectedEmployee(null)}>
           <Suspense fallback={<p style={{ textAlign: 'center' }}>Loading...</p>}>
             <Await resolve={selectedEmployee}>
               {(loadedEmployee) => <EmployeeItem employee={loadedEmployee} />}

@@ -1,22 +1,16 @@
 import { useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import {Sidebar, Navbar} from '../components/index';
 import ThemeSettings from '../components/ThemeSettings';
 import { TooltipComponent } from "@syncfusion/ej2-react-popups";
 import { FiSettings } from 'react-icons/fi';
 import { useStateContext } from "../contexts/ContextProvider";
+import AuthenticationPage from './Authentication';
 
 
 const RootLayout = () => {
-  const { currentMode, activeMenu, currentColor, themeSettings, setThemeSettings } = useStateContext();
-  // useEffect(() => {
-  //     const currentThemeColor = localStorage.getItem('colorMode');
-  //     const currentThemeMode = localStorage.getItem('themeMode');
-  //     if (currentThemeColor && currentThemeMode) {
-  //     setCurrentColor(currentThemeColor);
-  //     setCurrentMode(currentThemeMode);
-  //     }
-  // }, [currentThemeColorl, currentThemeMode]);
+  const { currentMode, activeMenu, currentColor, themeSettings, setThemeSettings, token, checkTokenActive } = useStateContext();
+  if(token === null) return <AuthenticationPage/>;
   return (
     <div className={currentMode === 'Dark' ? 'dark' : ''}>
         <div className="flex relative dark:bg-main-dark-bg">

@@ -3,7 +3,7 @@ import { useStateContext } from '../../../contexts/ContextProvider';
 import { BASE_URL } from '../../../data/config';
 
 
-function BannerItem({ banner, onEdit}) {
+function BannerItem({ banner}) {
   const submit = useSubmit();
   const navigate = useNavigate();
   const { showToast } = useStateContext();

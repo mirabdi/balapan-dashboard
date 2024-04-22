@@ -37,6 +37,7 @@ const Navbar = () => {
     handleClick,
     screenSize,
     setScreenSize,
+    user,
   } = useStateContext();
 
   // handling Resize and decide activeMenu
@@ -69,7 +70,7 @@ const Navbar = () => {
         icon={<AiOutlineMenu />}
       />
       <div className="flex">
-        <NavButton
+        {/* <NavButton
           title="Cart"
           customFunc={() => handleClick("cart")}
           color={currentColor}
@@ -86,24 +87,28 @@ const Navbar = () => {
           customFunc={() => handleClick("notification")}
           color={currentColor}
           icon={<RiNotification3Line />}
-        />
+        /> */}
 
         <TooltipComponent content="Profile" position="BottomCenter">
           <div
             className="flex items-center gap-2 cursor-pointer p-1 hover:bg-light-gray rounded-lg"
             onClick={() => handleClick("userProfile")}
           >
-            <img
-              src={avatar}
-              alt="user-profile"
-              className="rounded-full w-8 h-8"
-            />
-            <p>
-              <span className="text-gray-400 text-14">Hi, </span>{" "}
-              <span className="text-gray-400 font-bold ml-1 text-14">
-                Amirbek
-              </span>
-            </p>
+            {user && 
+              <>
+                <img
+                  className="rounded-full h-8 w-8"
+                  src={user.image_url ? user.image_url : avatar}
+                  alt="user-profile"
+                />
+                <p>
+                  <span className="text-gray-400 text-14">Привет, </span>{" "}
+                  <span className="text-gray-400 font-bold ml-1 text-14">
+                    {user && user.first_name}
+                  </span>
+                </p>
+                </>
+            }
             <MdKeyboardArrowDown className="text-gray-400 text-14" />
           </div>
         </TooltipComponent>

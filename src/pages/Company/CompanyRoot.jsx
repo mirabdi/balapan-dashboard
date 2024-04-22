@@ -14,6 +14,12 @@ function CompanyRootLayout(){
                 }
                 >Сотрудники</NavLink>
                 <NavLink 
+                to="/company/employee-groups/" 
+                className={({ isActive }) =>
+                    isActive ? activeClass : inactiveClass
+                }
+                >Группа Сотрудников</NavLink>
+                <NavLink 
                 to="/company/stores/" 
                 className={({ isActive }) =>
                     isActive ? activeClass : inactiveClass

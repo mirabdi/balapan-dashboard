@@ -164,6 +164,7 @@ import { BASE_URL } from "data/config";
 
 // export default EmployeesList;
 const EmployeesList = ({employees, title, selectHandler}) => {
+  const formatDate = (date) => new Date(date).toLocaleDateString();
   return (
     <div className="overflow-x-auto">
     <div className="py-2 align-middle inline-block min-w-full">
@@ -177,6 +178,12 @@ const EmployeesList = ({employees, title, selectHandler}) => {
                 className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
                 ID
+              </th>
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Группа
               </th>
               <th
                 scope="col"
@@ -200,12 +207,6 @@ const EmployeesList = ({employees, title, selectHandler}) => {
                 scope="col"
                 className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
-                Группа
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
                 Создан
               </th>
               <th
@@ -218,9 +219,12 @@ const EmployeesList = ({employees, title, selectHandler}) => {
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {employees.map((employee) => (
-              <tr key={employee.id} onClick={selectHandler}>
+              <tr key={employee.id} onClick={()=>selectHandler(employee)} className="hover:bg-gray-100 cursor-pointer"> 
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {employee.id}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  {employee.group ? employee.group.name : " - "}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {employee.username}
@@ -229,16 +233,13 @@ const EmployeesList = ({employees, title, selectHandler}) => {
                   {employee.first_name} {employee.last_name}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {employee.last_seen}
+                  {formatDate(employee.last_seen)}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {employee.group}
+                  {formatDate(employee.created)}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {employee.created}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {employee.updated}
+                  {formatDate(employee.updated)}
                 </td>
               </tr>
             ))}

@@ -10,11 +10,14 @@ import {
     TestPage,
     OrdersTemplate,
     RootLayout,
+    AuthenticationPage,
 
     // Company pages
     CompanyRootLayout,
     EmployeesRootLayout,
     Employees, AddEmployee, ViewEmployee, EditEmployee, employeesLoader, employeeDetailLoader,
+    EmployeeGroupsRootLayout,
+    EmployeeGroups, AddEmployeeGroup, EditEmployeeGroup, ViewEmployeeGroup, employeeGroupsLoader, employeeGroupDetailLoader,
 
     // Product pages
     ProductRootLayout,
@@ -118,6 +121,15 @@ const router = createBrowserRouter([
                         {path: ":id", id: "employee-detail", loader: employeeDetailLoader, children: [
                             {index: true, element: <ViewEmployee/>},
                             {path: "edit", element: <EditEmployee/>},
+                        ]},
+                    ]},
+                    {path: "employee-groups", element: <EmployeeGroupsRootLayout/>, children: [
+                        {index: true, element: <EmployeeGroups key="activeEmployeeGroups"/>, loader: () => employeeGroupsLoader(false)},
+                        {path: "archived", element: <EmployeeGroups key="archivedEmployeeGroups"/>, loader: () => employeeGroupsLoader(true)},
+                        {path: "new", element: <AddEmployeeGroup/>},
+                        {path: ":id", id: "employee-group-detail", loader: employeeGroupDetailLoader, children: [
+                            {index: true, element: <ViewEmployeeGroup/>},
+                            {path: "edit", element: <EditEmployeeGroup/>},
                         ]},
                     ]},
                     {path: ":id", element: <UnderConstruction />},

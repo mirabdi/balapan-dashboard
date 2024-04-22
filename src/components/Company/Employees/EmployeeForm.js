@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useStateContext } from 'contexts/ContextProvider';
 import { Button } from 'components';
@@ -8,6 +8,28 @@ function EmployeeForm({ method = 'POST', employee }) {
   const navigate = useNavigate();
   const { showToast, currentColor } = useStateContext();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [employeeGroups, setEmployeeGroups] = useState([]);
+
+  useEffect(() => {
+    const fetchEmployeeGroups = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/admin-api/employee-groups`, {
+          headers: {
+            Authorization: 'Token token', 
+          },
+        });
+        if (!response.ok) {
+          throw new Error('Failed to fetch employee groups');
+        }
+        const data = await response.json();
+        setEmployeeGroups(data.response); 
+      } catch (error) {
+        showToast({ title: 'Error!', content: 'Failed to load employee groups.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
+      }
+    };
+
+    fetchEmployeeGroups();
+  }, []);
 
   const cancelHandler = () => {
     navigate('/company/employees/');
@@ -62,9 +84,10 @@ function EmployeeForm({ method = 'POST', employee }) {
         <label htmlFor="password" className="block text-gray-700 text-sm font-bold mb-2">Password</label>
         <input
           id="password"
-          type="password"
+          type="text"
           name="password"
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          defaultValue={employee ? employee.password : ''}
           required
         />
       </div>
@@ -92,14 +115,16 @@ function EmployeeForm({ method = 'POST', employee }) {
       </div>
 
       <div className="mb-4">
-        <label htmlFor="is_archived" className="block text-gray-700 text-sm font-bold mb-2">Is Archived</label>
-        <input
-          id="is_archived"
-          type="checkbox"
-          name="is_archived"
-          className="mt-1 align-middle"
-          defaultChecked={employee ? employee.is_archived : false}
-        />
+        <label htmlFor="employee_group" className="block text-gray-700 text-sm font-bold mb-2">Employee Group</label>
+        <select
+          id="employee_group"
+          name="employee_group"
+          className="block  w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+        >
+          {employeeGroups.map(group => (
+            <option key={group.id} value={group.id} selected={employee && group.id === employee.group.id}>{group.name}</option>
+          ))}
+        </select>
       </div>
 
       <div className="float-right">

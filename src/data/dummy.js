@@ -530,6 +530,11 @@ export const links = [
         icon: <MdOutlineSupervisorAccount />,
       },
       {
+        url: "company/employee-groups",
+        name: "Группа Сотрудников",
+        icon: <MdOutlineSupervisorAccount />,
+      },
+      {
         url: "company/stores",
         name: "Магазины",
         icon: <BsBoxSeam />,

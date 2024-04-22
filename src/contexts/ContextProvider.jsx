@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useState, useRef } from "react";
+import React, { createContext, useContext, useState, useRef, useEffect } from "react";
 import { ToastComponent } from '@syncfusion/ej2-react-notifications';
+import { BASE_URL } from "data/config";
 const StateContext = createContext();
 
 const initialNavbarState = {
@@ -11,6 +12,8 @@ const initialNavbarState = {
 
 export const ContextProvider = ({ children }) => {
   console.log("ContextProvider", Math.random());
+  const [token, setToken] = useState(localStorage.getItem('token'));
+  const [user, setUser] = useState(null);
   const [screenSize, setScreenSize] = useState(undefined);
   const [currentColor, setCurrentColor] = useState("#03C9D7");
   const [currentMode, setCurrentMode] = useState("Light");
@@ -62,9 +65,61 @@ export const ContextProvider = ({ children }) => {
       toastRef.current.hide('All');
     }
   };
+  useEffect(() => {
+    checkTokenActive();
+  }, []);
+
+  const checkTokenActive = async () => {
+    if (token === null) return;
+    try {
+      const response = await fetch(`${BASE_URL}/admin-api/auth/check`, {
+        headers: { Authorization: `Token ${token}` }
+      });
+      if (!response.ok) throw new Error('Token validation failed');
+      const data = await response.json();
+      const userData = data.response;
+      setUser(userData);
+    } catch (error) {
+      console.error('Token check failed:', error);
+      setToken(null);
+      localStorage.removeItem('token');
+    }
+  };
+
+  const login = async (username, password) => {
+    try {
+      const response = await fetch(`${BASE_URL}/admin-api/auth`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+      if (!response.ok){
+        showToast({ title: 'Login Error', content: 'Invalid username or password', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
+        throw new Error('Login failed');
+      } 
+      const data = await response.json();
+      const userData = data.response;
+      const token = userData.token;
+      localStorage.setItem('token', token);
+      setToken(token);
+      setUser(userData);
+    } catch (error) {
+      showToast({ title: 'Login Error', content: error.message, cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
+    }
+  };
+
+  const logout = () => {
+    setToken(null);
+    localStorage.removeItem('token');
+  };
   return (
     <StateContext.Provider
       value={{
+        user,
+        token,
+        login,
+        logout,
+        checkTokenActive,
         currentColor,
         currentMode,
         activeMenu,

@@ -19,6 +19,7 @@ export { default as UnderConstruction } from "./UnderConstruction";
 export { default as TestPage } from "./Test";
 export { default as RootLayout } from "./Root";
 export { default as ErrorPage } from "./Error";
+export { default as AuthenticationPage } from "./Authentication";
 
 // Company 
 export { default as CompanyRootLayout } from "./Company/CompanyRoot";
@@ -29,6 +30,13 @@ export { default as AddEmployee } from "./Company/Employees/AddEmployee";
 export { default as ViewEmployee } from "./Company/Employees/ViewEmployee";
 export { default as EditEmployee } from "./Company/Employees/EditEmployee";
 export { employeesLoader,  employeeDetailLoader } from './Company/Employees/Services';
+
+export { default as EmployeeGroupsRootLayout } from "./Company/EmployeeGroups/EmployeeGroupsRoot";
+export { default as EmployeeGroups } from "./Company/EmployeeGroups/EmployeeGroups";
+export { default as AddEmployeeGroup } from "./Company/EmployeeGroups/AddEmployeeGroup";
+export { default as EditEmployeeGroup } from "./Company/EmployeeGroups/EditEmployeeGroup";
+export { default as ViewEmployeeGroup } from "./Company/EmployeeGroups/ViewEmployeeGroup";
+export { employeeGroupsLoader,  employeeGroupDetailLoader } from './Company/EmployeeGroups/Services';
 
 // Products
 export { default as ProductRootLayout } from './Products/ProductRoot';

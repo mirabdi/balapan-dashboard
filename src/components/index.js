@@ -37,6 +37,9 @@ export { default as MapComponent } from "./Utils/MapComponent";
 export { default as EmployeeForm } from "./Company/Employees/EmployeeForm";
 export { default as EmployeeItem } from "./Company/Employees/EmployeeItem";
 export { default as EmployeesList } from "./Company/Employees/EmployeesList";
+export { default as EmployeeGroupsList } from "./Company/EmployeeGroups/EmployeeGroupsList";
+export { default as EmployeeGroupItem } from "./Company/EmployeeGroups/EmployeeGroupItem";
+export { default as EmployeeGroupForm } from "./Company/EmployeeGroups/EmployeeGroupForm";
 
 // Products
 export { default as ProductsNavigation } from "./Products/ProductsNavigation";
