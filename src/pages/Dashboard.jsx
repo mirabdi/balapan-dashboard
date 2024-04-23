@@ -15,7 +15,6 @@ import {
   ecomPieChartData,
 } from "../data/dummy";
 import { useStateContext } from "../contexts/ContextProvider";
-import product9 from "../data/product9.jpg";
 
 const Dashboard = () => {
   const {currentColor} = useStateContext();

@@ -52,6 +52,11 @@ export { default as NotificationNavigation } from "./CRM/NotificationNavigation"
 export { default as OrderNavigation } from "./CRM/OrderNavigation";
 
 
+// POS
+export { default as OPaymentForm } from "./Pos/OPayments/OPaymentForm";
+export { default as OPaymentItem } from "./Pos/OPayments/OPaymentItem";
+export { default as OPaymentsList } from "./Pos/OPayments/OPaymentsList";
+
 // App
 export { default as PostsList } from "./App/posts/PostsList";
 export { default as PostItem } from "./App/posts/PostItem";

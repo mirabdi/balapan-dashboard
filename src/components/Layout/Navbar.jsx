@@ -6,7 +6,7 @@ import { RiNotification3Line } from "react-icons/ri";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { TooltipComponent } from "@syncfusion/ej2-react-popups";
 
-import avatar from "../../data/avatar.jpg";
+
 import { Cart, Chat, Notification, UserProfile } from "../";
 import { useStateContext } from "../../contexts/ContextProvider";
 
@@ -62,7 +62,7 @@ const Navbar = () => {
   // return
   const handleActiveMenu = () => setActiveMenu(!activeMenu);
   return (
-    <div className="flex justify-between p-2 md:ml-6 md:mr-6 relative">
+    <div className="flex justify-between p-2 md:ml-6 md:mr-6 relative border-b">
       <NavButton
         title="Menu"
         customFunc={handleActiveMenu}

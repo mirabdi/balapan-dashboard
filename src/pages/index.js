@@ -126,3 +126,9 @@ export { postsLoader,  postDetailLoader } from './App/posts/Services';
 
 // POS
 export { default as PosRootLayout } from "./Pos/PosRoot";
+export { default as AddOPayment } from "./Pos/OPayments/AddOPayment";
+export { default as EditOPayment } from "./Pos/OPayments/EditOPayment";
+export { default as ViewOPayment } from "./Pos/OPayments/ViewOPayment";
+export { default as OPayments } from "./Pos/OPayments/OPayments";
+export { default as OPaymentRootLayout } from "./Pos/OPayments/OPaymentRoot";
+export { opaymentDetailLoader,  opaymentsLoader } from './Pos/OPayments/Services';

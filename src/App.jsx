@@ -78,6 +78,8 @@ import {
 
     // POS pages
     PosRootLayout,
+    OPaymentRootLayout,ViewOPayment, AddOPayment, EditOPayment, OPayments, opaymentDetailLoader, opaymentsLoader,
+
 
 
     // Other pages
@@ -202,9 +204,7 @@ const router = createBrowserRouter([
                     ]},
                 ]},
             ]},
-            {
-                path: "app", 
-                element: <AppRootLayout/>, 
+            {path: "app", element: <AppRootLayout/>, 
                 children: [
                     {index: true, element: <UnderConstruction/>},
                     {
@@ -303,7 +303,14 @@ const router = createBrowserRouter([
               },              
             {path: "pos", element: <PosRootLayout/>, children: [
                 {index: true, element: <UnderConstruction/>},
-                {path: "payment", element: <UnderConstruction/>},
+                {path: "opay", element: <OPaymentRootLayout/>, children: [
+                    {index: true, element: <OPayments key="activeOPayments"/>, loader: () => opaymentsLoader(false)},
+                    {path: "active", element: <OPayments key="activeOPayments"/>, loader: () => opaymentsLoader(false)},
+                    {path: "archived", element: <OPayments archived={true} key="archivedOPayments"/>, loader: () => opaymentsLoader(true)},
+        
+                    {path: "new", element: <AddOPayment/>},
+                    {path: ":id", element: <ViewOPayment/>},
+                ]},
             ]},
             {path: "dashboard", element: <UnderConstruction/>},
             {path: "orders", element: <OrdersTemplate/>},

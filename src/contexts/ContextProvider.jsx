@@ -11,7 +11,6 @@ const initialNavbarState = {
 };
 
 export const ContextProvider = ({ children }) => {
-  console.log("ContextProvider", Math.random());
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [user, setUser] = useState(null);
   const [screenSize, setScreenSize] = useState(undefined);
@@ -22,7 +21,7 @@ export const ContextProvider = ({ children }) => {
   const [activeMenu, setActiveMenu] = useState(true);
   const [navbarState, setNavbarState] = useState(initialNavbarState);
   const toastRef = useRef(null);
-
+  console.log("ContextProvider", Math.random(), currentColor);
   const setMode = (e) => {
     setCurrentMode(e.target.value);
     localStorage.setItem("themeMode", e.target.value);
