@@ -6,8 +6,7 @@ import { BASE_URL } from 'data/config';
 
 function ListingForm({ currentListing }) {
   const navigate = useNavigate();
-  const { currentColor } = useStateContext();
-  const { showToast } = useStateContext();
+  const { currentColor, showToast, token } = useStateContext();
   const [listing, setListing] = useState(currentListing);
   const [loading, setLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -27,7 +26,7 @@ function ListingForm({ currentListing }) {
       const response = await fetch(`${BASE_URL}/crm/admin-api/listings${currentListing ? `/${currentListing.id}` : ''}`, {
         method: currentListing ? 'PUT' : 'POST',
         headers: {
-          Authorization: 'Token token',
+          Authorization: `Token ${token}`,
         },
         body: formData,
       });
@@ -66,14 +65,15 @@ function ListingForm({ currentListing }) {
               />
             </div>
             <div className="mb-4">
-              <label htmlFor="image_file" className="block text-gray-700 text-sm font-bold mb-2">Рисунок</label>
+              <label htmlFor="image" className="block text-gray-700 text-sm font-bold mb-2">Рисунок</label>
               <input
                 type="file"
-                id="image_file"
-                name="image_file"
+                id="image"
+                name="image"
                 className="shadow w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 accept="image/*"
               />
+              {listing && listing.image_url && <img src={listing.image_url} alt={listing.title} className="mt-2 w-48 h-48 object-cover rounded-lg" />}
             </div>
             <div className="mb-4">
               <label htmlFor="sale_price" className="block text-gray-700 text-sm font-bold mb-2">Цена продажи</label>

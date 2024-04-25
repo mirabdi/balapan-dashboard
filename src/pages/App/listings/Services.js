@@ -7,8 +7,7 @@ import { BASE_URL } from '../../../data/config';
 
 
 
-async function loadListingsList(is_archived = false) {
-  const token = "token";
+async function loadListingsList(is_archived = false, token) {
   let url = BASE_URL + "/crm/admin-api/listings";
   if (is_archived) {
     url += "?is_archived=" + is_archived;
@@ -34,12 +33,12 @@ async function loadListingsList(is_archived = false) {
   }
 }
 
-async function loadListingDetail(id) {
+async function loadListingDetail(id, token) {
     const response = await fetch(BASE_URL + "/crm/admin-api/listings?id=" + id, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Token token",
+        Authorization: "Token " + token,
       },
     });
   
@@ -57,17 +56,17 @@ async function loadListingDetail(id) {
   }
 
 // Loaders
-export function listingsLoader(is_archived = false) {
+export function listingsLoader(is_archived = false, token) {
   return defer({
-    listings: loadListingsList(is_archived),
+    listings: loadListingsList(is_archived, token),
   });
 }
 
 
-export async function listingDetailLoader({ request, params }) {
+export async function listingDetailLoader({ request, params }, token) {
   const id = params.id;
 
   return defer({
-    listing: await loadListingDetail(id),
+    listing: await loadListingDetail(id, token),
   });
 }

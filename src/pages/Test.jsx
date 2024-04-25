@@ -4,6 +4,142 @@ import { Link } from "react-router-dom";
 const TestPage = () => {
   return (
     <>
+      <div class="flex flex-col justify-center items-center h-[100vh]">
+            <div
+                class="relative flex max-w-[500px] w-full flex-col rounded-[20px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] dark:border-[#ffffff33] dark:!bg-navy-800 dark:text-white dark:shadow-none"
+            >
+                <div class="!z-5 relative flex h-full w-full flex-col rounded-[20px] bg-white bg-clip-border p-4 shadow-3xl shadow-shadow-500 dark:!bg-navy-800 dark:text-white dark:shadow-none">
+                    <div class="mb-8 w-full">
+                        <h4 class="text-xl font-bold text-navy-700 dark:text-white">
+                        All projects
+                        </h4>
+                        <p class="mt-2 text-base text-gray-600">
+                        Here you can find more details about your projects. Keep you user
+                        engaged by providing meaningful information.
+                        </p>
+                    </div>
+                    <div class="mt-3 flex w-full items-center justify-between rounded-2xl bg-gray-100  p-3 shadow-3xl shadow-shadow-500 dark:!bg-navy-700 dark:shadow-none">
+                        <div class="flex items-center">
+                        <div class="">
+                            <img
+                            class="h-[83px] w-[83px] rounded-lg"
+                            src="http://pic.cloudshop.ru/v1/l8blk1kwbqh6ezxmsxmd.jpg"
+                            alt=""
+                            />
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-base font-medium text-navy-700 dark:text-white">
+                            2-Pack Babysoft Pants (12m)
+                            </p>
+                            <p class="mt-2 text-sm text-gray-600">
+                            Project #1 .
+                            <a
+                                class="ml-1 font-medium text-brand-500 hover:text-brand-500 dark:text-white"
+                                href=" "
+                            >
+                                See product details
+                            </a>
+                            </p>
+                        </div>
+                        </div>
+                        <div class="mr-4 flex items-center justify-center text-gray-600 dark:text-white">
+                        <svg
+                            stroke="currentColor"
+                            fill="currentColor"
+                            stroke-width="0"
+                            viewBox="0 0 24 24"
+                            height="1em"
+                            width="1em"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path fill="none" d="M0 0h24v24H0z"></path>
+                            <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75zM20.71 5.63l-2.34-2.34a.996.996 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83a.996.996 0 000-1.41z"></path>
+                        </svg>
+                        </div>
+                    </div>
+                    <div class="mt-3 flex w-full items-center justify-between rounded-2xl bg-gray-100  p-3 shadow-3xl shadow-shadow-500 dark:!bg-navy-700 dark:shadow-none">
+                        <div class="flex items-center">
+                        <div class="">
+                            <img
+                            class="h-[83px] w-[83px] rounded-lg"
+                            src="https://github.com/horizon-ui/horizon-tailwind-react-ts-corporate/blob/main/src/assets/img/profile/image2.png?raw=true"
+                            alt=""
+                            />
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-base font-medium text-navy-700 dark:text-white">
+                            Technology behind the Blockchain
+                            </p>
+                            <p class="mt-2 text-sm text-gray-600">
+                            Project #1 .
+                            <a
+                                class="ml-1 font-medium text-brand-500 hover:text-brand-500 dark:text-white"
+                                href=" "
+                            >
+                                See product details
+                            </a>
+                            </p>
+                        </div>
+                        </div>
+                        <div class="mr-4 flex items-center justify-center text-gray-600 dark:text-white">
+                        <svg
+                            stroke="currentColor"
+                            fill="currentColor"
+                            stroke-width="0"
+                            viewBox="0 0 24 24"
+                            height="1em"
+                            width="1em"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path fill="none" d="M0 0h24v24H0z"></path>
+                            <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75zM20.71 5.63l-2.34-2.34a.996.996 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83a.996.996 0 000-1.41z"></path>
+                        </svg>
+                        </div>
+                    </div>
+                    <div class="mt-3 flex w-full items-center justify-between rounded-2xl bg-gray-100  p-3 shadow-3xl shadow-shadow-500 dark:!bg-navy-700 dark:shadow-none">
+                        <div class="flex items-center">
+                        <div class="">
+                            <img
+                            class="h-[83px] w-[83px] rounded-lg"
+                            src="https://github.com/horizon-ui/horizon-tailwind-react-ts-corporate/blob/main/src/assets/img/profile/image3.png?raw=true"
+                            alt=""
+                            />
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-base font-medium text-navy-700 dark:text-white">
+                            Technology behind the Blockchain
+                            </p>
+                            <p class="mt-2 text-sm text-gray-600">
+                            Project #1 .
+                            <a
+                                class="ml-1 font-medium text-brand-500 hover:text-brand-500 dark:text-white"
+                                href=" "
+                            >
+                                See product details
+                            </a>
+                            </p>
+                        </div>
+                        </div>
+                        <div class="mr-4 flex items-center justify-center text-gray-600 dark:text-white">
+                        <svg
+                            stroke="currentColor"
+                            fill="currentColor"
+                            stroke-width="0"
+                            viewBox="0 0 24 24"
+                            height="1em"
+                            width="1em"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path fill="none" d="M0 0h24v24H0z"></path>
+                            <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75zM20.71 5.63l-2.34-2.34a.996.996 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83a.996.996 0 000-1.41z"></path>
+                        </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p class="font-normal text-navy-700 mt-20 mx-auto w-max">Profile Card component from <a href="https://horizon-ui.com?ref=tailwindcomponents.com" target="_blank" class="text-brand-500 font-bold">Horizon UI Tailwind React</a></p>  
+        </div>
+
     {/* Order List 1 */}
     <div className="mx-auto max-w-screen-xl bg-white">
             <h1 className="mt-20 mb-10 ml-5 text-2xl font-bold text-gray-900">Order Management</h1>

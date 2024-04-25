@@ -7,8 +7,7 @@ import { BASE_URL } from '../../../data/config';
 
 
 
-async function loadBannersList(is_archived = false) {
-  const token = "token";
+async function loadBannersList(is_archived = false, token) {  
   let url = BASE_URL + "/crm/admin-api/banners";
   if (is_archived) {
     url += "?is_archived=" + is_archived;
@@ -34,12 +33,12 @@ async function loadBannersList(is_archived = false) {
   }
 }
 
-async function loadBannerDetail(id) {
+async function loadBannerDetail(id, token) {
     const response = await fetch(BASE_URL + "/crm/admin-api/banners?id=" + id, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Token token",
+        Authorization: "Token " + token,
       },
     });
   
@@ -57,17 +56,17 @@ async function loadBannerDetail(id) {
   }
 
 // Loaders
-export function bannersLoader(is_archived = false) {
+export function bannersLoader(is_archived = false, token) {
   return defer({
-    banners: loadBannersList(is_archived),
+    banners: loadBannersList(is_archived, token),
   });
 }
 
 
-export async function bannerDetailLoader({ request, params }) {
+export async function bannerDetailLoader({ request, params }, token) {
   const id = params.id;
 
   return defer({
-    banner: await loadBannerDetail(id),
+    banner: await loadBannerDetail(id, token),
   });
 }

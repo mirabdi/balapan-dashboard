@@ -11,7 +11,7 @@ function OPaymentRootLayout() {
     const links = [
         {
             'name': 'История',
-            'path': 'active',
+            'path': '',
         },
         {
             'name': 'Новая',
@@ -23,10 +23,10 @@ function OPaymentRootLayout() {
         }
     ];
 
-    const getNavLinkStyle = ({ isActive, path }) => (
+    const getNavLinkStyle = ({ isActive, name }) => (
         {
-            borderBottomColor: isActive || hoveredLink === path ?  currentColor : 'transparent',
-            color: isActive || hoveredLink === path ? currentColor : '#4B5563',  
+            borderBottomColor: isActive || hoveredLink === name ?  currentColor : 'transparent',
+            color: isActive || hoveredLink === name ? currentColor : '#4B5563',  
             transition: 'color 200ms, border-bottom-color 200ms', 
         }
     );
@@ -41,10 +41,11 @@ function OPaymentRootLayout() {
                             <NavLink
                                 key={link.name}
                                 to={`/pos/opay/${link.path}`}
-                                onMouseEnter={() => setHoveredLink(link.path)}
+                                onMouseEnter={() => setHoveredLink(link.name)}
                                 onMouseLeave={() => setHoveredLink(null)}
-                                style={({ isActive }) => getNavLinkStyle({isActive, path: link.path})}
+                                style={({ isActive }) => getNavLinkStyle({isActive, name: link.name})}
                                 className="inline-flex whitespace-nowrap border-b-2 border-transparent py-2 px-3 text-sm font-medium text-gray-600 transition-all duration-200 ease-in-out hover:border-b-2 hover:text-gray-800"
+                                end
                             >
                                 {link.name}
                             </NavLink>

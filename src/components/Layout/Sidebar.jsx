@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import { MdOutlineCancel, MdKeyboardArrowRight, MdKeyboardArrowDown } from "react-icons/md";
 import { TooltipComponent } from "@syncfusion/ej2-react-popups";
 import { useStateContext } from "../../contexts/ContextProvider";
@@ -9,14 +9,19 @@ import { convertLinks } from "../../data/utils";
 const Sidebar = () => {
   const { currentColor, activeMenu, setActiveMenu, screenSize, user, token } = useStateContext();
   const [currentLinks, setCurrentLinks] = useState([]);
+  const location = useLocation();
 
+  const isGroupActive = (item) => { 
+    return item.links.some((link) => location.pathname === `/${link.url}/`) || item.isOpen;
+  };
   
 
   useEffect(() => {
     if(user && user.sections){
       const parsedLinks = convertLinks(user.sections);
-      console.log("parsedLinks", parsedLinks);
+      console.log(parsedLinks);
       setCurrentLinks(parsedLinks);
+
     }
   }, [user]);
 
@@ -77,7 +82,7 @@ const Sidebar = () => {
                    onClick={() => toggleGroup(item.title)}>
                     {item.title}
                 </p>
-                {item.isOpen && item.links.map((link) => (
+                {(isGroupActive(item) )&& item.links.map((link) => (
                   <NavLink
                     to={`/${link.url}/`}
                     key={link.name}

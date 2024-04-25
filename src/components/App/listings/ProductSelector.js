@@ -11,7 +11,7 @@ const ProductSelector = ({product, onSelect}) => {
   
   const [barcodeOrTitle, setBarcodeOrTitle] = useState('');
   const [loading, setLoading] = useState(false);
-  const { showToast, currentColor } = useStateContext();
+  const { showToast, currentColor, token } = useStateContext();
 
   const loadProduct = async () => {
     setLoading(true);
@@ -19,7 +19,7 @@ const ProductSelector = ({product, onSelect}) => {
       const response = await fetch(`${BASE_URL}/crm/admin-api/listings/get-product?query=${barcodeOrTitle}`, {
         method: 'GET',
         headers: {
-          Authorization: 'Token token',
+          Authorization: `Token ${token}`,
         },
       });
       const data = await response.json();
@@ -48,8 +48,8 @@ const ProductSelector = ({product, onSelect}) => {
               <p className="mt-1 text-gray-500">{selectedProduct.description || "Описание недоступно."}</p>
               <div className="mt-4">
                 <div className="text-gray-600">Штрих-код: {selectedProduct.barcode}</div>
-                <div className="text-gray-600">Цена: {selectedProduct.price} руб.</div>
-                <div className="text-gray-600">Себестоимость: {selectedProduct.cost} руб.</div>
+                <div className="text-gray-600">Цена: {selectedProduct.price} сом.</div>
+                <div className="text-gray-600">Себестоимость: {selectedProduct.cost} сом.</div>
               </div>
               <Button
                 color="white"

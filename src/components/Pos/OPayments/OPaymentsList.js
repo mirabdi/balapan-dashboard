@@ -4,7 +4,7 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useStateContext } from "contexts/ContextProvider";
 import { BASE_URL } from "data/config";
 import { gridOrderStatus } from "data/utils";
-
+import { MdRefresh } from 'react-icons/md';
 
 const OPaymentsList = ({opayments, title, selectHandler}) => {
   const navigate = useNavigate();
@@ -133,7 +133,7 @@ const OPaymentsList = ({opayments, title, selectHandler}) => {
                           updateStatus(opayment.id)}
                         }
                       >
-                        R
+                        <MdRefresh />
                       </button>
                     </>
                    }

@@ -1,38 +1,68 @@
-import { Outlet, NavLink } from "react-router-dom";
+import React, { useState } from "react";
+import { Outlet, NavLink, useNavigate } from "react-router-dom";
+import { useStateContext } from "contexts/ContextProvider";
+import { Button, Header } from "components"; 
 
 function EmployeeGroupsRootLayout() {
+    const { currentColor } = useStateContext();
+    const [hoveredLink, setHoveredLink] = useState(null);
+    const navigate = useNavigate();
+
+    const getNavLinkStyle = ({ isActive, name }) => ({
+        borderBottomColor: isActive || hoveredLink === name ? currentColor : 'transparent',
+        color: isActive || hoveredLink === name ? currentColor : '#4B5563',
+        transition: 'color 200ms, border-bottom-color 200ms',
+    });
+
+    const links = [
+        {
+            'name': 'Активные',
+            'path': '',
+        },
+        {
+            'name': 'Архив',
+            'path': 'archived',
+        },
+        {
+            'name': 'Добавить Группу',
+            'path': 'new',
+        }
+    ];
+
     return (
         <>
-            <nav className="flex justify-center bg-gray-200 shadow-md py-4">
-                <NavLink
-                    to="/company/employee-groups/"
-                    className={({ isActive }) =>
-                    isActive ? 'mx-2 px-4 py-2 text-balapanBlue font-bold border-b-2 border-balapanBlue' : 'mx-2 px-4 py-2 text-gray-600 hover:text-balapanBlue'
-                    }
-                    end
-                >
-                    Активные
-                </NavLink>
-                <NavLink
-                    to="/company/employee-groups/new"
-                    className={({ isActive }) =>
-                    isActive ? 'mx-2 px-4 py-2 text-balapanBlue font-bold border-b-2 border-balapanBlue' : 'mx-2 px-4 py-2 text-gray-600 hover:text-balapanBlue'
-                    }
-                >
-                    Добавить Группу
-                </NavLink>
-                <NavLink
-                    to="/company/employee-groups/archived"
-                    className={({ isActive }) =>
-                    isActive ? 'mx-2 px-4 py-2 text-balapanBlue font-bold border-b-2 border-balapanBlue' : 'mx-2 px-4 py-2 text-gray-600 hover:text-balapanBlue'
-                    }
-                >
-                    Архив
-                </NavLink>
-            </nav>
-            
-            <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
-                <Outlet />
+            <div className="mx-auto max-w-screen-xl bg-white">
+                <div className="flex justify-between items-center">
+                    <Header category="Страница" title="Группы Сотрудников" />
+                    <Button
+                        color="white"
+                        bgColor={currentColor}
+                        text="+ Группа"
+                        onClick={() => navigate('/company/employee-groups/new')}
+                        borderRadius="10px"
+                        className="m-2 font-bold py-2 px-4 rounded"
+                    />
+                </div>
+                <div className="bg-white py-2 px-3 border-b">
+                    <nav className="flex flex-wrap gap-4">
+                        {links.map((link) => (
+                            <NavLink
+                                key={link.name}
+                                to={`/company/employee-groups/${link.path}`}
+                                onMouseEnter={() => setHoveredLink(link.name)}
+                                onMouseLeave={() => setHoveredLink(null)}
+                                style={({ isActive }) => getNavLinkStyle({isActive, name: link.name})}
+                                className="inline-flex whitespace-nowrap border-b-2 border-transparent py-2 px-3 text-sm font-medium text-gray-600 transition-all duration-200 ease-in-out hover:border-b-2 hover:text-gray-800"
+                                end
+                            >
+                                {link.name}
+                            </NavLink>
+                        ))}
+                    </nav>
+                </div>
+                <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
+                    <Outlet />
+                </div>
             </div>
         </>
     );

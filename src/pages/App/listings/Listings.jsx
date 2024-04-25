@@ -6,13 +6,13 @@ import { useLoaderData, Await } from 'react-router-dom';
 import { useStateContext} from '../../../contexts/ContextProvider';
 
 function Listings() {
-  let title = "Активные баннеры";
+  let title = "Активные листинги";
   const url = new URL(window.location.href);
   const lastSegment = url.pathname.split('/').pop();
   const [selectedListing, setSelectedListing] = useState(null);
   const { rightModal, setRightModal, showToast} = useStateContext();
   if(lastSegment === 'archived'){
-    title = "Архивные баннеры";
+    title = "Архивные листинги";
   }
   const { listings } = useLoaderData();
   return (
@@ -23,7 +23,7 @@ function Listings() {
         </Await>
       </Suspense>
       {rightModal && selectedListing &&
-        <RightModal title={"Пост: "+selectedListing.title} afterClose={()=>setSelectedListing(null)}>
+        <RightModal title={"Листинг: "+selectedListing.title} afterClose={()=>setSelectedListing(null)}>
           <Suspense fallback={<p style={{ textAlign: 'center' }}>Loading...</p>}>
             <Await resolve={selectedListing}>
               {(loadedListing) => <ListingItem listing={loadedListing} />}

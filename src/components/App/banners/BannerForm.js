@@ -7,7 +7,7 @@ import { BASE_URL } from 'data/config';
 
 function BannerForm({ method = 'POST', banner }) {
   const navigate = useNavigate();
-  const { showToast, currentColor } = useStateContext();
+  const { showToast, currentColor, token } = useStateContext();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const cancelHandler = () => {
@@ -23,7 +23,7 @@ function BannerForm({ method = 'POST', banner }) {
       const response = await fetch(`${BASE_URL}/crm/admin-api/banners`, {
         method: banner ? 'PUT' : 'POST',
         headers: {
-          Authorization: 'Token token', // Replace 'token' with your actual token
+          Authorization: `Token ${token}`,
         },
         body: formData,
       });

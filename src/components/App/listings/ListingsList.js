@@ -120,14 +120,14 @@ function ListingsList({ listings, title, selectHandler }) {
                 key={listing.id}
                 {...provided.draggableProps}
                 {...provided.dragHandleProps}
-                className="bg-gray-200 rounded-lg overflow-hidden shadow-lg my-4 flex relative"
+                className="mt-3 flex w-full items-center justify-between rounded-2xl bg-gray-100  p-3 shadow-3xl shadow-shadow-500 dark:!bg-navy-700 dark:shadow-none relative"
               >
                 <div to={`/app/listings/${listing.id}`} onClick={()=>selectHandler(listing)} className="flex items-center hover:bg-gray-100 w-full text-decoration-none">
                   <img src={listing.image_url} alt={listing.title} className="flex-none w-48 h-48 object-cover rounded-l-lg" />
                   <div className="p-4 flex flex-col justify-between leading-normal">
                     <h2 className="font-bold text-xl mb-2 text-gray-900">{listing.title}</h2>
                     <p className="mb-2 text-gray-900">{listing.description}</p>
-                    <time className="text-sm text-gray-600">{listing.date}</time>
+                    <time className="text-sm text-gray-600">{listing.created}</time>
                   </div>
                 </div>
                 {/* Buttons container */}

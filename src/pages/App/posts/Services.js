@@ -7,8 +7,7 @@ import { BASE_URL } from '../../../data/config';
 
 
 
-async function loadPostsList(is_archived = false) {
-  const token = "token";
+async function loadPostsList(is_archived = false, token) {
   let url = BASE_URL + "/crm/admin-api/posts";
   if (is_archived) {
     url += "?is_archived=" + is_archived;
@@ -34,12 +33,12 @@ async function loadPostsList(is_archived = false) {
   }
 }
 
-async function loadPostDetail(id) {
+async function loadPostDetail(id, token) {
     const response = await fetch(BASE_URL + "/crm/admin-api/posts?id=" + id, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Token token",
+        Authorization: "Token " + token,
       },
     });
   
@@ -57,18 +56,18 @@ async function loadPostDetail(id) {
   }
 
 // Loaders
-export function postsLoader(is_archived = false) {
+export function postsLoader(is_archived = false, token) {
   return defer({
-    posts: loadPostsList(is_archived),
+    posts: loadPostsList(is_archived, token),
   });
 }
 
 
-export async function postDetailLoader({ request, params }) {
+export async function postDetailLoader({ request, params }, token) {
   const id = params.id;
 
   return defer({
-    post: await loadPostDetail(id),
+    post: await loadPostDetail(id, token),
   });
 }
 
