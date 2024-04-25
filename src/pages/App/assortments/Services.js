@@ -7,8 +7,8 @@ import { BASE_URL } from '../../../data/config';
 
 
 
-async function loadListingsList(is_archived = false, token) {
-  let url = BASE_URL + "/crm/admin-api/listings";
+async function loadAssortmentsList(is_archived = false, token) {
+  let url = BASE_URL + "/crm/admin-api/assortments";
   if (is_archived) {
     url += "?is_archived=" + is_archived;
   }
@@ -21,7 +21,7 @@ async function loadListingsList(is_archived = false, token) {
   });
   if (!response.ok) {
     throw json(
-      { message: "Failed to load listings" },
+      { message: "Failed to load assortments" },
       {
         status: response.status,
         statusText: response.statusText,
@@ -33,8 +33,8 @@ async function loadListingsList(is_archived = false, token) {
   }
 }
 
-async function loadListingDetail(id, token) {
-    const response = await fetch(BASE_URL + "/crm/admin-api/listings?id=" + id, {
+async function loadAssortmentDetail(id, token) {
+    const response = await fetch(BASE_URL + "/crm/admin-api/assortments?id=" + id, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -44,7 +44,7 @@ async function loadListingDetail(id, token) {
   
     if (!response.ok) {
       throw json(
-        { message: "Could not fetch details for selected listing." },
+        { message: "Could not fetch details for selected assortment." },
         {
           status: 500,
         }
@@ -56,17 +56,17 @@ async function loadListingDetail(id, token) {
   }
 
 // Loaders
-export function listingsLoader(is_archived = false, token) {
+export function assortmentsLoader(is_archived = false, token) {
   return defer({
-    listings: loadListingsList(is_archived, token),
+    assortments: loadAssortmentsList(is_archived, token),
   });
 }
 
 
-export async function listingDetailLoader({ request, params, token }) {
+export async function assortmentDetailLoader({ request, params, token }) {
   const id = params.id;
 
   return defer({
-    listing: await loadListingDetail(id, token),
+    assortment: await loadAssortmentDetail(id, token),
   });
 }

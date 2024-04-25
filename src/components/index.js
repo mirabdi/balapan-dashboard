@@ -70,3 +70,8 @@ export { default as ListingsList } from "./App/listings/ListingsList";
 export { default as ListingItem } from "./App/listings/ListingItem";
 export { default as ListingForm } from "./App/listings/ListingForm";
 export { default as ProductSelector } from "./App/listings/ProductSelector";
+
+export { default as AssortmentsList } from "./App/assortments/AssortmentsList";
+export { default as AssortmentItem } from "./App/assortments/AssortmentItem";
+export { default as AssortmentForm } from "./App/assortments/AssortmentForm";
+export { default as ListingSelector } from "./App/assortments/ListingSelector";

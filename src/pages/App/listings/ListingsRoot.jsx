@@ -8,22 +8,25 @@ function ListingsRootLayout() {
     const [hoveredLink, setHoveredLink] = useState(null);
     const navigate = useNavigate();
 
-    const getNavLinkStyle = ({ isActive, path }) => ({
-        borderBottomColor: isActive || hoveredLink === path ? currentColor : 'transparent',
-        color: isActive || hoveredLink === path ? currentColor : '#4B5563',
+    const getNavLinkStyle = ({ isActive, name }) => ({
+        borderBottomColor: isActive || hoveredLink === name ? currentColor : 'transparent',
+        color: isActive || hoveredLink === name ? currentColor : '#4B5563',
         transition: 'color 200ms, border-bottom-color 200ms',
     });
 
     const links = [
         {
+            'id': 'active',
             'name': 'Активные',
             'path': '',
         },
         {
+            'id': 'archived',
             'name': 'Архив',
             'path': 'archived',
         },
         {
+            'id': 'new',
             'name': 'Добавить листинг',
             'path': 'new',
         },

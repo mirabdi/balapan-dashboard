@@ -55,7 +55,7 @@ import {
 
     // App pages
     AppRootLayout,
-    AssortmentsRootLayout, Assortments, AddAssortment, ViewAssortment, EditAssortment,
+    AssortmentsRootLayout, Assortments, AddAssortment, ViewAssortment, EditAssortment, assortmentsLoader, assortmentDetailLoader,
     BannersRootLayout, Banners, AddBanner, ViewBanner, EditBanner, bannersLoader, bannerDetailLoader,
     BrandsRootLayout, Brands, AddBrand, ViewBrand, EditBrand,
     ListingsRootLayout, Listings, AddListing, ViewListing, EditListing, listingsLoader, listingDetailLoader,
@@ -124,7 +124,7 @@ function App() {
                             {index: true, element: <Employees key="activeEmployees"/>, loader: () => employeesLoader(false, token)},
                             {path: "archived", element: <Employees key="archivedEmployees"/>, loader: () => employeesLoader(true, token)},
                             {path: "new", element: <AddEmployee/>},
-                            {path: ":id", id: "employee-detail", loader: () => employeeDetailLoader(token), children: [
+                            {path: ":id", id: "employee-detail", loader: ({ params, request }) => employeeDetailLoader({ request, params, token }), children: [
                                 {index: true, element: <ViewEmployee/>},
                                 {path: "edit", element: <EditEmployee/>},
                             ]},
@@ -133,7 +133,7 @@ function App() {
                             {index: true, element: <EmployeeGroups key="activeEmployeeGroups"/>, loader: () => employeeGroupsLoader(false, token)},
                             {path: "archived", element: <EmployeeGroups key="archivedEmployeeGroups"/>, loader: () => employeeGroupsLoader(true, token)},
                             {path: "new", element: <AddEmployeeGroup/>},
-                            {path: ":id", id: "employee-group-detail", loader: () => employeeGroupDetailLoader(token), children: [
+                            {path: ":id", id: "employee-group-detail", loader: ({ params, request }) => employeeGroupDetailLoader({ request, params, token }),children: [
                                 {index: true, element: <ViewEmployeeGroup/>},
                                 {path: "edit", element: <EditEmployeeGroup/>},
                             ]},
@@ -215,14 +215,55 @@ function App() {
                             path: "assortments", 
                             element: <AssortmentsRootLayout/>, 
                             children: [
-                                {index: true, element: <Assortments/>},
-                                {path: "archived", element: <Assortments archived={true}/>},
+                                {index: true, element: <Assortments key="activeAssortments"/>, loader: () => assortmentsLoader(false, token)},
+                                {path: "archived", element: <Assortments archived={true} key="archivedAssortments"/>, loader: () => assortmentsLoader(true, token)},
                                 {path: "new", element: <AddAssortment/>},
                                 {
                                     path: ":id", 
+                                    id: "assortment-detail",
+                                    loader: ({ params, request }) => assortmentDetailLoader({ request, params, token }),
                                     children: [
                                         {index: true, element: <ViewAssortment/>},
                                         {path: "edit", element: <EditAssortment/>},
+                                    ],
+                                },
+                            ],
+                        },
+                        // Listings
+                        {
+                            path: "listings",
+                            element: <ListingsRootLayout/>,
+                            children: [
+                                {index: true, element: <Listings key="activeListings"/>, loader: () => listingsLoader(false, token)},
+                                {path: "archived", element: <Listings archived={true} key="archivedListings"/>, loader: () => listingsLoader(true, token)},
+                                {path: "new", element: <AddListing/>},
+                                {
+                                    path: ":id",
+                                    id: "listing-detail",
+                                    loader: ({ params, request }) => listingDetailLoader({ request, params, token }),
+                                    children: [
+                                        {index: true, element: <ViewListing/>},
+                                        {path: "edit", element: <EditListing/>},
+                                    ],
+                                },
+                            ],
+                        },
+                        // Posts
+                        {
+                            path: "posts",
+                            element: <PostsRootLayout/>,
+                            children: [
+                                {index: true, element: <Posts  key="activePosts"/>, loader: () => postsLoader(false,token)},
+                                {path: "archived", element: <Posts  key="archivedPosts"/>, loader: () => postsLoader(true,token)},
+                                {path: "new", element: <AddPost/>},
+                                {
+                                    path: ":id",
+                                    id: "post-detail",
+                                    loader: ({ params, request }) => postDetailLoader({ request, params, token }),
+                                    children: [
+                                        {index: true, element: <ViewPost/>},
+                                        {path: "delete", element: <ViewPost/>},
+                                        {path: "edit", element: <EditPost/>},
                                     ],
                                 },
                             ],
@@ -238,7 +279,7 @@ function App() {
                                 {
                                     path: ":id",
                                     id: "banner-detail",
-                                    loader: () => bannerDetailLoader(token),
+                                    loader: ({ params, request }) => bannerDetailLoader({ request, params, token }),
                                     children: [
                                         {index: true, element: <ViewBanner/>},
                                         {path: "edit", element: <EditBanner/>},
@@ -263,45 +304,7 @@ function App() {
                                 },
                             ],
                         },
-                        // Listings
-                        {
-                            path: "listings",
-                            element: <ListingsRootLayout/>,
-                            children: [
-                                {index: true, element: <Listings key="activeListings"/>, loader: () => listingsLoader(false, token)},
-                                {path: "archived", element: <Listings archived={true} key="archivedListings"/>, loader: () => listingsLoader(true, token)},
-                                {path: "new", element: <AddListing/>},
-                                {
-                                    path: ":id",
-                                    id: "listing-detail",
-                                    loader: () => listingDetailLoader(token),
-                                    children: [
-                                        {index: true, element: <ViewListing/>},
-                                        {path: "edit", element: <EditListing/>},
-                                    ],
-                                },
-                            ],
-                        },
-                        // Posts
-                        {
-                            path: "posts",
-                            element: <PostsRootLayout/>,
-                            children: [
-                                {index: true, element: <Posts  key="activePosts"/>, loader: () => postsLoader(false,token)},
-                                {path: "archived", element: <Posts  key="archivedPosts"/>, loader: () => postsLoader(true,token)},
-                                {path: "new", element: <AddPost/>},
-                                {
-                                    path: ":id",
-                                    id: "post-detail",
-                                    loader: () => postDetailLoader(token),
-                                    children: [
-                                        {index: true, element: <ViewPost/>},
-                                        {path: "delete", element: <ViewPost/>},
-                                        {path: "edit", element: <EditPost/>},
-                                    ],
-                                },
-                            ],
-                        },
+                        
                         // Add other app pages here
                     ],
                   },              

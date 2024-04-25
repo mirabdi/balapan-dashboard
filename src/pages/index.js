@@ -92,6 +92,7 @@ export { default as Assortments } from "./App/assortments/Assortments";
 export { default as AddAssortment } from "./App/assortments/AddAssortment";
 export { default as ViewAssortment } from "./App/assortments/ViewAssortment";
 export { default as EditAssortment } from "./App/assortments/EditAssortment";
+export { assortmentsLoader,  assortmentDetailLoader } from './App/assortments/Services';
 
 export {default as BannersRootLayout} from "./App/banners/BannersRoot";
 export {default as Banners} from "./App/banners/Banners";
