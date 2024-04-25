@@ -11,9 +11,10 @@ const Sidebar = () => {
   const [currentLinks, setCurrentLinks] = useState([]);
   const location = useLocation();
 
-  const isGroupActive = (item) => { 
-    return item.links.some((link) => location.pathname === `/${link.url}/`) || item.isOpen;
+  const isGroupActive = (item) => {
+    return item.links.some((link) => location.pathname.includes(`/${link.url}`)) || item.isOpen;
   };
+
   
 
   useEffect(() => {
@@ -91,7 +92,7 @@ const Sidebar = () => {
                       backgroundColor: isActive ? currentColor : "",
                     })}
                     className={({ isActive }) =>
-                      isActive ? activeLink : normalLink
+                      isActive || location.pathname.includes(link.url) ? activeLink : normalLink
                     }
                     end
                   >
