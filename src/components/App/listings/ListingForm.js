@@ -4,7 +4,7 @@ import { useStateContext } from 'contexts/ContextProvider';
 import { Button, ProductSelector } from 'components';
 import { BASE_URL } from 'data/config';
 
-function ListingForm({ currentListing }) {
+function ListingForm({ currentListing, parent_assortment }) {
   const navigate = useNavigate();
   const { currentColor, showToast, token } = useStateContext();
   const [listing, setListing] = useState(currentListing);

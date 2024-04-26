@@ -16,10 +16,15 @@ export { default as OrdersTemplate } from "./OrdersTemplate";
 
 // Utils:
 export { default as UnderConstruction } from "./UnderConstruction";
-export { default as TestPage } from "./Test";
 export { default as RootLayout } from "./Root";
 export { default as ErrorPage } from "./Error";
 export { default as AuthenticationPage } from "./Authentication";
+
+// Tests
+export { default as TestRootLayout } from "./Test/TestRoot";
+export { default as Test1Page } from "./Test/Test1";
+export { default as Test2Page } from "./Test/Test2";
+export { default as Test3Page } from "./Test/Test3";
 
 // Company 
 export { default as CompanyRootLayout } from "./Company/CompanyRoot";

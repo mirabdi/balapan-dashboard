@@ -3,7 +3,7 @@ import { useStateContext } from '../../../contexts/ContextProvider';
 import { BASE_URL } from '../../../data/config';
 
 
-function AssortmentItem({ assortment, onEdit}) {
+function AssortmentCard({ assortment, onEdit}) {
   const submit = useSubmit();
   const navigate = useNavigate();
   const { showToast } = useStateContext();
@@ -51,7 +51,10 @@ function AssortmentItem({ assortment, onEdit}) {
           <p className="text-gray-600 mt-2">{assortment.description}</p>
         </div>
         <div className="flex mt-4">
-          <Link to={"/app/assortments/"+assortment.id + "/edit/"} className="text-blue-600 hover:underline mr-2">Изменить</Link>
+          { onEdit 
+            ? <button onClick={onEdit} className="text-blue-600 hover:underline mr-2">Изменить</button>
+            : <Link to={"/app/assortments/"+assortment.id + "/edit/"} className="text-blue-600 hover:underline mr-2">Изменить</Link>
+        }
           <button onClick={() => archiveAssortment(assortment.id, !assortment.is_archived)}>{ assortment.is_archived ? "Восстановить" : "В архив"}</button>
         </div>
       </div>
@@ -59,4 +62,4 @@ function AssortmentItem({ assortment, onEdit}) {
   );
 }
 
-export default AssortmentItem;
+export default AssortmentCard;

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useStateContext } from "contexts/ContextProvider";
 import { BASE_URL } from "data/config";
+import { MyImage } from "components";
 
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
@@ -98,63 +99,66 @@ function ListingsList({ listings, title, selectHandler }) {
 
   };
 
-
+  if(currListings.length === 0) {
+    return <div className="flex flex-col items-center justify-center p-10">
+        <p className="text-center text-gray-600 text-lg font-semibold">Листингов не найден</p>
+    </div>
+  }
   return (
     
     <div className="bg-white py-8">
       <h1 className="text-3xl font-bold text-center text-gray-800 mb-10">{title}</h1>
       <DragDropContext onDragEnd={onDragEnd}>
-      
       <Droppable droppableId="listings">
-          {(provided, snapshot) => (
-            <ul 
-            className="max-w-4xl mx-auto"
-            {...provided.droppableProps} 
-            ref={provided.innerRef}
-            >
-            {currListings.map((listing, index) => (
-              <Draggable key={listing.id} draggableId={listing.title} index={index}>
-              {(provided, snapshot) => (
-                <li
-                ref={provided.innerRef}
-                key={listing.id}
-                {...provided.draggableProps}
-                {...provided.dragHandleProps}
-                className="mt-3 flex w-full items-center justify-between rounded-2xl bg-gray-100  p-3 shadow-3xl shadow-shadow-500 dark:!bg-navy-700 dark:shadow-none relative"
-              >
-                <div to={`/app/listings/${listing.id}`} onClick={()=>selectHandler(listing)} className="flex items-center hover:bg-gray-100 w-full text-decoration-none">
-                  <img src={listing.image_url} alt={listing.title} className="flex-none w-48 h-48 object-cover rounded-l-lg" />
-                  <div className="p-4 flex flex-col justify-between leading-normal">
-                    <h2 className="font-bold text-xl mb-2 text-gray-900">{listing.title}</h2>
-                    <p className="mb-2 text-gray-900">{listing.description}</p>
-                    <time className="text-sm text-gray-600">{listing.created}</time>
-                  </div>
-                </div>
-                {/* Buttons container */}
-                <div className="absolute top-0 right-0 m-4">
-                  {/* Archive Button */}
-                  <button
-                    onClick={() => archiveListing(listing.id, !listing.is_archived)}
-                    className="text-white bg-red-500 hover:bg-red-700 rounded px-3 py-1 mr-2"
-                  >
-                    {listing.is_archived ? "Восстановить" : "В архив"}
-                  </button>
-                  {/* Edit Button */}
-                  <Link
-                    to={`/app/listings/${listing.id}/edit/`}
-                    className="text-white bg-blue-500 hover:bg-blue-700 rounded px-3 py-1"
-                  >
-                    Edit
-                  </Link>
-                </div>
-              </li>
-              )}
-              </Draggable>
-            ))}
+          {(provided) => (
+             <div className="shadow-lg overflow-hidden border-b border-gray-400 sm:rounded-lg">
+             <table className="min-w-full divide-y divide-gray-200" {...provided.droppableProps} ref={provided.innerRef}>
+               <thead className="bg-gray-50">
+                 <tr>
+                   <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Наименование</th>
+                   <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Описание</th>
+                   <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Создан</th>
+                   <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Рисунок</th>
+                   <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"></th>
+                 </tr>
+               </thead>
+               <tbody className="bg-white divide-y divide-gray-200">
+                {currListings.map((listing, index) => (
+                  <Draggable to={`/app/listings/${listing.id}`} onClick={() => selectHandler(listing)} key={listing.id} draggableId={listing.id.toString()} index={index}>
+                  {(provided) => (
+                    <tr ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className="hover:bg-gray-100 hover:cursor-pointer" onClick={() => selectHandler(listing)}> 
+                      <td className="max-w-32 px-6 py-4  text-md  text-gray-500 ">{listing.title}</td>
+                      <td className="max-w-32  px-6 py-4 text-md  text-gray-500">{listing.description.slice(0, 100)}...</td>
+                      <td className=" px-6 py-4 text-md  text-gray-500">{new Date(listing.created).toLocaleDateString('ru-RU', {year: 'numeric',month: 'long',day: 'numeric'})}</td>
+                      <td className=" px-6 py-4">
+                        <MyImage src={listing.image_url} alt={listing.title}  height="h-32" width="w-32 "/>
+                      </td>
+                      <td className=" px-6 py-4">
+                        <button
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            archiveListing(listing.id, !listing.is_archived)}}
+                          className="text-white bg-red-500 hover:bg-red-700 rounded px-3 py-1 mr-2"
+                        >
+                          {listing.is_archived ? "Восстановить" : "В архив"}
+                        </button>
+                        <Link
+                          onClick={(event) => event.stopPropagation()}
+                          to={`/app/listings/${listing.id}/edit/`}
+                          className="text-white bg-blue-500 hover:bg-blue-700 rounded px-3 py-1"
+                        >
+                          Edit
+                        </Link>
+                      </td>
+                    </tr>
+                  )}
+                </Draggable>
+                ))}
             {provided.placeholder}
-            </ul>
-          )}
-          
+          </tbody>
+        </table>
+      </div>
+    )}
         </Droppable>
     </DragDropContext>
 

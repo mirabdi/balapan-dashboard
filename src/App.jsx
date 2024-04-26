@@ -7,7 +7,7 @@ import {
     Dashboard,
     UnderConstruction,
     ErrorPage,
-    TestPage,
+    TestRootLayout, Test1Page, Test2Page, Test3Page,
     OrdersTemplate,
     RootLayout,
     AuthenticationPage,
@@ -108,7 +108,7 @@ import { useStateContext } from "./contexts/ContextProvider";
 
 
 function App() {
-    const { token } = useStateContext();
+    const token = localStorage.getItem('token');
     const router = createBrowserRouter([
         {
             path: "/",
@@ -215,8 +215,18 @@ function App() {
                             path: "assortments", 
                             element: <AssortmentsRootLayout/>, 
                             children: [
-                                {index: true, element: <Assortments key="activeAssortments"/>, loader: () => assortmentsLoader(false, token)},
-                                {path: "archived", element: <Assortments archived={true} key="archivedAssortments"/>, loader: () => assortmentsLoader(true, token)},
+                                {   
+                                    index: true, 
+                                    id: 'active-assortments-list',
+                                    element: <Assortments key="activeAssortments"/>, 
+                                    loader: () => assortmentsLoader(false, token)
+                                },
+                                {   
+                                    path: "archived",
+                                    id: 'archived-assortments-list',
+                                    element: <Assortments archived={true} key="archivedAssortments"/>, 
+                                    loader: () => assortmentsLoader(true, token)
+                                },
                                 {path: "new", element: <AddAssortment/>},
                                 {
                                     path: ":id", 
@@ -322,7 +332,11 @@ function App() {
                 {path: "dashboard", element: <UnderConstruction/>},
                 {path: "orders", element: <OrdersTemplate/>},
                 {path: "customers", element: <Customers/>},
-                {path: "test", element: <TestPage/>},
+                {path: "test", element: <TestRootLayout/>, children: [
+                    {path: "1", element: <Test1Page/>},
+                    {path: "2", element: <Test2Page/>},
+                    {path: "3", element: <Test3Page/>},
+                ]},
     
                 {path: "kanban", element: <Kanban/>},
                 {path: "editor", element: <Editor/>},

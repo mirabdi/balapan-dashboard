@@ -3,20 +3,20 @@ import { Button } from 'components'
 import { BASE_URL } from 'data/config';
 import { useStateContext } from 'contexts/ContextProvider';
 
-const ProductSelector = ({product, onSelect}) => {
-  const [selectedProduct, setSelectedProduct] = useState(null);
+const ListingSelector = ({listing, onSelect}) => {
+  const [selectedListing, setSelectedListing] = useState(null);
   useEffect(() => {
-    setSelectedProduct(product);
-  }, [product]);
+    setSelectedListing(listing);
+  }, [listing]);
   
   const [barcodeOrTitle, setBarcodeOrTitle] = useState('');
   const [loading, setLoading] = useState(false);
   const { showToast, currentColor, token } = useStateContext();
 
-//   const loadProduct = async () => {
+//   const loadListing = async () => {
 //     setLoading(true);
 //     try {
-//       const response = await fetch(`${BASE_URL}/crm/admin-api/listings/get-product?query=${barcodeOrTitle}`, {
+//       const response = await fetch(`${BASE_URL}/crm/admin-api/listings/get-listing?query=${barcodeOrTitle}`, {
 //         method: 'GET',
 //         headers: {
 //           Authorization: `Token ${token}`,
@@ -25,9 +25,9 @@ const ProductSelector = ({product, onSelect}) => {
 //       const data = await response.json();
 //       if (response.ok) {
 //         onSelect(data);
-//         showToast({ title: 'Product Loaded', content: 'The product details have been loaded.', cssClass: 'e-toast-success', icon: 'e-success toast-icons' });
+//         showToast({ title: 'Listing Loaded', content: 'The listing details have been loaded.', cssClass: 'e-toast-success', icon: 'e-success toast-icons' });
 //       } else {
-//         throw new Error(data.message || 'Failed to load product.');
+//         throw new Error(data.message || 'Failed to load listing.');
 //       }
 //     } catch (error) {
 //       showToast({ title: 'Error', content: error.message, cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
@@ -35,21 +35,21 @@ const ProductSelector = ({product, onSelect}) => {
 //       setLoading(false);
 //     }
 //   };
-  console.log("product selector:", selectedProduct);
+  console.log("listing selector:", selectedListing);
   return (
-    selectedProduct 
+    selectedListing 
       ?  <div className="max-w-md mx-auto bg-gray-200 rounded-xl shadow-md overflow-hidden md:max-w-2xl mb-8 ">
           <div className="md:flex" >
             <div className="p-8">
               <div className="text-lg leading-tight font-medium text-black mt-2">
                 <p className="uppercase tracking-wide text-xl font-bold" style={{ color: currentColor }}>Выбранный товар:</p>
-                <span className="uppercase tracking-wide text-lg font-semibold" style={{ color: currentColor }}> {selectedProduct.name}</span>
+                <span className="uppercase tracking-wide text-lg font-semibold" style={{ color: currentColor }}> {selectedListing.name}</span>
               </div>
-              <p className="mt-1 text-gray-500">{selectedProduct.description || "Описание недоступно."}</p>
+              <p className="mt-1 text-gray-500">{selectedListing.description || "Описание недоступно."}</p>
               <div className="mt-4">
-                <div className="text-gray-600">Штрих-код: {selectedProduct.barcode}</div>
-                <div className="text-gray-600">Цена: {selectedProduct.price} сом.</div>
-                <div className="text-gray-600">Себестоимость: {selectedProduct.cost} сом.</div>
+                <div className="text-gray-600">Штрих-код: {selectedListing.barcode}</div>
+                <div className="text-gray-600">Цена: {selectedListing.price} сом.</div>
+                <div className="text-gray-600">Себестоимость: {selectedListing.cost} сом.</div>
               </div>
               <Button
                 color="white"
@@ -76,9 +76,9 @@ const ProductSelector = ({product, onSelect}) => {
             color="white"
             bgColor={currentColor}
             disabled={loading}
-            text={loading ? 'Loading...' : 'Load Product'}
+            text={loading ? 'Loading...' : 'Load Listing'}
             type="submit"
-            onClick={loadProduct}
+            onClick={loadListing}
             borderRadius="10px"
             className="m-2"
           />
@@ -86,4 +86,4 @@ const ProductSelector = ({product, onSelect}) => {
   )
 }
 
-export default ProductSelector
+export default ListingSelector

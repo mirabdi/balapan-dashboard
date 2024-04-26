@@ -24,9 +24,10 @@ const RightModal = ({ children, afterClose, title }) => {
                         <MdOutlineCancel />
                     </button>
                 </div>
-                {/* Scrollable Content */}
-                <div className="p-4">
-                    {children}
+                <div className="p-4 m-2 md:m-10 mt-24 md:p-10 bg-white rounded-3xl">
+                    <div className="mx-auto max-w-screen-xl bg-white">
+                        {children}
+                    </div>
                 </div>
             </div>
         </div>
