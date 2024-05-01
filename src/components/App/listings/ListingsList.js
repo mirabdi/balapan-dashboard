@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useStateContext } from "contexts/ContextProvider";
 import { BASE_URL } from "data/config";
@@ -18,6 +18,9 @@ const reorder = (list, startIndex, endIndex) => {
 
 function ListingsList({ listings, title, selectHandler }) {
   const [currListings, setCurrListings] = useState(listings);
+  useEffect(() => {
+    setCurrListings(listings);
+  }, [listings]);
   const navigate = useNavigate();
   const { showToast } = useStateContext();
   const archiveListing = async (id, is_archived) => {
@@ -44,18 +47,31 @@ function ListingsList({ listings, title, selectHandler }) {
   
         // Check the response status
         if (response.ok) {
-          showToast({ title: 'Success!', content: 'Listing has been successfully archived.', cssClass: 'e-toast-success', icon: 'e-success toast-icons' });
-          navigate(is_archived ? "/app/listings/archived" : "/app/listings/");  // Redirect based on the archive status
+          showToast({
+            title: 'Успех!',
+            content: 'листинг успешно архивировано.',
+            cssClass: 'e-toast-success',
+            icon: 'e-success toast-icons'
+          });
+          navigate(is_archived ? "/app/listings/archived" : "/app/listings/");
         } else {
-          // Throw an error if the server responded with a non-2xx status
           const errorData = await response.json();
-          showToast({ title: 'Error!', content: errorData.message || 'Could not archive listing.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
+          showToast({
+            title: 'Ошибка!',
+            content: errorData.message || 'Не удалось архивировать листинг.',
+            cssClass: 'e-toast-danger',
+            icon: 'e-error toast-icons'
+          });
         }
-      } catch (error) {
-        // Handle any errors that occurred during fetch
-        console.error("Fetch error:", error);
-        showToast({ title: 'Error!', content: 'Failed to communicate with server.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
-      }
+        } catch (error) {
+          console.error("Fetch error:", error);
+          showToast({
+            title: 'Ошибка!',
+            content: 'Не удалось связаться с сервером.',
+            cssClass: 'e-toast-danger',
+            icon: 'e-error toast-icons'
+          });
+        }
     }
   };
 
@@ -82,32 +98,43 @@ function ListingsList({ listings, title, selectHandler }) {
         });
     
         if (response.ok) {
-          // Only update state if the backend has successfully processed the request
-          showToast({ title: 'Success!', content: 'Listing order has been updated.', cssClass: 'e-toast-success', icon: 'e-success toast-icons' });
+          showToast({
+            title: 'Успех!',
+            content: 'Порядок листингов обновлен.',
+            cssClass: 'e-toast-success',
+            icon: 'e-success toast-icons'
+          });
         } else {
-          // If the server responds with an error, inform the user and do not update local state
           const errorData = await response.json();
-          showToast({ title: 'Error!', content: errorData.message || 'Failed to update listing order.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
+          showToast({
+            title: 'Ошибка!',
+            content: errorData.message || 'Не удалось обновить порядок листингов.',
+            cssClass: 'e-toast-danger',
+            icon: 'e-error toast-icons'
+          });
         }
-      } catch (error) {
-        // Handle any errors that occurred during fetch
-        showToast({ title: 'Error!', content: 'Failed to communicate with server.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
-        console.error("Fetch error:", error);
-        setCurrListings(currListings);
-      }
-      
-
+        } catch (error) {
+          showToast({
+            title: 'Ошибка!',
+            content: 'Не удалось связаться с сервером.',
+            cssClass: 'e-toast-danger',
+            icon: 'e-error toast-icons'
+          });
+          console.error("Fetch error:", error);
+          setCurrListings(currListings); // Assuming the function setCurrListings is part of handling the state.
+        }        
   };
 
   if(currListings.length === 0) {
-    return <div className="flex flex-col items-center justify-center p-10">
-        <p className="text-center text-gray-600 text-lg font-semibold">Листингов не найден</p>
+    return <div className="bg-white py-8">
+        <h1 className="text-3xl font-bold text-center text-gray-800 mb-10">{title}</h1>
+        <p className="text-center text-gray-400 text-lg font-semibold">Листингов не найден</p>
     </div>
   }
   return (
     
     <div className="bg-white py-8">
-      <h1 className="text-3xl font-bold text-center text-gray-800 mb-10">{title}</h1>
+      {title && <h1 className="text-3xl font-bold text-center text-gray-800 mb-10">{title}</h1>}
       <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="listings">
           {(provided) => (

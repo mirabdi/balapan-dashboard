@@ -1,44 +1,43 @@
-import { Link, useSubmit, useNavigate} from 'react-router-dom';
+import { Link, useSubmit, useNavigate } from 'react-router-dom';
 import { useStateContext } from '../../../contexts/ContextProvider';
 import { BASE_URL } from '../../../data/config';
 
-
-function BannerItem({ banner}) {
+function BannerItem({ banner }) {
   const submit = useSubmit();
   const navigate = useNavigate();
   const { showToast } = useStateContext();
   const archiveBanner = async (id, is_archived) => {
-      const confirmArchive = window.confirm("Are you sure you want to archive this banner?");
-      if (confirmArchive) {
-        try {
-          const url = `${BASE_URL}/crm/admin-api/banners`; 
-          const token = "token"; 
+    const confirmArchive = window.confirm("Вы уверены, что хотите архивировать этот баннер?");
+    if (confirmArchive) {
+      try {
+        const url = `${BASE_URL}/crm/admin-api/banners`;
+        const token = "token";  // Replace 'token' with your actual token
 
-          const formData = new FormData();
-          formData.append("id", id);
-          formData.append("is_archived", is_archived);
-          
-          const response = await fetch(url, {
-            method: "PUT", 
-            headers: {
-              Authorization: `Token ${token}`,
-            },
-            body: formData,
-          });
-    
-          if (response.ok) {
-            showToast({ title: 'Success!', content: 'Banner has been successfully archived.', cssClass: 'e-toast-success', icon: 'e-success toast-icons' });
-            navigate(is_archived ? "/app/banners/archived" : "/app/banners/"); 
-          } else {
-            const errorData = await response.json();
-            showToast({ title: 'Error!', content: errorData.message || 'Could not archive banner.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
-          }
-        } catch (error) {
-          console.error("Fetch error:", error);
-          showToast({ title: 'Error!', content: 'Failed to communicate with server.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
+        const formData = new FormData();
+        formData.append("id", id);
+        formData.append("is_archived", is_archived);
+
+        const response = await fetch(url, {
+          method: "PUT",
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+          body: formData,
+        });
+
+        if (response.ok) {
+          showToast({ title: 'Успех!', content: 'Баннер успешно архивирован.', cssClass: 'e-toast-success', icon: 'e-success toast-icons' });
+          navigate(is_archived ? "/app/banners/archived" : "/app/banners/");
+        } else {
+          const errorData = await response.json();
+          showToast({ title: 'Ошибка!', content: errorData.message || 'Не удалось архивировать баннер.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
         }
+      } catch (error) {
+        console.error("Fetch error:", error);
+        showToast({ title: 'Ошибка!', content: 'Не удалось связаться с сервером.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
       }
-    };
+    }
+  };
   console.log(banner)
 
   return (
@@ -51,7 +50,7 @@ function BannerItem({ banner}) {
           <p className="text-gray-600 mt-2">{banner.description}</p>
         </div>
         <div className="flex mt-4">
-          <Link to={"/app/banners/"+banner.id + "/edit/"} className="text-blue-600 hover:underline mr-2">Изменить</Link>
+          <Link to={"/app/banners/" + banner.id + "/edit/"} className="text-blue-600 hover:underline mr-2">Изменить</Link>
           <button onClick={() => archiveBanner(banner.id, !banner.is_archived)}>{ banner.is_archived ? "Восстановить" : "В архив"}</button>
         </div>
       </div>

@@ -79,6 +79,7 @@ export { default as CrmMap } from "./CRM/CrmMap";
 export { default as Orders } from "./CRM/Orders/Orders";
 export { default as OrderDetail } from "./CRM/Orders/OrderDetail";
 export { default as OrderRootLayout } from "./CRM/Orders/OrderRoot";
+export { orderDetailLoader,  ordersLoader } from './CRM/Orders/Services';
 
 export { default as NotificationRootLayout } from "./CRM/Notifications/NotificationRoot";
 export { default as Tags } from "./CRM/Notifications/Tags";

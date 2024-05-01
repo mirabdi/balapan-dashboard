@@ -2,6 +2,7 @@ import { Link, useNavigate} from 'react-router-dom';
 import { useStateContext } from '../../../contexts/ContextProvider';
 import { BASE_URL } from '../../../data/config';
 import { gridOrderStatus } from '../../../data/utils';
+import { MdRefresh } from 'react-icons/md';
 
 const OPaymentItem = ({ opayment }) => {
   const { token } = useStateContext();
@@ -131,7 +132,7 @@ const OPaymentItem = ({ opayment }) => {
                     updateStatus(opayment.id)}
                   }
                 >
-                  R
+                  <MdRefresh />
                 </button>
               </>
               }

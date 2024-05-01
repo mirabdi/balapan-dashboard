@@ -1,16 +1,17 @@
-import { Link, useSubmit, useNavigate} from 'react-router-dom';
+import { Link, useSubmit, useNavigate } from 'react-router-dom';
 import { useStateContext } from '../../../contexts/ContextProvider';
 
-function PostItem({ post, onEdit}) {
+function PostItem({ post, onEdit }) {
   const submit = useSubmit();
   const navigate = useNavigate();
   const { showToast } = useStateContext();
+  
   const archivePost = () => {
-    const confirmArchive = window.confirm("Are you sure you want to archive this post?");
+    const confirmArchive = window.confirm("Вы уверены, что хотите архивировать этот пост?");
     if (confirmArchive) {
       const response = submit({ id: post.id, is_archived: !post.is_archived }, { method: "put", action: "/app/posts/" + post.id + "/edit"}).then((response) => {
         console.log(response);
-        showToast({ title: 'Success!', content: 'Your message has been sent successfully.', cssClass: 'e-toast-success', icon: 'e-success toast-icons' });
+        showToast({ title: 'Успех!', content: 'Сообщение успешно отправлено.', cssClass: 'e-toast-success', icon: 'e-success toast-icons' });
         navigate("/app/posts/", { replace: true, state: { key: Date.now() } });
       });
     }
@@ -27,7 +28,7 @@ function PostItem({ post, onEdit}) {
           <p className="text-gray-600 mt-2">{post.description}</p>
         </div>
         <div className="flex mt-4">
-          <Link to={"/app/posts/"+post.id + "/edit/"} className="text-blue-600 hover:underline mr-2">Изменить</Link>
+          <Link to={"/app/posts/" + post.id + "/edit/"} className="text-blue-600 hover:underline mr-2">Изменить</Link>
           <button onClick={archivePost}>{ post.is_archived ? "Восстановить" : "В архив"}</button>
         </div>
       </div>

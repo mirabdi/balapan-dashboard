@@ -6,13 +6,13 @@ import { useLoaderData, Await } from 'react-router-dom';
 import { useStateContext} from '../../../contexts/ContextProvider';
 
 function OPayments() {
-  let title = "Активные сотрудники";
+  let title = "Активные чеки";
   const url = new URL(window.location.href);
   const lastSegment = url.pathname.split('/').pop();
   const [selectedOPayment, setSelectedOPayment] = useState(null);
   const { rightModal, setRightModal, showToast} = useStateContext();
   if(lastSegment === 'archived'){
-    title = "Архивные сотрудники";
+    title = "Архивные чеки";
   }
   const { opayments } = useLoaderData();
   return (

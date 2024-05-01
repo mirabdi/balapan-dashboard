@@ -34,12 +34,11 @@ function AssortmentCard({ assortment, onEdit}) {
             showToast({ title: 'Error!', content: errorData.message || 'Could not archive assortment.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
           }
         } catch (error) {
-          console.error("Fetch error:", error);
+          // console.error("Fetch error:", error);
           showToast({ title: 'Error!', content: 'Failed to communicate with server.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
         }
       }
     };
-  console.log(assortment)
 
   return (
     <div className="max-w-md mx-auto bg-gray-200 hover:bg-gray-100 rounded-lg shadow-lg overflow-hidden my-4 flex md:flex-row flex-col">

@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
-import {Sidebar, Navbar} from '../components/index';
-import ThemeSettings from '../components/ThemeSettings';
+import {Sidebar, Navbar, ThemeSettings} from '../components/index';
 import { TooltipComponent } from "@syncfusion/ej2-react-popups";
 import { FiSettings } from 'react-icons/fi';
 import { useStateContext } from "../contexts/ContextProvider";

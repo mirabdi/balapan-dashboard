@@ -4,7 +4,7 @@ function AddPost() {
   return (
     
     <div className="flex flex-col items-center justify-center">
-      <h1 className="text-2xl font-bold mb-8 pt-5">New Post</h1>
+      <h1 className="text-2xl font-bold mb-8 pt-5">Создать Новый Пост</h1>
       <PostForm method="post"/>
       </div>);
 }

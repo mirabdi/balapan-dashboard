@@ -5,7 +5,7 @@ import { AssortmentSelector, AssortmentForm, AssortmentsList } from 'components'
 
 const AssortmentEdit = ({assortment}) => {
   return (
-    <AssortmentSelector/>
+    <AssortmentSelector assortments={assortment.assortments}/>
   )
 }
 

@@ -1,52 +1,99 @@
-import React, {useState} from 'react'
-import { AssortmentForm, AssortmentsList, AssortmentSelector, ListingForm, RightModal, ListingsList, Button } from 'components';
-import { useRouteLoaderData } from 'react-router-dom';
+import React, {useEffect, useState} from 'react'
+import { AssortmentForm, AssortmentsList, AssortmentSelector, ListingForm, RightModal, ListingsList, Button, ListingSelector } from 'components';
+import { useRouteLoaderData, useNavigate } from 'react-router-dom';
 import { useStateContext } from 'contexts/ContextProvider';
+import { MdEdit, MdDelete, MdAddCircleOutline  } from 'react-icons/md';
 
 const EditAssortment = () => {
+  const navigate = useNavigate();
   const {assortment} = useRouteLoaderData('assortment-detail');
-  const data = useRouteLoaderData('active-assortments-list');
   const [mode, setMode ] = useState(null); 
-  console.log(data);
   const { rightModal, setRightModal, showToast, currentColor} = useStateContext();
-    return (
-        <div className="flex flex-col items-center justify-center">
-          <h1 className="text-2xl font-bold mb-8 pt-5">Edit Assortment</h1>
-          <AssortmentForm assortment={assortment}/>
-          <AssortmentsList title="Related Assortments" assortments={assortment.assortments} selectHandler={(assortment)=>{console.log(assortment); setRightModal(true)}}/>
-          <AssortmentSelector assortments={assortments} title="title" selectHandler={()=>console.log('title')}/>
-          <Button
+  const refreshPage = () => {
+    setMode(null);
+    navigate('/app/assortments/' + assortment.id + '/edit', {replace: true});
+  };
+  return (
+      <div className="flex flex-col items-center justify-center">
+        <h1 className="text-2xl font-bold mb-8 pt-5">Edit Assortment</h1>
+        <AssortmentForm assortment={assortment} afterAction={refreshPage}/>
+        <div className="flex justify-between items-center w-full">
+            <p className="text-3xl font-extrabold tracking-tight text-slate-900">
+                Related Assortments
+            </p>
+            <div>
+                <Button
                     color="white"
                     bgColor={currentColor}
-                    text="+ Ассортимент"
-                    onClick={()=>setMode('add_assortment')}
+                    icon={<MdAddCircleOutline size={30} />}
+                    onClick={() => setMode('add_assortment')}
                     borderRadius="10px"
                     className="m-2 font-bold py-2 px-4 rounded"
                 />
-          <Button
+                <Button
                     color="white"
                     bgColor={currentColor}
-                    text="+ Листинг"
+                    icon={<MdEdit size={30} />}
+                    onClick={() => setMode('edit_children_assortment')}
+                    borderRadius="10px"
+                    className="m-2 font-bold py-2 px-4 rounded"
+                />
+            </div>
+        </div>        
+        <AssortmentsList assortments={assortment.sub_assortments || []} selectHandler={(assortment)=>{setRightModal(true)}}/>
+
+        <div className="flex justify-between items-center w-full mt-10">
+            <p className="text-3xl font-extrabold tracking-tight text-slate-900">
+                Related Listings
+            </p>
+            <div>
+              <Button
+                    color="white"
+                    bgColor={currentColor}
+                    icon={<MdAddCircleOutline size={30} />}
                     onClick={()=>setMode('add_listing')}
                     borderRadius="10px"
                     className="m-2 font-bold py-2 px-4 rounded"
                 />
-          <ListingsList title="Related Listings" listings={assortment.listings} selectHandler={(listing)=>{console.log(listing); setRightModal(true)}}/>
-          { 
-            mode === 'add_assortment' 
-            && <RightModal title={"title"} afterClose={()=>setMode(null)}>
-                <AssortmentForm parent_assortment={assortment}/>
-              </RightModal>
-          }
-          { 
-            mode === 'add_listing' 
-            &&
-              <RightModal title={"title"} afterClose={()=>setMode(null)}>
-                <ListingForm parent_assortment={assortment}/>
-              </RightModal>
-          }
+                <Button
+                    color="white"
+                    bgColor={currentColor}
+                    icon={<MdEdit size={30} />}
+                    onClick={()=>setMode('edit_children_listing')}
+                    borderRadius="10px"
+                    className="m-2 font-bold py-2 px-4 rounded"
+                />
+              </div>
         </div>
-    );
+
+        <ListingsList listings={assortment.listings || []} selectHandler={(listing)=>{console.log(listing); setRightModal(true)}}/>
+        { 
+          mode === 'add_assortment' 
+          && <RightModal title={"Добавить Новый Ассортимент"} afterClose={refreshPage}>
+              <AssortmentForm parent_assortment={assortment} afterAction={refreshPage}/>
+            </RightModal>
+        }
+        { 
+          mode === 'edit_children_assortment' 
+          && <RightModal title={"Изменить Список Ассортиментов"} afterClose={refreshPage}>
+              <AssortmentSelector parent_assortment={assortment} title="AssortmentSelector" afterAction={refreshPage}/>
+            </RightModal>
+        }
+        { 
+          mode === 'add_listing' 
+          &&
+            <RightModal title={"Добавить Новый Листинг"} afterClose={refreshPage}>
+              <ListingForm parent_assortment={assortment}  afterAction={refreshPage}/>
+            </RightModal>
+        }
+        { 
+          mode === 'edit_children_listing' 
+          && <RightModal title={"Изменить Список Листингов"} afterClose={refreshPage}>
+              <ListingSelector parent_assortment={assortment} title="ListingSelector" afterAction={refreshPage}/>
+            </RightModal>
+        }
+      </div>
+  );
 }
 
 export default EditAssortment

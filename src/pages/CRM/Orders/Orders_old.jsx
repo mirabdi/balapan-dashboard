@@ -1,56 +1,86 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import {
+  GridComponent,
+  ColumnsDirective,
+  ColumnDirective,
+  Page,
+  Search,
+  Inject,
+  Toolbar
+} from "@syncfusion/ej2-react-grids";
+import { ToastComponent } from '@syncfusion/ej2-react-notifications';
+import { isNullOrUndefined } from '@syncfusion/ej2-base';
+import { ButtonComponent } from '@syncfusion/ej2-react-buttons';
 import axios from 'axios';
 import { RightModal, Header } from '../../../components';
 import { BASE_URL } from "../../../data/config";
 import { OrderDetail } from '../../../pages';
 import { useStateContext } from '../../../contexts/ContextProvider';
+import { DataManager, UrlAdaptor } from "@syncfusion/ej2-data";
+
+
 
 const Orders = ({status='ordered'}) => {
-  const [orders, setOrders] = useState([]);
+  const grid = useRef(null);
   const [selectedOrder, setSelectedOrder] = useState(null);
-  const { rightModal, setRightModal } = useStateContext();
-  const [dataManager, setDataManager] = useState(null);
+  const { rightModal, setRightModal, showToast} = useStateContext();
+  
+  // data handling for grid
+  class CustomAdaptor extends UrlAdaptor {
+    processResponse(data, ds, query, xhr, request, changes) {
+      if (xhr && xhr.status !== 200) {
+        // Handle HTTP errors
+        console.log('Data fetch error:', xhr.status, xhr.statusText);
+      }
+      // Continue with the default processResponse implementation
+      return super.processResponse(data, ds, query, xhr, request, changes);
+    }
 
+    beforeSend(dm, request, settings) {
+      // Preserve the existing beforeSend if any
+      if (this.pvt && this.pvt.beforeSend) {
+        this.pvt.beforeSend.apply(this, arguments);
+      }
+      request.onloadend = () => {
+        if (request.status < 200 || request.status >= 300) {
+          // Handle HTTP errors
+          showToast(toasts[2]);
+        }
+      };
+    }
+  }
+  const dataManager = new DataManager({
+    url: `${BASE_URL}/crm/admin-api/orders/status-${status}`,
+    adaptor: new CustomAdaptor(),
+    crossDomain: true,
+  });
+  
   useEffect(() => {
-    const newDataManager = new DataManager({
-      url: `${BASE_URL}/crm/admin-api/orders/list`,
-      adaptor: new UrlAdaptor(),
-      crossDomain: true,
-    });
-    setDataManager(newDataManager);
-  }, []);
+    if (grid.current) {
+      grid.current.refresh();
+    }
+  }, [dataManager]);
 
-
-
-  const handleRowClick = (order) => {
-    setSelectedOrder(order);
+  // open modal upon row selection
+  const handleRowSelected = ({ data }) => {
+    setSelectedOrder(data);
     setRightModal(true);
   };
 
 
-  const fetchOrders = async () => { 
-    try {
-      const response = await axios.post(`${BASE_URL}/crm/admin-api/orders/list`, {});
-      console.log(response.data); // Debug: Log the response data to ensure it's correct
-      setOrders(response.data.result || []); // Set orders to the result array from the response
-    } catch (error) {
-      console.error('Failed to fetch orders:', error);
-    }
-  };
 
-  useEffect(() => {
-    fetchOrders();
-  }, []);
-  
+  // handle status
   const updateOrderStatus = async (orderId, status) => {
     try {
-      await axios.put(`${BASE_URL}/crm/admin-api/orders/${orderId}`, {  });
-      await fetchOrders();
+      await axios.put(`${BASE_URL}/crm/admin-api/orders/${orderId}`, {status});
+      if (grid.current) {
+        grid.current.refresh();
+      }
+      showToast({ title: 'Success!', content: 'Your message has been sent successfully.', cssClass: 'e-toast-success', icon: 'e-success toast-icons' });
     } catch (error) {
       console.error('Failed to update order status:', error);
     }
   };
-  
   const statusToRussian = {
     cart: 'Корзина',
     ordered: 'Оформлен',
@@ -60,56 +90,55 @@ const Orders = ({status='ordered'}) => {
     completed: 'Завершен',
     canceled: 'Отменен',
   };
-
+  const statusTemplate = (props) => {
+    return (
+      <select
+        defaultValue={props.status}
+        onChange={(e) => {
+          e.stopPropagation();
+          updateOrderStatus(props.id, e.target.value);
+        }}
+        className="form-select block w-full"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {Object.entries(statusToRussian).map(([value, label]) => (
+          <option key={value} value={value}>{label}</option>
+        ))}
+      </select>
+    );
+  };
   return (
     <>
-    <Header category="Страница" title="Заказы" />
-    <div className="overflow-x-auto relative shadow-md sm:rounded-lg">
-      <table className="w-full text-sm text-left text-gray-500">
-        <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-          <tr>
-            <th scope="col" className="py-3 px-6">ID</th>
-            <th scope="col" className="py-3 px-6">Клиент</th>
-            <th scope="col" className="py-3 px-6">Магазин</th>
-            <th scope="col" className="py-3 px-6">Адрес</th>
-            <th scope="col" className="py-3 px-6">Дата</th>
-            <th scope="col" className="py-3 px-6">Количество</th>
-            <th scope="col" className="py-3 px-6">Сумма</th>
-            <th scope="col" className="py-3 px-6">Способ оплаты</th>
-            <th scope="col" className="py-3 px-6">Способ доставки</th>
-            <th scope="col" className="py-3 px-6">Статус</th>
-          </tr>
-        </thead>
-        <tbody>
-          {orders.map((order) => (
-            <tr key={order.id} className="bg-white border-b hover:bg-gray-50" onClick={() => handleRowClick(order)}>
-              <td className="py-4 px-6">{order.id}</td>
-              <td className="py-4 px-6">{order.client.name}</td>
-              <td className="py-4 px-6">{order.store ? order.store.name : 'N/A'}</td> 
-              <td className="py-4 px-6">{order.address.name}</td>
-              <td className="py-4 px-6">{new Date(order.ordered).toLocaleDateString()}</td>
-              <td className="py-4 px-6">{order.quantity}</td>
-              <td className="py-4 px-6">{order.sum}</td>
-              <td className="py-4 px-6">{order.payment_option}</td>
-              <td className="py-4 px-6">{order.delivery_option}</td>
-              <td className="py-4 px-6">
-                <select 
-                  defaultValue={order.status} 
-                  onClick={(e) => {e.stopPropagation();}}
-                  onChange={(e) => {
-                    e.stopPropagation();
-                    updateOrderStatus(order.id, e.target.value)
-                  }}
-                  className="form-select block w-full mt-1">
-                  {Object.entries(statusToRussian).map(([value, label]) => (
-                    <option key={value} value={value}>{label}</option>
-                  ))}
-                </select>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <Header category="Страница" title={"Заказы - " + statusToRussian[status]} />
+    <div className="overflow-x-auto relative shadow-md sm:rounded-lg text-lg">
+        <GridComponent dataSource={dataManager}
+                      allowPaging={true}
+                      allowSorting={true}
+                      toolbar={['Search']}
+                      rowSelected={handleRowSelected}
+                      ref={grid}>
+          <ColumnsDirective>
+            <ColumnDirective field='id' headerText='ID' width='100' textAlign='Center' />
+            <ColumnDirective field='client.name' headerText='Клиент' width='100' />
+            <ColumnDirective field='store.name' headerText='Магазин' width='100' />
+            <ColumnDirective field='address.name' headerText='Адрес' width='100' />
+            <ColumnDirective field='ordered' headerText='Дата' width='100' format='yMd' textAlign='Center' />
+            <ColumnDirective field='quantity' headerText='Количество' width='100' textAlign='Center' />
+            <ColumnDirective field='sum' headerText='Сумма' width='130' format='C2' textAlign='Center' />
+            <ColumnDirective field='payment_option' headerText='Способ оплаты' width='100' />
+            <ColumnDirective field='delivery_option' headerText='Способ доставки' width='100' />
+            <ColumnDirective
+              field='status'
+              headerText='Статус'
+              width='100'
+              textAlign='Center'
+              template={statusTemplate}
+              type='string'
+            />
+          </ColumnsDirective>
+          <Inject services={[Page, Search, Toolbar]} />
+        </GridComponent>
+      
         {rightModal && selectedOrder &&
         <RightModal title={"Заказ №" + selectedOrder.id} afterClose={() => setSelectedOrder(null)}>
            <OrderDetail order={selectedOrder} />

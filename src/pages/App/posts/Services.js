@@ -63,7 +63,7 @@ export function postsLoader(is_archived = false, token) {
 }
 
 
-export async function postDetailLoader({ request, params }, token) {
+export async function postDetailLoader({ request, params, token}) {
   const id = params.id;
 
   return defer({

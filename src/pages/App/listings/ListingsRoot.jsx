@@ -11,7 +11,7 @@ function ListingsRootLayout() {
     const getNavLinkStyle = ({ isActive, name }) => ({
         borderBottomColor: isActive || hoveredLink === name ? currentColor : 'transparent',
         color: isActive || hoveredLink === name ? currentColor : '#4B5563',
-        transition: 'color 1000ms, border-bottom-color 1000ms',
+        transition: 'color 300ms, border-bottom-color 300ms',
     });
 
     const links = [

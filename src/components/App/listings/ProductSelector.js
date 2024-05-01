@@ -5,13 +5,15 @@ import { useStateContext } from 'contexts/ContextProvider';
 
 const ProductSelector = ({product, onSelect}) => {
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [barcodeOrTitle, setBarcodeOrTitle] = useState('');
+  const { showToast, currentColor, token } = useStateContext();
+  
   useEffect(() => {
     setSelectedProduct(product);
   }, [product]);
   
-  const [barcodeOrTitle, setBarcodeOrTitle] = useState('');
-  const [loading, setLoading] = useState(false);
-  const { showToast, currentColor, token } = useStateContext();
+ 
 
   const loadProduct = async () => {
     setLoading(true);
@@ -25,12 +27,12 @@ const ProductSelector = ({product, onSelect}) => {
       const data = await response.json();
       if (response.ok) {
         onSelect(data);
-        showToast({ title: 'Product Loaded', content: 'The product details have been loaded.', cssClass: 'e-toast-success', icon: 'e-success toast-icons' });
+        showToast({ title: 'Товар загружен', content: 'Информация о товаре успешно загружена.', cssClass: 'e-toast-success', icon: 'e-success toast-icons' });
       } else {
-        throw new Error(data.message || 'Failed to load product.');
+        throw new Error(data.message || 'Не удалось загрузить товар.');
       }
     } catch (error) {
-      showToast({ title: 'Error', content: error.message, cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
+      showToast({ title: 'Ошибка', content: error.message, cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
     } finally {
       setLoading(false);
     }
@@ -45,7 +47,7 @@ const ProductSelector = ({product, onSelect}) => {
                 <p className="uppercase tracking-wide text-xl font-bold" style={{ color: currentColor }}>Выбранный товар:</p>
                 <span className="uppercase tracking-wide text-lg font-semibold" style={{ color: currentColor }}> {selectedProduct.name}</span>
               </div>
-              <p className="mt-1 text-gray-500">{selectedProduct.description || "Описание недоступно."}</p>
+              <p className="mt-1 text-gray-500">{selectedProduct.description || "Описание отсутствует."}</p>
               <div className="mt-4">
                 <div className="text-gray-600">Штрих-код: {selectedProduct.barcode}</div>
                 <div className="text-gray-600">Цена: {selectedProduct.price} сом.</div>
@@ -64,19 +66,19 @@ const ProductSelector = ({product, onSelect}) => {
         </div>
       :
         <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">Barcode or Title</label>
+          <label className="block text-gray-700 text-sm font-bold mb-2">Штрих-код или Название</label>
           <input
             type="text"
             value={barcodeOrTitle}
             onChange={(e) => setBarcodeOrTitle(e.target.value)}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            placeholder="Enter Barcode or Title"
+            placeholder="Введите штрих-код или название"
           />
           <Button
             color="white"
             bgColor={currentColor}
             disabled={loading}
-            text={loading ? 'Loading...' : 'Load Product'}
+            text={loading ? 'Загрузка...' : 'Загрузить товар'}
             type="submit"
             onClick={loadProduct}
             borderRadius="10px"

@@ -63,7 +63,7 @@ export function bannersLoader(is_archived = false, token) {
 }
 
 
-export async function bannerDetailLoader({ request, params }, token) {
+export async function bannerDetailLoader({ request, params, token }) {
   const id = params.id;
 
   return defer({

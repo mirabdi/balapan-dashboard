@@ -1,26 +1,28 @@
 import React, { useState } from "react";
-import { Outlet, NavLink } from "react-router-dom";
-import { Header } from "../../../components";
+import { Outlet, NavLink, useNavigate } from "react-router-dom";
+import { Header, Button } from "../../../components";
 import { useStateContext } from "contexts/ContextProvider";
 import { hover } from "@syncfusion/ej2-react-schedule";
+
 
 function OPaymentRootLayout() {
     const { currentColor } = useStateContext();  
     const [hoveredLink, setHoveredLink] = useState(null);
     console.log(hoveredLink)
+    const navigate = useNavigate();
     const links = [
         {
             'name': 'История',
             'path': '',
         },
         {
-            'name': 'Новая',
-            'path': 'new',
-        },
-        {
             'name': 'Архив',
             'path': 'archived',
-        }
+        },
+        {
+            'name': 'Новый чек',
+            'path': 'new',
+        },
     ];
 
     const getNavLinkStyle = ({ isActive, name }) => (
@@ -34,7 +36,17 @@ function OPaymentRootLayout() {
     return (
         <>
             <div className="mx-auto max-w-screen-xl bg-white">
+                <div className="flex justify-between items-center">
                 <Header category="Страница" title="Оплаты" />
+                <Button
+                    color="white"
+                    bgColor={currentColor}
+                    text="+ чек"
+                    onClick={() => navigate('/pos/opay/new')}
+                    borderRadius="10px"
+                    className="m-2 font-bold py-2 px-4 rounded"
+                />
+            </div>
                 <div className="bg-white py-2 px-3 border-b">
                     <nav className="flex flex-wrap gap-4">
                         {links.map((link) => (

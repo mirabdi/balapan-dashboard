@@ -66,6 +66,7 @@ import {
     OrderRootLayout,
     Orders,
     OrderDetail,
+    ordersLoader, orderDetailLoader,
     // Notifications
     NotificationRootLayout,
     Tags,
@@ -187,14 +188,54 @@ function App() {
                     {index: true, element: <CRMStats/>},
                     {path: "map", element: <CrmMap/>},
                     {path: "orders", element: <OrderRootLayout/>, children: [
-                        {index: true, element: <Orders status="ordered" key="ordered"/>},
-                        {path: "cart", element: <Orders status="cart" key="cart"/>},
-                        {path: "ordered", element: <Orders status="ordered" key="ordered"/>},
-                        {path: "preparing", element: <Orders status="preparing" key="preparing"/>},
-                        {path: "ready", element: <Orders status="ready" key="ready"/>},
-                        {path: "delivering", element: <Orders status="delivering" key="delivering"/>},
-                        {path: "completed", element: <Orders status="completed" key="completed"/>},
-                        {path: "canceled", element: <Orders status="canceled" key="canceled"/>},
+                        {index: true, element: <Orders status="all" key="all"/>, loader: () => ordersLoader("all", token)},
+                        {   
+                            path: "all", 
+                            element: <Orders status="all" key="all"/>, 
+                            loader: () => ordersLoader("all", token)
+                        },
+                        {
+                            path: "cart", 
+                            element: <Orders status="cart" key="cart"/>,
+                            id: "cart-orders-list",
+                            loader: () => ordersLoader("cart", token),
+                        },
+                        {
+                            path: "ordered", 
+                            element: <Orders status="ordered" key="ordered"/>,
+                            id: "ordered-orders-list",
+                            loader: () => ordersLoader("ordered", token),
+                        },
+                        {
+                            path: "preparing", 
+                            element: <Orders status="preparing" key="preparing"/>,
+                            id: "preparing-orders-list",
+                            loader: () => ordersLoader("preparing", token),
+                        },
+                        {
+                            path: "ready", 
+                            element: <Orders status="ready" key="ready"/>,
+                            id: "ready-orders-list",
+                            loader: () => ordersLoader("ready", token),
+                        },
+                        {
+                            path: "delivering", 
+                            element: <Orders status="delivering" key="delivering"/>,
+                            id: "delivering-orders-list",
+                            loader: () => ordersLoader("delivering", token),
+                        },
+                        {
+                            path: "completed", 
+                            element: <Orders status="completed" key="completed"/>,
+                            id: "completed-orders-list",
+                            loader: () => ordersLoader("completed", token),
+                        },
+                        {
+                            path: "canceled", 
+                            element: <Orders status="canceled" key="canceled"/>,
+                            id: "canceled-orders-list",
+                            loader: () => ordersLoader("canceled", token),
+                        },                        
                         {path: ":id", element: <OrderDetail/>},
                     ]},
                     {path: "notifications", element: <NotificationRootLayout/>, children:[
@@ -218,14 +259,25 @@ function App() {
                                 {   
                                     index: true, 
                                     id: 'active-assortments-list',
-                                    element: <Assortments key="activeAssortments"/>, 
-                                    loader: () => assortmentsLoader(false, token)
+                                    element: <Assortments status="active"  key="activeAssortments"/>, 
+                                    loader: () => assortmentsLoader("active", token)
+                                },
+                                {   
+                                    path: "active",
+                                    element: <Assortments status="active" key="activeAssortments"/>, 
+                                    loader: () => assortmentsLoader("active", token)
+                                },
+                                {   
+                                    path: "catalog",
+                                    id: 'catalog-assortments-list',
+                                    element: <Assortments status="catalog" key="catalogAssortments"/>, 
+                                    loader: () => assortmentsLoader("catalog", token)
                                 },
                                 {   
                                     path: "archived",
                                     id: 'archived-assortments-list',
-                                    element: <Assortments archived={true} key="archivedAssortments"/>, 
-                                    loader: () => assortmentsLoader(true, token)
+                                    element: <Assortments status="archived" key="archivedAssortments"/>, 
+                                    loader: () => assortmentsLoader("archived", token)
                                 },
                                 {path: "new", element: <AddAssortment/>},
                                 {
@@ -234,7 +286,7 @@ function App() {
                                     loader: ({ params, request }) => assortmentDetailLoader({ request, params, token }),
                                     children: [
                                         {index: true, element: <ViewAssortment/>},
-                                        {path: "edit", element: <EditAssortment/>},
+                                        {path: "edit", element: <EditAssortment key={new Date().toISOString()}/>},
                                     ],
                                 },
                             ],
@@ -314,6 +366,10 @@ function App() {
                                 },
                             ],
                         },
+                        {
+                            path: "qas",
+                            element: <UnderConstruction/>
+                        }
                         
                         // Add other app pages here
                     ],
@@ -330,7 +386,7 @@ function App() {
                     ]},
                 ]},
                 {path: "dashboard", element: <UnderConstruction/>},
-                {path: "orders", element: <OrdersTemplate/>},
+                {path: "orders-template", element: <OrdersTemplate/>},
                 {path: "customers", element: <Customers/>},
                 {path: "test", element: <TestRootLayout/>, children: [
                     {path: "1", element: <Test1Page/>},

@@ -1,89 +1,137 @@
-import React, { useState, useEffect } from 'react'
-import { Button } from 'components'
-import { BASE_URL } from 'data/config';
-import { useStateContext } from 'contexts/ContextProvider';
+import { Suspense, useEffect, useState } from "react";
+import { Link, useNavigate, useLoaderData, Await } from "react-router-dom";
+import { useStateContext } from "contexts/ContextProvider";
+import { MyImage } from "components";
+import { Button } from 'components';
+import { BASE_URL } from "data/config";
 
-const ListingSelector = ({listing, onSelect}) => {
-  const [selectedListing, setSelectedListing] = useState(null);
+
+function ListingSelector({ parent_assortment, title, afterAction }) {
+  const [listings, setListings] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { showToast, token, currentColor } = useStateContext();
+
+  const handleCheckboxChange = (listingId) => {
+    setListings(prev => prev.map(item => 
+      item.id === listingId ? { ...item, included: !item.included } : item
+    ));
+  };
+
+  const localCancelHandler = () => {
+    const result = window.confirm('Вы уверены, что хотите отменить изменения? Все несохраненные данные будут потеряны.');
+    if(result){
+      afterAction();
+    }
+  }
   useEffect(() => {
-    setSelectedListing(listing);
-  }, [listing]);
-  
-  const [barcodeOrTitle, setBarcodeOrTitle] = useState('');
-  const [loading, setLoading] = useState(false);
-  const { showToast, currentColor, token } = useStateContext();
+    const fetchListings = async () => {
+      try {
+        let url = BASE_URL + "/crm/admin-api/listings?parent_id=" + parent_assortment.id;
+        const response = await fetch(url,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Token ${token}`,
+            },
+          });
+        const data = await response.json();
+        setListings(data.response);
+      } catch (error) {
+        showToast({ title: 'Error!', content: error || 'Something.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons'});
+      }
+    }
+    fetchListings();
+  }, [parent_assortment]);
 
-//   const loadListing = async () => {
-//     setLoading(true);
-//     try {
-//       const response = await fetch(`${BASE_URL}/crm/admin-api/listings/get-listing?query=${barcodeOrTitle}`, {
-//         method: 'GET',
-//         headers: {
-//           Authorization: `Token ${token}`,
-//         },
-//       });
-//       const data = await response.json();
-//       if (response.ok) {
-//         onSelect(data);
-//         showToast({ title: 'Listing Loaded', content: 'The listing details have been loaded.', cssClass: 'e-toast-success', icon: 'e-success toast-icons' });
-//       } else {
-//         throw new Error(data.message || 'Failed to load listing.');
-//       }
-//     } catch (error) {
-//       showToast({ title: 'Error', content: error.message, cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-  console.log("listing selector:", selectedListing);
+  const saveChanges = async () => {
+    const result = window.confirm('Вы уверены, что хотите сохранить изменения?');
+    if (!result) return;
+    try {
+      let url = `${BASE_URL}/crm/admin-api/assortments/${parent_assortment.id}/edit`;
+      const response = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Token ${token}`,
+        },
+        body: JSON.stringify({ listings: listings })
+      });
+      if (response.ok) {
+        showToast({ title: 'Success!', content: 'All changes saved successfully.', cssClass: 'e-toast-success', icon: 'e-success toast-icons' });
+      } else {
+        const errorData = await response.json();
+        showToast({ title: 'Failed to save!', content: errorData.message, cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
+      }
+    } catch (error) {
+      showToast({ title: 'Error!', content: error.toString(), cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
+    }
+    afterAction();
+  };
   return (
-    selectedListing 
-      ?  <div className="max-w-md mx-auto bg-gray-200 rounded-xl shadow-md overflow-hidden md:max-w-2xl mb-8 ">
-          <div className="md:flex" >
-            <div className="p-8">
-              <div className="text-lg leading-tight font-medium text-black mt-2">
-                <p className="uppercase tracking-wide text-xl font-bold" style={{ color: currentColor }}>Выбранный товар:</p>
-                <span className="uppercase tracking-wide text-lg font-semibold" style={{ color: currentColor }}> {selectedListing.name}</span>
-              </div>
-              <p className="mt-1 text-gray-500">{selectedListing.description || "Описание недоступно."}</p>
-              <div className="mt-4">
-                <div className="text-gray-600">Штрих-код: {selectedListing.barcode}</div>
-                <div className="text-gray-600">Цена: {selectedListing.price} сом.</div>
-                <div className="text-gray-600">Себестоимость: {selectedListing.cost} сом.</div>
-              </div>
+    <Suspense fallback={<p className="flex flex-wrap">Loading...</p>}>
+           <div className="bg-white py-8">
+            <h1 className="text-3xl font-bold text-center text-gray-800 mb-10">{title}</h1>
+            <div className="shadow-lg overflow-hidden border-b border-gray-400 sm:rounded-lg">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">  
+                  <tr>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"></th>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Наименование</th>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">ИКОНКА</th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {listings.map((listing) => (
+                    <tr 
+                      key={listing.id} 
+                      onClick={() => handleCheckboxChange(listing.id)} 
+                      className={`${
+                        listing.included ? 'bg-blue-100' : 'bg-white'
+                      } hover:bg-blue-200 cursor-pointer transition duration-150 ease-in-out select-none`}
+                    >
+                      <td className="px-6 py-4 whitespace-nowrap text-md text-gray-500">
+                        <input 
+                          type="checkbox" 
+                          checked={listing.included} 
+                          onChange={(event) =>{
+                            event.stopPropagation();
+                            handleCheckboxChange(listing.id);
+                          }}
+                          className="checked:bg-blue-500 checked:border-transparent focus:outline-none"
+                        />
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-md text-gray-700 overflow-hidden text-overflow-ellipsis max-w-xs" title={listing.title}>
+                        {listing.title}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-md text-gray-700">
+                        <MyImage src={listing.image_url} alt={listing.title}  height="h-32" />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+
+              </table>
+            </div>
+            <div className="float-right">
+              <button type="button" onClick={localCancelHandler} disabled={isSubmitting} className='mr-3'>
+                Cancel
+              </button>
               <Button
                 color="white"
                 bgColor={currentColor}
-                text={'Изменить'}
-                onClick={() => onSelect(null)}
+                disabled={isSubmitting}
+                text={isSubmitting ? 'Submitting...' : 'Save'}
+                type="button"
+                onClick={saveChanges}
                 borderRadius="10px"
                 className="m-2"
               />
             </div>
           </div>
-        </div>
-      :
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">Barcode or Title</label>
-          <input
-            type="text"
-            value={barcodeOrTitle}
-            onChange={(e) => setBarcodeOrTitle(e.target.value)}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            placeholder="Enter Barcode or Title"
-          />
-          <Button
-            color="white"
-            bgColor={currentColor}
-            disabled={loading}
-            text={loading ? 'Loading...' : 'Load Listing'}
-            type="submit"
-            onClick={loadListing}
-            borderRadius="10px"
-            className="m-2"
-          />
-        </div>
-  )
+      </Suspense>
+   
+  );
 }
 
-export default ListingSelector
+export default ListingSelector;

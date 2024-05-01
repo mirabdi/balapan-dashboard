@@ -7,8 +7,11 @@ import { BASE_URL } from '../../../data/config';
 
 
 
-async function loadAssortmentsList(status='active', token) {
-  let url = BASE_URL + "/crm/admin-api/assortments" + "?status=" + status;
+async function loadOrdersList(status = "ordered", token) {
+  let url = BASE_URL + "/crm/admin-api/orders";
+  if (status) {
+    url += "?status=" + status;
+  }
   const response = await fetch(url, {
     method: "GET",
     headers: {
@@ -18,7 +21,7 @@ async function loadAssortmentsList(status='active', token) {
   });
   if (!response.ok) {
     throw json(
-      { message: "Failed to load assortments" },
+      { message: "Failed to load orders" },
       {
         status: response.status,
         statusText: response.statusText,
@@ -30,8 +33,8 @@ async function loadAssortmentsList(status='active', token) {
   }
 }
 
-async function loadAssortmentDetail(id, token) {
-    const response = await fetch(BASE_URL + "/crm/admin-api/assortments?id=" + id, {
+async function loadOrderDetail(id, token) {
+    const response = await fetch(BASE_URL + "/crm/admin-api/orders?id=" + id, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -41,7 +44,7 @@ async function loadAssortmentDetail(id, token) {
   
     if (!response.ok) {
       throw json(
-        { message: "Could not fetch details for selected assortment." },
+        { message: "Could not fetch details for selected order." },
         {
           status: 500,
         }
@@ -53,17 +56,17 @@ async function loadAssortmentDetail(id, token) {
   }
 
 // Loaders
-export function assortmentsLoader(status='active', token) {
+export function ordersLoader(status = "ordered", token) {
   return defer({
-    assortments: loadAssortmentsList(status, token),
+    orders: loadOrdersList(status, token),
   });
 }
 
 
-export async function assortmentDetailLoader({ request, params, token }) {
+export async function orderDetailLoader({ request, params, token }) {
   const id = params.id;
 
   return defer({
-    assortment: await loadAssortmentDetail(id, token),
+    order: await loadOrderDetail(id, token),
   });
 }

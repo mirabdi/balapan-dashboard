@@ -4,7 +4,6 @@ import { useStateContext } from 'contexts/ContextProvider';
 import { Button } from 'components';
 import { BASE_URL } from 'data/config';
 
-
 function BannerForm({ method = 'POST', banner }) {
   const navigate = useNavigate();
   const { showToast, currentColor, token } = useStateContext();
@@ -30,15 +29,15 @@ function BannerForm({ method = 'POST', banner }) {
 
       if (!response.ok) {
         const errorData = await response.json();
-        showToast({ title: 'Error!', content: errorData.message || 'Failed to save banner.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
+        showToast({ title: 'Ошибка!', content: errorData.message || 'Не удалось сохранить баннер.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
         setIsSubmitting(false);
         return;
       }
 
-      showToast({ title: 'Success!', content: 'Banner saved successfully.', cssClass: 'e-toast-success', icon: 'e-success toast-icons' });
+      showToast({ title: 'Успех!', content: 'Баннер успешно сохранен.', cssClass: 'e-toast-success', icon: 'e-success toast-icons' });
       navigate('/app/banners/');
     } catch (error) {
-      showToast({ title: 'Error!', content: 'Network error or invalid response.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
+      showToast({ title: 'Ошибка!', content: 'Сетевая ошибка или неверный ответ.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
       console.error('Fetch error:', error);
       setIsSubmitting(false);
     }
@@ -47,7 +46,7 @@ function BannerForm({ method = 'POST', banner }) {
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-xl px-8" encType="multipart/form-data">
        <div className="mb-4">
-        <label htmlFor="title" className="block text-gray-700 text-sm font-bold mb-2">Title</label>
+        <label htmlFor="title" className="block text-gray-700 text-sm font-bold mb-2">Название</label>
         <input
           id="title"
           type="text"
@@ -58,7 +57,7 @@ function BannerForm({ method = 'POST', banner }) {
         />
       </div>
       <div className='mb-4 flex items-center'>
-        <label htmlFor="image" className="block text-gray-700 text-sm font-bold mb-2 mr-2">Image</label>
+        <label htmlFor="image" className="block text-gray-700 text-sm font-bold mb-2 mr-2">Изображение</label>
         <input
           type="file"
           id="image"
@@ -69,7 +68,7 @@ function BannerForm({ method = 'POST', banner }) {
         {banner && <img src={banner.image_url} alt="Banner" className="w-24 h-24 object-cover rounded-md" />}
       </div>
       <div className='mb-4'>
-        <label htmlFor="description" className="block text-gray-700 text-sm font-bold mb-2">Description</label>
+        <label htmlFor="description" className="block text-gray-700 text-sm font-bold mb-2">Описание</label>
         <textarea
           id="description"
           name="description"
@@ -82,13 +81,13 @@ function BannerForm({ method = 'POST', banner }) {
       {/*  buttons VVV */}
       <div className="float-right">
         <button type="button" onClick={cancelHandler} disabled={isSubmitting} className='mr-3'>
-          Cancel
+          Отмена
         </button>
         <Button
           color="white"
           bgColor={currentColor}
           disabled={isSubmitting}
-          text={isSubmitting ? 'Submitting...' : 'Save'}
+          text={isSubmitting ? 'Отправка...' : 'Сохранить'}
           type="submit"
           borderRadius="10px"
           className="m-2"

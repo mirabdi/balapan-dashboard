@@ -5,13 +5,16 @@ import { Button } from 'components';
 import { BASE_URL } from 'data/config';
 import { AssortmentCard } from 'components'; 
 
-function AssortmentForm({assortment, parent_assortment}) {
+function AssortmentForm({assortment, parent_assortment, afterAction}) {
   const navigate = useNavigate();
   const { showToast, currentColor, token } = useStateContext();
   const [isCatalog, setIsCatalog] = useState(assortment ? assortment.is_catalog : false);
   const [isEditing, setIsEditing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  console.log("form", isEditing, assortment)
+  if(!isCatalog && parent_assortment){
+    setIsCatalog(true);
+  }
+  // console.log("AssortmentForm", isEditing, assortment.id)
 
   if(!assortment && !isEditing) {
     setIsEditing(true);
@@ -28,13 +31,11 @@ function AssortmentForm({assortment, parent_assortment}) {
     event.preventDefault();
     const formData = new FormData(event.target);
     formData.append('id', assortment ? assortment.id : '');
+    formData.append('parent_id', parent_assortment ? parent_assortment.id : null);
     setIsSubmitting(true);
 
     try {
-      let url = `${BASE_URL}/crm/admin-api/assortments`;
-      if(parent_assortment){
-        url = `${BASE_URL}/crm/admin-api/assortments/${parent.id}/sub-assortments`;
-      }
+      const url = `${BASE_URL}/crm/admin-api/assortments`;
       const response = await fetch(url, {
         method: assortment ? 'PUT' : 'POST',
         headers: {
@@ -51,7 +52,17 @@ function AssortmentForm({assortment, parent_assortment}) {
       }
 
       showToast({ title: 'Success!', content: 'Assortment saved successfully.', cssClass: 'e-toast-success', icon: 'e-success toast-icons' });
-      navigate('/app/assortments/');
+      setIsSubmitting(false);
+      if(afterAction){
+        afterAction();
+        return;
+      }
+      if(parent_assortment){
+        navigate(`/app/assortments/${parent_assortment.id}/edit`);
+      }
+      else{
+        navigate('/app/assortments/');
+      }
     } catch (error) {
       showToast({ title: 'Error!', content: 'Network error or invalid response.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
       console.error('Fetch error:', error);

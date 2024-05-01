@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useStateContext } from "contexts/ContextProvider";
 import { BASE_URL } from "data/config";
@@ -9,15 +9,21 @@ const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
   const [removed] = result.splice(startIndex, 1);
   result.splice(endIndex, 0, removed);
+  const priorities = list.map((item) => item.priority);
+  priorities.sort((a, b) => a - b);
   for (let i = 0; i < result.length; i++) {
-    result[i].priority = i;
+    result[i].priority = priorities[i];
   }
   return result;
 };
 
 
+
 function AssortmentsList({ assortments, title, selectHandler }) {
   const [currAssortments, setCurrAssortments] = useState(assortments);
+  useEffect(() => {
+    setCurrAssortments(assortments);
+  }, [assortments]);
   const navigate = useNavigate();
   const { showToast, token } = useStateContext();
   const archiveAssortment = async (id, is_archived) => {
@@ -86,16 +92,18 @@ function AssortmentsList({ assortments, title, selectHandler }) {
 
 
   };
+  
   if(currAssortments.length === 0) {
-    return <div className="flex flex-col items-center justify-center p-10">
-        <p className="text-center text-gray-600 text-lg font-semibold">Ассортиментов не найдено</p>
+    return <div className="bg-white py-8">
+        <h1 className="text-3xl font-bold text-center text-gray-800 mb-10">{title}</h1>
+        <p className="text-center text-gray-400 text-lg font-semibold">Ассортиментов не найдено</p>
     </div>
   }
 
   return (
 
     <div className="bg-white py-8">
-      <h1 className="text-3xl font-bold text-center text-gray-800 mb-10">{title}</h1>
+      {title && <h1 className="text-3xl font-bold text-center text-gray-800 mb-10">{title}</h1>}
           <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId="assortments">
               {(provided) => (

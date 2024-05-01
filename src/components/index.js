@@ -1,23 +1,23 @@
 import { fromJSON } from "postcss";
 
-export { default as Button } from "./MyButton";
+export { default as Button } from "./Others/MyButton";
 export { default as MyImage } from "./Utils/MyImage";
-export { default as ThemeSettings } from "./ThemeSettings";
+export { default as ThemeSettings } from "./Others/ThemeSettings";
 
 
 // Navbar
-export { default as Cart } from "./Cart";
-export { default as Chat } from "./Chat";
-export { default as Notification } from "./Notification";
-export { default as UserProfile } from "./UserProfile";
+export { default as Cart } from "./Others/Cart";
+export { default as Chat } from "./Others/Chat";
+export { default as Notification } from "./Others/Notification";
+export { default as UserProfile } from "./Others/UserProfile";
 
 // Charts
 export { default as SparkLine } from "./Charts/SparkLine";
 export { default as LineChart } from "./Charts/LineChart";
 export { default as Stacked } from "./Charts/Stacked";
 export { default as Pie } from "./Charts/Pie";
-export { default as ChartsHeader } from "./ChartsHeader";
-export { default as Filter } from "./Filter";
+export { default as ChartsHeader } from "./Others/ChartsHeader";
+export { default as Filter } from "./Others/Filter";
 
 // Table
 export { default as Pagination } from "./Table/Pagination";
@@ -51,7 +51,9 @@ export { default as PartiesNavigation } from "./Parties/PartiesNavigation";
 // CRM
 export { default as NotificationNavigation } from "./CRM/NotificationNavigation";
 export { default as OrderNavigation } from "./CRM/OrderNavigation";
-
+export { default as OrdersList } from "./CRM/Orders/OrdersList";
+export { default as OrderItem } from "./CRM/Orders/OrderItem";
+export { default as OrderForm } from "./CRM/Orders/OrderForm";
 
 // POS
 export { default as OPaymentForm } from "./Pos/OPayments/OPaymentForm";

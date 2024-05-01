@@ -27,15 +27,31 @@ function ListingItem({ listing, onEdit}) {
           });
     
           if (response.ok) {
-            showToast({ title: 'Success!', content: 'Listing has been successfully archived.', cssClass: 'e-toast-success', icon: 'e-success toast-icons' });
+            showToast({ 
+              title: 'Успех!', 
+              content: 'Листинг успешно архивирован.', 
+              cssClass: 'e-toast-success', 
+              icon: 'e-success toast-icons' 
+            });
             navigate(is_archived ? "/app/listings/archived" : "/app/listings/"); 
           } else {
             const errorData = await response.json();
-            showToast({ title: 'Error!', content: errorData.message || 'Could not archive listing.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
+            showToast({ 
+              title: 'Ошибка!', 
+              content: errorData.message || 'Не удалось архивировать листинг.', 
+              cssClass: 'e-toast-danger', 
+              icon: 'e-error toast-icons' 
+            });
           }
         } catch (error) {
           console.error("Fetch error:", error);
-          showToast({ title: 'Error!', content: 'Failed to communicate with server.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
+          showToast({
+            title: 'Ошибка!',
+            content: 'Не удалось связаться с сервером.',
+            cssClass: 'e-toast-danger',
+            icon: 'e-error toast-icons'
+          });
+          
         }
       }
     };

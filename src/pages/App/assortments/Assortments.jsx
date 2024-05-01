@@ -2,20 +2,25 @@ import { useEffect, useState } from 'react';
 // import AssortmentsList from "../../../components/App/assortments/AssortmentsList";
 import { Suspense} from 'react';
 import { RightModal, AssortmentsList, AssortmentCard } from 'components';
-import { useLoaderData, Await } from 'react-router-dom';
+import { useLoaderData, Await, useNavigate } from 'react-router-dom';
 import { useStateContext} from '../../../contexts/ContextProvider';
 
-function Assortments() {
-  let title = "Активные ассортименты";
-  const url = new URL(window.location.href);
-  const lastSegment = url.pathname.split('/').pop();
+
+function Assortments({ status }) {
+  const navigate = useNavigate();
   const [selectedAssortment, setSelectedAssortment] = useState(null);
   const { rightModal, setRightModal, showToast} = useStateContext();
-  if(lastSegment === 'archived'){
-    title = "Архивные ассортименты";
-  }
-  const loaderId = lastSegment + '-assortments-list'
+  const loaderId = status + '-assortments-list'
   const { assortments } = useLoaderData(loaderId);
+  const getTitle = (status) => {
+    switch (status) {
+      case 'all': return 'Все ассортименты';
+      case 'active': return 'Активные ассортименты';
+      case 'archived': return 'Архивные ассортименты';
+      case 'catalog': return 'Каталог';
+    }
+  }
+  const title = getTitle(status);
 
   return (
     <>
@@ -32,7 +37,11 @@ function Assortments() {
         </Await>
       </Suspense>
       {rightModal && selectedAssortment &&
-        <RightModal title={"Ассортимент: "+selectedAssortment.title} afterClose={()=>setSelectedAssortment(null)}>
+        <RightModal title={"Ассортимент: "+selectedAssortment.title} afterClose={()=>{
+            setSelectedAssortment(null);
+            navigate(`/app/assortments/${status}`, { replace: true });
+          }
+        }>
           <Suspense fallback={<p style={{ textAlign: 'center' }}>Loading...</p>}>
             <Await resolve={selectedAssortment}>
               {(loadedAssortment) => <AssortmentCard assortment={loadedAssortment} />}

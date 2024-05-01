@@ -20,7 +20,6 @@ const Sidebar = () => {
   useEffect(() => {
     if(user && user.sections){
       const parsedLinks = convertLinks(user.sections);
-      console.log(parsedLinks);
       setCurrentLinks(parsedLinks);
 
     }
@@ -39,6 +38,10 @@ const Sidebar = () => {
     });
     setCurrentLinks(newLinks);
   };
+
+  const isLinkActive = (isActive, link) => {
+    return isActive || location.pathname === `${link}` || location.pathname.includes(`${link}/archived`) || location.pathname.includes(`${link}/new`);
+  }
 
   const activeLink =
     "flex items-center gap-5 pl-4 pt-3 pb-2.5 rounded-lg  text-white  text-md m-2";
@@ -83,16 +86,16 @@ const Sidebar = () => {
                    onClick={() => toggleGroup(item.title)}>
                     {item.title}
                 </p>
-                {(isGroupActive(item) )&& item.links.map((link) => (
+                {(isGroupActive(item) ) && item.links.map((link) => (
                   <NavLink
                     to={`/${link.url}/`}
                     key={link.name}
                     onClick={handleCloseSideBar}
                     style={({ isActive }) => ({
-                      backgroundColor: isActive ? currentColor : "",
+                      backgroundColor: isLinkActive(isActive, link.url) ? currentColor : "",
                     })}
                     className={({ isActive }) =>
-                      isActive || location.pathname.includes(link.url) ? activeLink : normalLink
+                      isLinkActive(isActive, link.url) ? activeLink : normalLink
                     }
                     end
                   >

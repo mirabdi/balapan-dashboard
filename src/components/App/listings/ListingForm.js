@@ -4,18 +4,20 @@ import { useStateContext } from 'contexts/ContextProvider';
 import { Button, ProductSelector } from 'components';
 import { BASE_URL } from 'data/config';
 
-function ListingForm({ currentListing, parent_assortment }) {
+function ListingForm({ currentListing, parent_assortment, afterAction }) {
   const navigate = useNavigate();
   const { currentColor, showToast, token } = useStateContext();
   const [listing, setListing] = useState(currentListing);
-  const [loading, setLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const cancelHandler = () => {
+    if(afterAction){
+      afterAction();
+      return;
+    }
     navigate('/app/listings/');
   };
 
-  // Handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsSubmitting(true);
@@ -23,6 +25,7 @@ function ListingForm({ currentListing, parent_assortment }) {
     try {
       const formData = new FormData(event.target);
       formData.append('product_id', listing.product.id);
+      formData.append('parent_id', parent_assortment ? parent_assortment.id : null);
       const response = await fetch(`${BASE_URL}/crm/admin-api/listings${currentListing ? `/${currentListing.id}` : ''}`, {
         method: currentListing ? 'PUT' : 'POST',
         headers: {
@@ -33,19 +36,23 @@ function ListingForm({ currentListing, parent_assortment }) {
 
       if (!response.ok) {
         const errorData = await response.json();
-        showToast({ title: 'Error!', content: errorData.message || 'Failed to save listing.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
+        showToast({ title: 'Ошибка!', content: errorData.message || 'Не удалось сохранить листинг.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
         return;
       }
 
-      showToast({ title: 'Success!', content: 'Listing saved successfully.', cssClass: 'e-toast-success', icon: 'e-success toast-icons' });
+      showToast({ title: 'Успех!', content: 'Листинг успешно сохранен.', cssClass: 'e-toast-success', icon: 'e-success toast-icons' });
+      if(afterAction){
+        afterAction();
+        return;
+      }
       navigate('/app/listings/');
     } catch (error) {
-      showToast({ title: 'Error!', content: 'Network error or invalid response.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
+      console.log(error);
+      showToast({ title: 'Ошибка!', content: 'Сетевая ошибка или неверный ответ.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
     } finally {
       setIsSubmitting(false);
     }
   };
-
 
   const product = listing ? listing.product : null;
   return (
@@ -81,8 +88,9 @@ function ListingForm({ currentListing, parent_assortment }) {
                 id="sale_price"
                 type="number"
                 name="sale_price"
-                defaultValue={listing ? listing.sale_price : ''}
+                defaultValue={listing ? listing.sale_price : 0}
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                step="0.01"
               />
             </div>
             <div className="mb-4">
@@ -91,8 +99,9 @@ function ListingForm({ currentListing, parent_assortment }) {
                 id="bonus"
                 type="number"
                 name="bonus"
-                defaultValue={listing ? listing.bonus : ''}
+                defaultValue={listing ? listing.bonus : 0}
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                step="0.01"
               />
             </div>
             <div className="mb-4">
@@ -101,8 +110,9 @@ function ListingForm({ currentListing, parent_assortment }) {
                 id="discount_percent"
                 type="number"
                 name="discount_percent"
-                defaultValue={listing ? listing.discount_percent : ''}
+                defaultValue={listing ? listing.discount_percent : 0}
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                step="0.01"
               />
             </div>
             <div className="mb-4">
@@ -117,12 +127,12 @@ function ListingForm({ currentListing, parent_assortment }) {
             </div>
             <div className="float-right">
               <button type="button" onClick={cancelHandler} disabled={isSubmitting} className="mr-3 bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
-                Cancel
+                Отмена
               </button>
               <Button
                 color="white"
                 bgColor={currentColor}
-                text={isSubmitting ? 'Submitting...' : 'Save'}
+                text={isSubmitting ? 'Отправка...' : 'Сохранить'}
                 type="submit"
                 borderRadius="10px"
                 disabled={isSubmitting}
