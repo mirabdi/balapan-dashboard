@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useStateContext } from 'contexts/ContextProvider';
 import { Button } from 'components';
 import { BASE_URL } from 'data/config';
-import { AssortmentCard } from 'components'; 
+import { AssortmentCard } from 'components';
 
 function AssortmentForm({assortment, parent_assortment, afterAction}) {
   const navigate = useNavigate();
@@ -11,17 +11,16 @@ function AssortmentForm({assortment, parent_assortment, afterAction}) {
   const [isCatalog, setIsCatalog] = useState(assortment ? assortment.is_catalog : false);
   const [isEditing, setIsEditing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  if(!isCatalog && parent_assortment){
+  if (!isCatalog && parent_assortment) {
     setIsCatalog(true);
   }
-  // console.log("AssortmentForm", isEditing, assortment.id)
 
-  if(!assortment && !isEditing) {
+  if (!assortment && !isEditing) {
     setIsEditing(true);
   }
 
   const cancelHandler = () => {
-    if(assortment){
+    if (assortment) {
       setIsEditing(false);
       return;
     }
@@ -46,25 +45,24 @@ function AssortmentForm({assortment, parent_assortment, afterAction}) {
 
       if (!response.ok) {
         const errorData = await response.json();
-        showToast({ title: 'Error!', content: errorData.message || 'Failed to save assortment.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
+        showToast({ title: 'Ошибка!', content: errorData.message || 'Не удалось сохранить ассортимент.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
         setIsSubmitting(false);
         return;
       }
 
-      showToast({ title: 'Success!', content: 'Assortment saved successfully.', cssClass: 'e-toast-success', icon: 'e-success toast-icons' });
+      showToast({ title: 'Успех!', content: 'Ассортимент успешно сохранен.', cssClass: 'e-toast-success', icon: 'e-success toast-icons' });
       setIsSubmitting(false);
-      if(afterAction){
+      if (afterAction) {
         afterAction();
         return;
       }
-      if(parent_assortment){
+      if (parent_assortment) {
         navigate(`/app/assortments/${parent_assortment.id}/edit`);
-      }
-      else{
+      } else {
         navigate('/app/assortments/');
       }
     } catch (error) {
-      showToast({ title: 'Error!', content: 'Network error or invalid response.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
+      showToast({ title: 'Ошибка!', content: 'Сетевая ошибка или недействительный ответ.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
       console.error('Fetch error:', error);
       setIsSubmitting(false);
     }
@@ -72,12 +70,12 @@ function AssortmentForm({assortment, parent_assortment, afterAction}) {
 
   return (
     <>
-      { !isEditing ? 
-      <AssortmentCard assortment={assortment} onEdit={()=>setIsEditing(true)}/>
+      {!isEditing ?
+      <AssortmentCard assortment={assortment} onEdit={() => setIsEditing(true)} />
       :
       <form onSubmit={handleSubmit} className="w-full max-w-xl px-8" encType="multipart/form-data">
         <div className="mb-4">
-          <label htmlFor="title" className="block text-gray-700 text-sm font-bold mb-2">Title</label>
+          <label htmlFor="title" className="block text-gray-700 text-sm font-bold mb-2">Название</label>
           <input
             id="title"
             type="text"
@@ -88,7 +86,7 @@ function AssortmentForm({assortment, parent_assortment, afterAction}) {
           />
         </div>
         <div className='mb-4 flex items-center'>
-          <label htmlFor="image" className="block text-gray-700 text-sm font-bold mb-2 mr-2">Image</label>
+          <label htmlFor="image" className="block text-gray-700 text-sm font-bold mb-2 mr-2">Изображение</label>
           <input
             type="file"
             id="image"
@@ -96,10 +94,10 @@ function AssortmentForm({assortment, parent_assortment, afterAction}) {
             className="shadow w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             accept="image/*"
           />
-          {(assortment &&  assortment.image_url) && <img src={assortment.image_url} alt="Assortment image" className="w-24 h-24 object-cover rounded-md" />}
+          {(assortment && assortment.image_url) && <img src={assortment.image_url} alt="Изображение ассортимента" className="w-24 h-24 object-cover rounded-md" />}
         </div>
         <div className='mb-4'>
-          <label htmlFor="description" className="block text-gray-700 text-sm font-bold mb-2">Description</label>
+          <label htmlFor="description" className="block text-gray-700 text-sm font-bold mb-2">Описание</label>
           <textarea
             id="description"
             name="description"
@@ -115,7 +113,7 @@ function AssortmentForm({assortment, parent_assortment, afterAction}) {
           </div>
           {isCatalog &&
             <div className='mb-4 flex items-center'>
-                <label htmlFor="catalog_icon" className="block text-gray-700 text-sm font-bold mb-2 mr-2">Значок Каталога</label>
+                <label htmlFor="catalog_icon" className="block text-gray-700 text-sm font-bold mb-2 mr-2">Значок каталога</label>
                 <input
                 type="file"
                 id="catalog_icon"
@@ -123,21 +121,21 @@ function AssortmentForm({assortment, parent_assortment, afterAction}) {
                 className="shadow w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 accept="image/*"
                 />
-                {assortment&& assortment.catalog_icon && <img src={assortment.catalog_icon} alt="Assortment catalog_icon" className="w-24 h-24 object-cover rounded-md" />}
+                {assortment && assortment.catalog_icon && <img src={assortment.catalog_icon} alt="Значок каталога ассортимента" className="w-24 h-24 object-cover rounded-md" />}
             </div>
           }
         </div>
-        {/*  buttons VVV */}
+        {/* buttons VVV */}
         <div className="float-right">
         
           <button type="button" onClick={cancelHandler} disabled={isSubmitting} className='mr-3'>
-            Cancel
+            Отмена
           </button>
           <Button
             color="white"
             bgColor={currentColor}
             disabled={isSubmitting}
-            text={isSubmitting ? 'Submitting...' : 'Save'}
+            text={isSubmitting ? 'Отправка...' : 'Сохранить'}
             type="submit"
             borderRadius="10px"
             className="m-2"

@@ -24,6 +24,7 @@ function ListingForm({ currentListing, parent_assortment, afterAction }) {
     
     try {
       const formData = new FormData(event.target);
+      formData.append('id', listing.id);
       formData.append('product_id', listing.product.id);
       formData.append('parent_id', parent_assortment ? parent_assortment.id : null);
       const response = await fetch(`${BASE_URL}/crm/admin-api/listings${currentListing ? `/${currentListing.id}` : ''}`, {

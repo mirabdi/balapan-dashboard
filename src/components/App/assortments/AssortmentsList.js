@@ -17,8 +17,6 @@ const reorder = (list, startIndex, endIndex) => {
   return result;
 };
 
-
-
 function AssortmentsList({ assortments, title, selectHandler }) {
   const [currAssortments, setCurrAssortments] = useState(assortments);
   useEffect(() => {
@@ -27,7 +25,7 @@ function AssortmentsList({ assortments, title, selectHandler }) {
   const navigate = useNavigate();
   const { showToast, token } = useStateContext();
   const archiveAssortment = async (id, is_archived) => {
-    const confirmArchive = window.confirm("Are you sure you want to archive this assortment?");
+    const confirmArchive = window.confirm("Вы уверены, что хотите архивировать этот ассортимент?");
     if (confirmArchive) {
       try {
         const url = `${BASE_URL}/crm/admin-api/assortments`;
@@ -43,15 +41,15 @@ function AssortmentsList({ assortments, title, selectHandler }) {
         });
 
         if (response.ok) {
-          showToast({ title: 'Success!', content: 'Assortment has been successfully archived.', cssClass: 'e-toast-success', icon: 'e-success toast-icons' });
+          showToast({ title: 'Успех!', content: 'Ассортимент успешно архивирован.', cssClass: 'e-toast-success', icon: 'e-success toast-icons' });
           navigate(is_archived ? "/app/assortments/archived" : "/app/assortments/");
         } else {
           const errorData = await response.json();
-          showToast({ title: 'Error!', content: errorData.message || 'Could not archive assortment.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
+          showToast({ title: 'Ошибка!', content: errorData.message || 'Не удалось архивировать ассортимент.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
         }
       } catch (error) {
         console.error("Fetch error:", error);
-        showToast({ title: 'Error!', content: 'Failed to communicate with server.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
+        showToast({ title: 'Ошибка!', content: 'Не удалось связаться с сервером.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
       }
     }
   };
@@ -79,21 +77,19 @@ function AssortmentsList({ assortments, title, selectHandler }) {
       });
 
       if (response.ok) {
-        showToast({ title: 'Success!', content: 'Assortment order has been updated.', cssClass: 'e-toast-success', icon: 'e-success toast-icons' });
+        showToast({ title: 'Успех!', content: 'Порядок ассортиментов обновлен.', cssClass: 'e-toast-success', icon: 'e-success toast-icons' });
       } else {
         const errorData = await response.json();
-        showToast({ title: 'Error!', content: errorData.message || 'Failed to update assortment order.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
+        showToast({ title: 'Ошибка!', content: errorData.message || 'Не удалось обновить порядок ассортиментов.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
       }
     } catch (error) {
-      showToast({ title: 'Error!', content: 'Failed to communicate with server.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
+      showToast({ title: 'Ошибка!', content: 'Не удалось связаться с сервером.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
       console.error("Fetch error:", error);
       setCurrAssortments(currAssortments);
     }
-
-
   };
-  
-  if(currAssortments.length === 0) {
+
+  if (currAssortments.length === 0) {
     return <div className="bg-white py-8">
         <h1 className="text-3xl font-bold text-center text-gray-800 mb-10">{title}</h1>
         <p className="text-center text-gray-400 text-lg font-semibold">Ассортиментов не найдено</p>
@@ -101,7 +97,6 @@ function AssortmentsList({ assortments, title, selectHandler }) {
   }
 
   return (
-
     <div className="bg-white py-8">
       {title && <h1 className="text-3xl font-bold text-center text-gray-800 mb-10">{title}</h1>}
           <DragDropContext onDragEnd={onDragEnd}>
@@ -116,38 +111,39 @@ function AssortmentsList({ assortments, title, selectHandler }) {
                         <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Создан</th>
                         <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Рисунок</th>
                         <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Иконка</th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">LIST</th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Действия</th>
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
                       {currAssortments.map((assortment, index) => (
-                        <Draggable to={`/app/assortments/${assortment.id}`} onClick={() => selectHandler(assortment)} key={assortment.id} draggableId={assortment.id.toString()} index={index}>
+                        <Draggable key={assortment.id} draggableId={assortment.id.toString()} index={index}>
                           {(provided) => (
-                            <tr ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className="hover:bg-gray-100 hover:cursor-pointer" onClick={() => selectHandler(assortment)}> 
-                              <td className=" px-6 py-4 text-md  text-gray-500 ">{assortment.title}</td>
-                              <td className=" px-6 py-4 text-md  text-gray-500">{assortment.description.slice(0, 100)}...</td>
-                              <td className=" px-6 py-4 text-md  text-gray-500">{new Date(assortment.created).toLocaleDateString('ru-RU', {year: 'numeric',month: 'long',day: 'numeric'})}</td>
-                              <td className=" px-6 py-4 whitespace-nowrap">
-                                <MyImage src={assortment.image_url} alt={assortment.title}  height="h-32" width="w-32 "/>
+                            <tr ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className="hover:bg-gray-100 hover:cursor-pointer" onClick={() => selectHandler(assortment)}>
+                              <td className="px-6 py-4 text-md text-gray-500">{assortment.title}</td>
+                              <td className="px-6 py-4 text-md text-gray-500">{assortment.description.slice(0, 100)}...</td>
+                              <td className="px-6 py-4 text-md text-gray-500">{new Date(assortment.created).toLocaleDateString('ru-RU', { year: 'numeric', month: 'long', day: 'numeric' })}</td>
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <MyImage src={assortment.image_url} alt={assortment.title} height="h-32" width="w-32" />
                               </td>
-                              <td className=" px-6 py-4 whitespace-nowrap">
-                                <MyImage src={assortment.icon_url} alt={assortment.title}  height="h-32" width="w-32"/>
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <MyImage src={assortment.icon_url} alt={assortment.title} height="h-32" width="w-32" />
                               </td>
-                              <td className=" px-6 py-4 whitespace-nowrap">
+                              <td className="px-6 py-4 whitespace-nowrap">
                                 <button
                                   onClick={(event) => {
                                     event.stopPropagation();
-                                    archiveAssortment(assortment.id, !assortment.is_archived)}}
+                                    archiveAssortment(assortment.id, !assortment.is_archived);
+                                  }}
                                   className="text-white bg-red-500 hover:bg-red-700 rounded px-3 py-1 mr-2"
                                 >
-                                  {assortment.is_archived ? "Восстановить" : "В архив"}
+                                  {assortment.is_archived ? "Восстановить" : "Архивировать"}
                                 </button>
                                 <Link
                                   onClick={(event) => event.stopPropagation()}
-                                  to={`/app/assortments/${assortment.id}/edit/`}
+                                  to={`/app/assortments/${assortment.id}/edit`}
                                   className="text-white bg-blue-500 hover:bg-blue-700 rounded px-3 py-1"
                                 >
-                                  Edit
+                                  Редактировать
                                 </Link>
                               </td>
                             </tr>
@@ -161,7 +157,6 @@ function AssortmentsList({ assortments, title, selectHandler }) {
               )}
             </Droppable>
           </DragDropContext>
-
     </div>
   );
 }

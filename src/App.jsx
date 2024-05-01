@@ -109,7 +109,7 @@ import { useStateContext } from "./contexts/ContextProvider";
 
 
 function App() {
-    const token = localStorage.getItem('token');
+    const { token } = useStateContext();
     const router = createBrowserRouter([
         {
             path: "/",

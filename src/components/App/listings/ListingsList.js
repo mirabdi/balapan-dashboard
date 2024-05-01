@@ -9,8 +9,10 @@ const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
   const [removed] = result.splice(startIndex, 1);
   result.splice(endIndex, 0, removed);
+  const priorities = list.map((item) => item.priority);
+  priorities.sort((a, b) => a - b);
   for (let i = 0; i < result.length; i++) {
-    result[i].priority = i;
+    result[i].priority = priorities[i];
   }
   return result;
 };
@@ -24,7 +26,8 @@ function ListingsList({ listings, title, selectHandler }) {
   const navigate = useNavigate();
   const { showToast } = useStateContext();
   const archiveListing = async (id, is_archived) => {
-    const confirmArchive = window.confirm("Are you sure you want to archive this listing?");
+    let confirmMessage = is_archived ? "Вы уверены, что хотите архивировать этот листинг?" :  "Вы уверены, что хотите восстановить этот листинг?" ;
+    const confirmArchive = window.confirm(confirmMessage);
     if (confirmArchive) {
       try {
         // Create the URL for the request

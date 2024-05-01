@@ -62,9 +62,11 @@ function ListingItem({ listing, onEdit}) {
       <img className="md:flex-shrink-0 w-full md:w-48 h-48 object-cover" src={listing.image_url} alt={listing.title} />
       <div className="p-4 flex flex-col justify-between">
         <div>
-          <h3 className="text-xl text-gray-800 font-bold">{listing.title}</h3>
-          <time className="text-sm text-gray-600">{listing.date}</time>
-          <p className="text-gray-600 mt-2">{listing.description}</p>
+          <h3 className="text-xl text-gray-800 font-bold">Название - {listing.title}</h3>
+          <p className="text-gray-600 mt-2">Описание - {listing.description}</p>
+          <p className="text-gray-600">Цена - {listing.sale_price}</p>
+          <p className="text-gray-600">Bonus- {listing.bonus}</p>
+          <p className="text-gray-600">Скидка - {listing.discount_percent}</p>
         </div>
         <div className="flex mt-4">
           <Link to={"/app/listings/"+listing.id + "/edit/"} className="text-blue-600 hover:underline mr-2">Изменить</Link>
