@@ -6,6 +6,9 @@ import { BASE_URL } from "data/config";
 import { MyImage } from "components";
 
 const reorder = (list, startIndex, endIndex) => {
+  if (startIndex === endIndex) {
+    return list;
+  }
   const result = Array.from(list);
   const [removed] = result.splice(startIndex, 1);
   result.splice(endIndex, 0, removed);
@@ -55,9 +58,9 @@ function AssortmentsList({ assortments, title, selectHandler }) {
   };
 
   const onDragEnd = async (result) => {
-    if (!result.destination) {
+    if (!result.destination || result.destination.index === result.source.index) {
       return;
-    }
+    } 
 
     const newAssortments = reorder(
       currAssortments,

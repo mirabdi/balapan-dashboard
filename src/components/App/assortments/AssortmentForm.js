@@ -26,6 +26,8 @@ function AssortmentForm({assortment, parent_assortment, afterAction}) {
     }
     navigate('/app/assortments/');
   };
+
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData(event.target);
@@ -57,6 +59,10 @@ function AssortmentForm({assortment, parent_assortment, afterAction}) {
         return;
       }
       if (parent_assortment) {
+        if(afterAction){
+          afterAction();
+          return;
+        }
         navigate(`/app/assortments/${parent_assortment.id}/edit`);
       } else {
         navigate('/app/assortments/');

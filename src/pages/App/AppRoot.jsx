@@ -6,7 +6,7 @@ function AppRootLayout(){
     const activeClass = 'mx-2 px-4 py-2 text-balapanBlue font-bold border-b-2 border-balapanBlue';
     return(
         <>
-            <nav className="flex justify-center bg-gray-200 shadow-md py-4">
+            <nav className="flex justify-center bg-gray-200 shadow-md py-4 dark:bg-secondary-dark-bg">
                 <NavLink 
                 to="/app/assortments/" 
                 className={({ isActive }) =>
@@ -40,7 +40,7 @@ function AppRootLayout(){
                 }
                 >Бренды</NavLink>
             </nav>
-            <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
+            <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl dark:bg-secondary-dark-bg">
                 <Outlet/>
             </div>
         </>

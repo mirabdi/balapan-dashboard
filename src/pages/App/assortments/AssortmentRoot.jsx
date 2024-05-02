@@ -35,7 +35,7 @@ function AssortmentsRootLayout() {
 
     return (
         <>
-        <div className="mx-auto max-w-screen-xl bg-white">
+        <div className="mx-auto max-w-screen-xl bg-white dark:bg-secondary-dark-bg">
             <div className="flex justify-between items-center">
                 <Header category="Страница" title="Ассортименты" />
                 <Button

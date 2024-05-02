@@ -1,25 +1,56 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { BASE_URL } from 'data/config';
 import { useStateContext } from 'contexts/ContextProvider';
-const QA = () => {
-    const { showToast, token } = useStateContext();
-    const [qas, setQas] = useState([])
-    useEffect(() => {
-        const fetchData = async () => {
-            const url = BASE_URL + '/crm/admin-api/qas'
-            const response = await fetch(url, {
-                method: 'GET',
-                headers: {
-                    authorization: `Token ${token}`,
-                }});
-            const data = await response.json()
-            setQas(data)
-        }
-        fetchData()
-    }, [])
-    return (
-        <div>QA</div>
-    )
-}
 
-export default QA
+const QA = () => {
+  const { showToast, token } = useStateContext();
+  const [qas, setQas] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const url = `${BASE_URL}/crm/admin-api/qas`;
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          authorization: `Token ${token}`,
+        },
+      });
+      if (!response.ok) {
+        showToast('Error fetching data', 'error');
+        return;
+      }
+      const data = await response.json();
+      setQas(data.response);
+    };
+
+    fetchData();
+  }, [token, showToast]);
+
+  return (
+    <section className="bg-white dark:bg-gray-900">
+      <div className="py-8 px-4 mx-auto max-w-screen-xl sm:py-16 lg:px-6">
+        <h2 className="mb-8 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">Frequently Asked Questions</h2>
+        {qas.length > 0 ? (
+          <div className="grid pt-8 text-left border-t border-gray-200 dark:border-gray-700 md:gap-8 md:grid-cols-1">
+            {qas.map((section, sIndex) => (
+              <div key={sIndex} className="mb-12">
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">{section.section}</h3>
+                {section.QAs.map((qa, qIndex) => (
+                  <div key={qIndex} className="mb-10">
+                    <h4 className="flex items-center mb-4 text-lg font-medium text-gray-900 dark:text-white">
+                      <svg className="flex-shrink-0 mr-2 w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd"></path></svg>
+                      {qa.question}
+                    </h4>
+                    <p className="text-gray-500 dark:text-gray-400">{qa.answer}</p>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        ) : <p className="text-center text-gray-500 col-span-full">Loading...</p>}
+      </div>
+    </section>
+  );
+};
+
+export default QA;

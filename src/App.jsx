@@ -54,7 +54,7 @@ import {
     CRMRootLayout,
 
     // App pages
-    AppRootLayout,
+    AppRootLayout, QA,
     AssortmentsRootLayout, Assortments, AddAssortment, ViewAssortment, EditAssortment, assortmentsLoader, assortmentDetailLoader,
     BannersRootLayout, Banners, AddBanner, ViewBanner, EditBanner, bannersLoader, bannerDetailLoader,
     BrandsRootLayout, Brands, AddBrand, ViewBrand, EditBrand,
@@ -252,6 +252,7 @@ function App() {
                 {path: "app", element: <AppRootLayout/>, 
                     children: [
                         {index: true, element: <UnderConstruction/>},
+                        // Assortments
                         {
                             path: "assortments", 
                             element: <AssortmentsRootLayout/>, 
@@ -368,7 +369,7 @@ function App() {
                         },
                         {
                             path: "qas",
-                            element: <UnderConstruction/>
+                            element: <QA/>
                         }
                         
                         // Add other app pages here
