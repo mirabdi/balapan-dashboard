@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 // import EmployeesList from "../../../components/App/employees/EmployeesList";
 import { Suspense} from 'react';
 import { RightModal, EmployeesList, EmployeeItem } from "../../../components";
@@ -14,7 +14,8 @@ function Employees() {
   if(lastSegment === 'archived'){
     title = "Архивные сотрудники";
   }
-  const { employees } = useLoaderData();
+  const {employees}  = useLoaderData();
+
   return (
     <>
       <Suspense fallback={<p className="flex flex-wrap">Loading...</p>}>

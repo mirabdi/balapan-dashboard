@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useStateContext } from 'contexts/ContextProvider';
-import { Button, ProductSelector } from 'components';
+import { Button, ProductSelector, ImageLoader } from 'components';
 import { BASE_URL } from 'data/config';
 
 function ListingForm({ currentListing, parent_assortment, afterAction }) {
@@ -55,11 +55,13 @@ function ListingForm({ currentListing, parent_assortment, afterAction }) {
     }
   };
 
+
   const product = listing ? listing.product : null;
   return (
     <>
       <ProductSelector product={product} onSelect={(data) => setListing(data)}/>
       {listing &&
+        <>
           <form onSubmit={handleSubmit} className="w-full max-w-xl px-8" encType="multipart/form-data">
             <div className="mb-4">
               <label htmlFor="title" className="block text-gray-700 text-sm font-bold mb-2">Наименование</label>
@@ -141,6 +143,9 @@ function ListingForm({ currentListing, parent_assortment, afterAction }) {
               />
             </div>
           </form>
+          <h1 className="text-2xl font-bold text-center text-gray-800 mt-10">Изображения:</h1>
+          <ImageLoader images={listing.pictures} url={`${BASE_URL}/crm/admin-api/listings/${listing.id}/pictures`}/>
+        </>
       }
     </>
   );

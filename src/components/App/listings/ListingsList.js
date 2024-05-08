@@ -25,6 +25,8 @@ function ListingsList({ listings, title, selectHandler }) {
   }, [listings]);
   const navigate = useNavigate();
   const { showToast } = useStateContext();
+
+  
   const archiveListing = async (id, is_archived) => {
     let confirmMessage = is_archived ? "Вы уверены, что хотите архивировать этот листинг?" :  "Вы уверены, что хотите восстановить этот листинг?" ;
     const confirmArchive = window.confirm(confirmMessage);
