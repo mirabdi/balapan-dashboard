@@ -73,7 +73,6 @@ function BannerForm({ method = 'POST', banner }) {
           id="description"
           name="description"
           rows="5"
-          required
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           defaultValue={banner ? banner.description : ''}
         />

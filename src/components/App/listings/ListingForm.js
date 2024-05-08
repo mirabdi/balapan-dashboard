@@ -144,7 +144,7 @@ function ListingForm({ currentListing, parent_assortment, afterAction }) {
             </div>
           </form>
           <h1 className="text-2xl font-bold text-center text-gray-800 mt-10">Изображения:</h1>
-          <ImageLoader images={listing.pictures} url={`${BASE_URL}/crm/admin-api/listings/${listing.id}/pictures`}/>
+          {listing && <ImageLoader images={listing.pictures} url={`${BASE_URL}/crm/admin-api/listings/${listing.id}/pictures`}/>}
         </>
       }
     </>

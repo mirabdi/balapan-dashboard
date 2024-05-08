@@ -108,7 +108,6 @@ function AssortmentForm({assortment, parent_assortment, afterAction}) {
             id="description"
             name="description"
             rows="5"
-            required
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             defaultValue={assortment ? assortment.description : ''}
           />
