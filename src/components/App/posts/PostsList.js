@@ -1,8 +1,10 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useStateContext } from "contexts/ContextProvider";
 import { BASE_URL } from "data/config";
+import { MyImage } from "components";
+
 
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
@@ -14,10 +16,14 @@ const reorder = (list, startIndex, endIndex) => {
   return result;
 };
 
-function PostsList({ posts, title, selectHandler }) {
+function PostsList({ posts, title, selectHandler, afterArchive }) {
   const [currPosts, setCurrPosts] = useState(posts);
   const navigate = useNavigate();
   const { showToast } = useStateContext();
+  useEffect(() => {
+    setCurrPosts(posts);
+  }, [posts]);
+
   const archivePost = async (id, is_archived) => {
     let confirmMessage = is_archived ? "Вы уверены, что хотите архивировать этот пост?" : "Вы уверены, что хотите восстановить этот пост?" ;
     const confirmArchive = window.confirm(confirmMessage);
@@ -40,7 +46,8 @@ function PostsList({ posts, title, selectHandler }) {
   
         if (response.ok) {
           showToast({ title: 'Успех!', content: 'Пост успешно архивирован.', cssClass: 'e-toast-success', icon: 'e-success toast-icons' });
-          navigate(is_archived ? "/app/posts/archived" : "/app/posts/");
+          navigate(is_archived ? "/app/posts/" : "/app/posts/archived");
+          if(afterArchive) afterArchive(id);
         } else {
           const errorData = await response.json();
           showToast({ title: 'Ошибка!', content: errorData.message || 'Не удалось архивировать пост.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
@@ -104,7 +111,7 @@ function PostsList({ posts, title, selectHandler }) {
                       className="bg-gray-200 rounded-lg overflow-hidden shadow-lg my-4 flex relative"
                     >
                       <div onClick={()=>selectHandler(post)} className="flex items-center hover:bg-gray-100 w-full text-decoration-none">
-                        <img src={post.image_url} alt={post.title} className="flex-none w-48 h-48 object-cover rounded-l-lg" />
+                        <MyImage src={post.image_url} alt={post.title} className="flex-none w-48 h-48 object-cover rounded-l-lg" />
                         <div className="p-4 flex flex-col justify-between leading-normal">
                           <h2 className="font-bold text-xl mb-2 text-gray-900">{post.title}</h2>
                           <p className="mb-2 text-gray-900">{post.description}</p>

@@ -20,11 +20,11 @@ const reorder = (list, startIndex, endIndex) => {
 
 function ListingsList({ listings, title, selectHandler }) {
   const [currListings, setCurrListings] = useState(listings);
+  const navigate = useNavigate();
+  const { showToast } = useStateContext();
   useEffect(() => {
     setCurrListings(listings);
   }, [listings]);
-  const navigate = useNavigate();
-  const { showToast } = useStateContext();
 
   
   const archiveListing = async (id, is_archived) => {

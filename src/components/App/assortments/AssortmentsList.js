@@ -20,7 +20,7 @@ const reorder = (list, startIndex, endIndex) => {
   return result;
 };
 
-function AssortmentsList({ assortments, title, selectHandler }) {
+function AssortmentsList({ assortments, title, selectHandler, afterArchive }) {
   const [currAssortments, setCurrAssortments] = useState(assortments);
   useEffect(() => {
     setCurrAssortments(assortments);
@@ -45,7 +45,8 @@ function AssortmentsList({ assortments, title, selectHandler }) {
 
         if (response.ok) {
           showToast({ title: 'Успех!', content: 'Ассортимент успешно архивирован.', cssClass: 'e-toast-success', icon: 'e-success toast-icons' });
-          navigate(is_archived ? "/app/assortments/archived" : "/app/assortments/");
+          navigate(is_archived ? "/app/assortments/" : "/app/assortments/archived");
+          if(afterArchive) afterArchive(id);
         } else {
           const errorData = await response.json();
           showToast({ title: 'Ошибка!', content: errorData.message || 'Не удалось архивировать ассортимент.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });

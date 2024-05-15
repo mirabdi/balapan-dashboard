@@ -1,9 +1,9 @@
 import { Link, useSubmit, useNavigate} from 'react-router-dom';
 import { useStateContext } from '../../../contexts/ContextProvider';
 import { BASE_URL } from '../../../data/config';
+import {MyImage} from 'components';
 
-
-function AssortmentCard({ assortment, onEdit}) {
+function AssortmentCard({ assortment, onEdit, afterArchive}) {
   const submit = useSubmit();
   const navigate = useNavigate();
   const { showToast } = useStateContext();
@@ -28,7 +28,8 @@ function AssortmentCard({ assortment, onEdit}) {
     
           if (response.ok) {
             showToast({ title: 'Success!', content: 'Assortment has been successfully archived.', cssClass: 'e-toast-success', icon: 'e-success toast-icons' });
-            navigate(is_archived ? "/app/assortments/archived" : "/app/assortments/"); 
+            navigate(is_archived ? "/app/assortments/" : "/app/assortments/archived"); 
+            if(afterArchive) afterArchive(id);
           } else {
             const errorData = await response.json();
             showToast({ title: 'Error!', content: errorData.message || 'Could not archive assortment.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
@@ -42,7 +43,7 @@ function AssortmentCard({ assortment, onEdit}) {
 
   return (
     <div className="max-w-md mx-auto bg-gray-200 hover:bg-gray-100 rounded-lg shadow-lg overflow-hidden my-4 flex md:flex-row flex-col">
-      <img className="md:flex-shrink-0 w-full md:w-48 h-48 object-cover" src={assortment.image_url} alt={assortment.title} />
+      <MyImage src={assortment.image_url} alt={assortment.title} />
       <div className="p-4 flex flex-col justify-between">
         <div>
           <h3 className="text-xl text-gray-800 font-bold">{assortment.title}</h3>

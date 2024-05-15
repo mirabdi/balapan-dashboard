@@ -261,7 +261,7 @@ function App() {
                                     index: true, 
                                     id: 'active-assortments-list',
                                     element: <Assortments status="active"  key="activeAssortments"/>, 
-                                    loader: () => assortmentsLoader("active", token)
+                                    // loader: () => assortmentsLoader("active", token)
                                 },
                                 {   
                                     path: "active",
@@ -297,9 +297,22 @@ function App() {
                             path: "listings",
                             element: <ListingsRootLayout/>,
                             children: [
-                                {index: true, element: <Listings key="activeListings"/>, loader: () => listingsLoader(false, token)},
-                                {path: "archived", element: <Listings archived={true} key="archivedListings"/>, loader: () => listingsLoader(true, token)},
-                                {path: "new", element: <AddListing/>},
+                                {   
+                                    index: true, 
+                                    id: "active-listings-list",
+                                    element: <Listings status="active" key="activeListings"/>,
+                                },
+                                {
+                                    path: "active",
+                                    element: <Listings status="active" key="activeListings"/>,
+                                },
+                                {
+                                    path: "archived", 
+                                    element: <Listings status="archived" key="archivedListings"/>
+                                },
+                                {
+                                    path: "new", 
+                                    element: <AddListing/>},
                                 {
                                     path: ":id",
                                     id: "listing-detail",
@@ -316,8 +329,18 @@ function App() {
                             path: "posts",
                             element: <PostsRootLayout/>,
                             children: [
-                                {index: true, element: <Posts  key="activePosts"/>, loader: () => postsLoader(false,token)},
-                                {path: "archived", element: <Posts  key="archivedPosts"/>, loader: () => postsLoader(true,token)},
+                                {
+                                    index: true, 
+                                    element: <Posts  key="activePosts" status="active"/>, 
+                                },
+                                {
+                                    path: "active",
+                                    element: <Posts  key="activePosts" status="active"/>,
+                                },
+                                {
+                                    path: "archived", 
+                                    element: <Posts  key="archivedPosts" status="archived"/>, 
+                                },
                                 {path: "new", element: <AddPost/>},
                                 {
                                     path: ":id",

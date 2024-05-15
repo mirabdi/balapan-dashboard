@@ -1,7 +1,7 @@
 import { Link, useSubmit, useNavigate} from 'react-router-dom';
 import { useStateContext } from '../../../contexts/ContextProvider';
 import { BASE_URL } from '../../../data/config';
-
+import {MyImage} from 'components';
 
 function ListingItem({ listing, onEdit}) {
   const submit = useSubmit();
@@ -59,7 +59,7 @@ function ListingItem({ listing, onEdit}) {
 
   return (
     <div className="max-w-md mx-auto bg-gray-200 hover:bg-gray-100 rounded-lg shadow-lg overflow-hidden my-4 flex md:flex-row flex-col">
-      <img className="md:flex-shrink-0 w-full md:w-48 h-48 object-cover" src={listing.image_url} alt={listing.title} />
+      <MyImage src={listing.image_url} alt={listing.title} />
       <div className="p-4 flex flex-col justify-between">
         <div>
           <h3 className="text-xl text-gray-800 font-bold">Название - {listing.title}</h3>
