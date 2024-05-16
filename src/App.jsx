@@ -359,8 +359,18 @@ function App() {
                             path: "banners",
                             element: <BannersRootLayout/>,
                             children: [
-                                {index: true, element: <Banners key="activeBanners"/>, loader: () => bannersLoader(false, token)},
-                                {path: "archived", element: <Banners archived={true} key="archivedBanners"/>, loader: () => bannersLoader(true, token)},
+                                {
+                                    index: true, 
+                                    element: <Banners key="activeBanners" status="active"/>,     
+                                },
+                                {
+                                    path: "active",
+                                    element: <Banners key="activeBanners" status="active"/>,
+                                },
+                                {
+                                    path: "archived",
+                                    element: <Banners archived={true} key="archivedBanners" status="archived"/>
+                                },
                                 {path: "new", element: <AddBanner/>},
                                 {
                                     path: ":id",

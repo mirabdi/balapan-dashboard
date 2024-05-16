@@ -11,7 +11,7 @@ function AssortmentForm({assortment, parent_assortment, afterAction}) {
   const [isCatalog, setIsCatalog] = useState(assortment ? assortment.is_catalog : false);
   const [isEditing, setIsEditing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  if (!isCatalog && parent_assortment) {
+  if (!isCatalog && (parent_assortment || assortment.is_catalog)) {
     setIsCatalog(true);
   }
 
@@ -54,6 +54,7 @@ function AssortmentForm({assortment, parent_assortment, afterAction}) {
 
       showToast({ title: 'Успех!', content: 'Ассортимент успешно сохранен.', cssClass: 'e-toast-success', icon: 'e-success toast-icons' });
       setIsSubmitting(false);
+      setIsEditing(false);
       if (afterAction) {
         afterAction();
         return;
@@ -120,13 +121,13 @@ function AssortmentForm({assortment, parent_assortment, afterAction}) {
             <div className='mb-4 flex items-center'>
                 <label htmlFor="catalog_icon" className="block text-gray-700 text-sm font-bold mb-2 mr-2">Значок каталога</label>
                 <input
-                type="file"
-                id="catalog_icon"
-                name="catalog_icon"
-                className="shadow w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                accept="image/*"
+                  type="file"
+                  id="catalog_icon"
+                  name="catalog_icon"
+                  className="shadow w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  accept="image/*"
                 />
-                {assortment && assortment.catalog_icon && <img src={assortment.catalog_icon} alt="Значок каталога ассортимента" className="w-24 h-24 object-cover rounded-md" />}
+                {assortment && assortment.icon_url && <img src={assortment.icon_url} alt="Значок каталога ассортимента" className="w-24 h-24 object-cover rounded-md" />}
             </div>
           }
         </div>

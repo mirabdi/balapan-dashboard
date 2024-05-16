@@ -130,10 +130,10 @@ function ListingsList({ listings, title, selectHandler }) {
         }        
   };
 
-  if(currListings.length === 0) {
+  if(!currListings || currListings.length === 0) {
     return <div className="bg-white py-8">
         <h1 className="text-3xl font-bold text-center text-gray-800 mb-10">{title}</h1>
-        <p className="text-center text-gray-400 text-lg font-semibold">Листингов не найден</p>
+        <p className="text-center text-gray-400 text-lg font-semibold">{currListings ? 'Листингов не найден' : 'Загрузка...'}</p>
     </div>
   }
   return (

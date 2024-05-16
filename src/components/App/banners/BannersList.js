@@ -1,8 +1,10 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useStateContext } from "contexts/ContextProvider";
 import { BASE_URL } from "data/config";
+import { MyImage } from "components"; 
+
 
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
@@ -18,6 +20,11 @@ function BannersList({ banners, title, selectHandler }) {
   const [currBanners, setCurrBanners] = useState(banners);
   const navigate = useNavigate();
   const { showToast } = useStateContext();
+  console.log("BannersList", currBanners);
+
+  useEffect(() => {
+    setCurrBanners(banners);
+  }, [banners]);
   const archiveBanner = async (id, is_archived) => {
     const confirmArchive = window.confirm("Вы уверены, что хотите архивировать этот баннер?");
     if (confirmArchive) {
@@ -86,6 +93,18 @@ function BannersList({ banners, title, selectHandler }) {
     }
   };
 
+  if (!banners || banners.length === 0) {
+    return (
+      <div className="bg-white py-8">
+        <h1 className="text-3xl font-bold text-center text-gray-800 mb-10">{title}</h1>
+        <p className="text-center text-gray-400 text-lg font-semibold">
+          {banners ? 'Баннеры не найдены' : 'Загрузка...'}
+        </p>
+      </div>
+    );
+  }
+  
+
   return (
     <div className="bg-white py-8">
       <h1 className="text-3xl font-bold text-center text-gray-800 mb-10">{title}</h1>
@@ -103,7 +122,7 @@ function BannersList({ banners, title, selectHandler }) {
                       className="bg-gray-200 rounded-lg overflow-hidden shadow-lg my-4 flex relative"
                     >
                       <div onClick={() => selectHandler(banner)} className="flex items-center hover:bg-gray-100 w-full text-decoration-none">
-                        <img src={banner.image_url} alt={banner.title} className="flex-none w-48 h-48 object-cover rounded-l-lg" />
+                        <MyImage src={banner.image_url} alt={banner.title} className="flex-none w-48 h-48 object-cover rounded-l-lg" />
                         <div className="p-4 flex flex-col justify-between leading-normal">
                           <h2 className="font-bold text-xl mb-2 text-gray-900">{banner.title}</h2>
                           <p className="mb-2 text-gray-900">{banner.description}</p>

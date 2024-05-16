@@ -9,7 +9,7 @@ import { BASE_URL } from 'data/config';
 function Assortments({ status }) {
   const navigate = useNavigate();
   const [selectedAssortment, setSelectedAssortment] = useState(null);
-  const [assortments, setAssortments] = useState([]);
+  const [assortments, setAssortments] = useState(null);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [query, setQuery] = useState("");
@@ -80,8 +80,6 @@ function Assortments({ status }) {
       setAssortments(loadedAssortments);
     }, 2000);
   };
-
-
 
   useEffect(async () => {
     if (token) {

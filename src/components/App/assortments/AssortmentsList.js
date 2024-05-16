@@ -22,11 +22,11 @@ const reorder = (list, startIndex, endIndex) => {
 
 function AssortmentsList({ assortments, title, selectHandler, afterArchive }) {
   const [currAssortments, setCurrAssortments] = useState(assortments);
+  const navigate = useNavigate();
+  const { showToast, token } = useStateContext();
   useEffect(() => {
     setCurrAssortments(assortments);
   }, [assortments]);
-  const navigate = useNavigate();
-  const { showToast, token } = useStateContext();
   const archiveAssortment = async (id, is_archived) => {
     const confirmArchive = window.confirm("Вы уверены, что хотите архивировать этот ассортимент?");
     if (confirmArchive) {
@@ -91,12 +91,12 @@ function AssortmentsList({ assortments, title, selectHandler, afterArchive }) {
       console.error("Fetch error:", error);
       setCurrAssortments(currAssortments);
     }
-  };
+  };  
 
-  if (currAssortments.length === 0) {
+  if (!currAssortments || currAssortments.length === 0) {
     return <div className="bg-white py-8">
         <h1 className="text-3xl font-bold text-center text-gray-800 mb-10">{title}</h1>
-        <p className="text-center text-gray-400 text-lg font-semibold">Ассортиментов не найдено</p>
+        <p className="text-center text-gray-400 text-lg font-semibold">{currAssortments  ? 'Ассортиментов не найдено' :  'Загрузка...'}</p>
     </div>
   }
 
