@@ -192,49 +192,49 @@ function App() {
                         {   
                             path: "all", 
                             element: <Orders status="all" key="all"/>, 
-                            loader: () => ordersLoader("all", token)
+                            // loader: () => ordersLoader("all", token)
                         },
                         {
                             path: "cart", 
                             element: <Orders status="cart" key="cart"/>,
                             id: "cart-orders-list",
-                            loader: () => ordersLoader("cart", token),
+                            // loader: () => ordersLoader("cart", token),
                         },
                         {
                             path: "ordered", 
                             element: <Orders status="ordered" key="ordered"/>,
                             id: "ordered-orders-list",
-                            loader: () => ordersLoader("ordered", token),
+                            // loader: () => ordersLoader("ordered", token),
                         },
                         {
                             path: "preparing", 
                             element: <Orders status="preparing" key="preparing"/>,
                             id: "preparing-orders-list",
-                            loader: () => ordersLoader("preparing", token),
+                            // loader: () => ordersLoader("preparing", token),
                         },
                         {
                             path: "ready", 
                             element: <Orders status="ready" key="ready"/>,
                             id: "ready-orders-list",
-                            loader: () => ordersLoader("ready", token),
+                            // loader: () => ordersLoader("ready", token),
                         },
                         {
                             path: "delivering", 
                             element: <Orders status="delivering" key="delivering"/>,
                             id: "delivering-orders-list",
-                            loader: () => ordersLoader("delivering", token),
+                            // loader: () => ordersLoader("delivering", token),
                         },
                         {
                             path: "completed", 
                             element: <Orders status="completed" key="completed"/>,
                             id: "completed-orders-list",
-                            loader: () => ordersLoader("completed", token),
+                            // loader: () => ordersLoader("completed", token),
                         },
                         {
                             path: "canceled", 
                             element: <Orders status="canceled" key="canceled"/>,
                             id: "canceled-orders-list",
-                            loader: () => ordersLoader("canceled", token),
+                            // loader: () => ordersLoader("canceled", token),
                         },                        
                         {path: ":id", element: <OrderDetail/>},
                     ]},

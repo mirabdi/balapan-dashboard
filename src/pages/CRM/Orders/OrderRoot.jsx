@@ -1,17 +1,53 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Outlet, NavLink } from "react-router-dom";
 import { Header, Button } from "components";
 import { useStateContext } from "contexts/ContextProvider";
-
+import { BASE_URL } from "data/config";
 
 function OrderRootLayout() {
-    const { currentColor } = useStateContext();
+    const { currentColor, showToast, token } = useStateContext();
     const [hoveredLink, setHoveredLink] = useState(null);
+    const [ stats, setStats ] = useState({ordered: 0, preparing: 0, ready: 0, delivering: 0, completed: 0, canceled: 0});
     const getNavLinkStyle = ({ isActive, name }) => ({
         borderBottomColor: isActive || hoveredLink === name ? currentColor : 'transparent',
         color: isActive || hoveredLink === name ? currentColor : '#4B5563',
         transition: 'color 300ms, border-bottom-color 300ms',
     });
+    const loadStats = async () => {
+        try {
+            const response = await fetch(BASE_URL + "/crm/admin-api/orders/stats", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: "Token " + token,
+                },
+            });
+            if (!response.ok) {
+                const data = await response.json();
+                showToast({
+                    title: "Error!",
+                    content: data.message,
+                    cssClass: "e-toast-danger",
+                    icon: "e-error toast-icons",
+                });
+                return;
+            }
+            const data = await response.json();
+            setStats(data.response);
+        } catch (error) {
+            showToast({
+                title: "Error!",
+                content: "Failed to load order stats.",
+                cssClass: "e-toast-danger",
+                icon: "e-error toast-icons",
+            });
+        }
+    };
+    useEffect(async () => {
+        if (token) {
+            loadStats();
+        }
+    }, [token]);
 
     const statuses = [
         ["cart", "Корзина"],
@@ -57,31 +93,23 @@ function OrderRootLayout() {
         <div className="mx-auto max-w-screen-xl bg-white">
             <div className="flex justify-between items-center">
                 <Header category="Страница" title="Заказы" />
-                {/* <Button
-                    color="white"
-                    bgColor={currentColor}
-                    text="+ Заказы"
-                    onClick={() => navigate('/app/assortments/new')}
-                    borderRadius="10px"
-                    className="m-2 font-bold py-2 px-4 rounded"
-                /> */}
             </div>
             <div className="m-4 grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div className="bg-green-100 p-4 rounded-lg shadow-lg">
                     <p className="text-green-800">Оформлен</p>
-                    <p className="font-bold text-lg">1,046</p>
+                    <p className="font-bold text-lg">{stats.ordered ? stats.ordered : 0}</p>
                 </div>
                 <div className="bg-yellow-100 p-4 rounded-lg shadow-lg">
                     <p className="text-yellow-800">Сборка</p>
-                    <p className="font-bold text-lg">159</p>
+                    <p className="font-bold text-lg">{stats.preparing ? stats.preparing : 0}</p>
                 </div>
                 <div className="bg-purple-100 p-4 rounded-lg shadow-lg">
                     <p className="text-purple-800">Готов</p>
-                    <p className="font-bold text-lg">624</p>
+                    <p className="font-bold text-lg">{stats.ready ? stats.ready : 0}</p>
                 </div>
                 <div className="bg-blue-100 p-4 rounded-lg shadow-lg">
                     <p className="text-blue-800">Доставка</p>
-                    <p className="font-bold text-lg">263</p>
+                    <p className="font-bold text-lg">{stats.delivering ? stats.delivering : 0}</p>
                 </div>
             </div>
 

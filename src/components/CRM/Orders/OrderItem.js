@@ -13,9 +13,7 @@ import {
 } from 'react-icons/bs'; 
 
 
-const OrderItem = ({order}) => {
-    const { showToast } = useStateContext();
-
+const OrderItem = ({order, afterStatusUpdate}) => {
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric'};
         return new Date(dateString).toLocaleDateString('ru-RU', options);
@@ -24,32 +22,29 @@ const OrderItem = ({order}) => {
     return (
         <div className="bg-white p-4 rounded-lg shadow">
             <h2 className="text-lg font-bold">Заказ №{order.id}</h2>
-            <p>Клиент: {order.client.name}</p>
-            <p>Магазин: {order.store.name}</p>
-            <p>Адрес: {order.address.name}</p>
+            <p>Клиент: {order.client?.name ?? 'N/A'}</p>
+            <p>Магазин: {order.store?.name ?? 'N/A'}</p>
+            <p>Адрес: {order.address?.name ?? 'N/A'}</p>
             <p>Время заказа: {formatDate(order.ordered)}</p>
 
             {/* Order payment and contact info */}
             <div className="my-4">
-                <div className="flex items-center justify-between p-4">
-                    <BsCash className="text-blue-500" />
-                    <span className="text-sm">Способ оплаты: {order.details.payment_option}</span>
-                </div>
+              <div className="flex items-center justify-between p-4">
+                <BsCash className="text-blue-500" />
+                <span className="text-sm">Способ оплаты: {order.details?.payment_option ?? 'N/A'}</span>
+              </div>
 
-                <div className="flex items-center justify-between p-4">
-                    <BsTelephone className="text-blue-500" />
-                    <span className="text-sm">Контактный телефон: {order.client.phone}</span>
-                </div>
+              <div className="flex items-center justify-between p-4">
+                <BsTelephone className="text-blue-500" />
+                <span className="text-sm">Контактный телефон: {order.client?.phone ?? 'N/A'}</span>
+              </div>
             </div>
 
             {/* Status indicator */}
             <StatusIndicator 
                 defaultStatus={order.status} 
                 orderId={order.id}
-                updateOrderStatus={(status) => {
-                    console.log(`Order status updated to ${status}`);
-                    showToast({ title: "Status Updated", content: `Status updated to ${status}`, cssClass: 'e-toast-success' });
-                }}
+                afterStatusUpdate={afterStatusUpdate}
             />
 
             {/* List of items */}
@@ -94,7 +89,7 @@ const OrderItem = ({order}) => {
 export default OrderItem;
 
 
-const StatusIndicator = ({ defaultStatus, orderId}) => {
+const StatusIndicator = ({ defaultStatus, orderId, afterStatusUpdate}) => {
   const { showToast } = useStateContext();
   const [currentStatus, setCurrentStatus] = useState(defaultStatus);
 
@@ -103,8 +98,9 @@ const StatusIndicator = ({ defaultStatus, orderId}) => {
     if (!confirm) return;
     try {
       await axios.put(`${BASE_URL}/crm/admin-api/orders/${orderId}`, {status});
-      showToast({ title: 'Success!', content: 'Your message has been sent successfully.', cssClass: 'e-toast-success', icon: 'e-success toast-icons' });
+      showToast({ title: 'Успех!', content: 'Статус успешно обновлен!', cssClass: 'e-toast-success', icon: 'e-success toast-icons' });
       setCurrentStatus(status);
+      if(afterStatusUpdate) afterStatusUpdate(orderId, status);
     } catch (error) {
       console.error('Failed to update order status:', error);
     }

@@ -100,7 +100,7 @@ function Assortments({ status }) {
             type="text"
             value={query}
             onChange={handleQueryChange}
-            placeholder="Search..."
+            placeholder="Поиск..."
             className="search-input float-right mb-4 p-2 border rounded-lg shadow-md"
           />
           <AssortmentsList 
