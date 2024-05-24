@@ -22,62 +22,49 @@ const  statsToRussian = (status) => {
 function Orders({status="ordered"}) {
   const [selectedOrder, setSelectedOrder] = useState(null); 
   const [orders, setOrders] = useState(null); 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [query, setQuery] = useState("");
   const { rightModal, setRightModal, showToast, token} = useStateContext();
   const title = statsToRussian(status);
   
-  const loadOrdersList = async (status='ordered', token, page=1, query="") => {
-    let url = `${BASE_URL}/crm/admin-api/orders?status=${status}&page=${page}&query=${query}`;
-    setLoading(true);
-    try {
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Token ${token}`,
-        },
-      });
-      if (!response.ok) {
-        let message = 'Failed to load orders';
-        try {
-          const resData = await response.json();
-          message = resData.message;
-        } catch (error) {
-          console.error('Failed to parse error message:', error);
-        }
-        throw new Error(message);
-      }
-      const resData = await response.json();
-      return resData.response;
-    } catch (error) {
-      showToast({ title: 'Ошибка!', content: error.message, cssClass: 'e-toast-danger', icon: 'e-error toast-icons' })
-    } finally {
-      setLoading(false);
-    }
-  };
+  
   
   const loadMoreOrders = async () => {
     const nextPage = page + 1;
     setPage(nextPage);
-    const loadedOrders = await loadOrdersList(status, token, nextPage, query);
-    if (Array.isArray(loadedOrders)) {
-      setOrders((prev) => [...prev, ...loadedOrders]);
-    } else {
-      console.error('Loaded orders is not an array:', loadedOrders);
+    const response = await loadOrdersList(status, token, nextPage, query);
+    if(response.status != 0){
+      showToast({ title: 'Ошибка!', content: response.message, cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
     }
-  };
-
-  useEffect( async () => {
-    if (token) {
-      const loadedOrders = await loadOrdersList(status, token, page, query);
+    else{
+      const loadedOrders = response.response;
       if (Array.isArray(loadedOrders)) {
-        setOrders(loadedOrders);
+        setOrders((prev) => [...prev, ...loadedOrders]);
       } else {
         console.error('Loaded orders is not an array:', loadedOrders);
       }
     }
+  };
+
+  useEffect( () => {
+    async function fetchOrders() {
+      try {
+        setLoading(true);
+        const response = await loadOrdersList(status, token, page, query);
+        if(response.status != 0){
+          throw new Error(response.message || 'Failed to load orders');
+        }
+        else{
+          setOrders(response.response);          
+        }
+      } catch (err) {
+        showToast({ title: 'Ошибка!', content: err.message, cssClass: 'e-toast-danger', icon: 'e-error toast-icons' })
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchOrders();
   }, [token, status]);
 
   const afterStatusUpdate = (orderId, status) => {
@@ -121,3 +108,31 @@ function Orders({status="ordered"}) {
 export default Orders;
 
 
+const loadOrdersList = async (status='ordered', token, page=1, query="") => {
+  let url = `${BASE_URL}/crm/admin-api/orders?status=${status}&page=${page}&query=${query}`;
+  
+  const response = await fetch(url, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Token ${token}`,
+    },
+  });
+
+  // if !ok, throw message from response, else return list of orders
+  if (!response.ok) {
+    let message = 'Failed to load orders';
+    try {
+      const resData = await response.json();
+      message = resData.message;
+    } catch (error) {
+      console.error('Failed to parse error message:', error);
+    }
+    throw new Error(message);
+  } else{
+    const resData = await response.json();
+    return resData;
+  }
+  
+  
+};

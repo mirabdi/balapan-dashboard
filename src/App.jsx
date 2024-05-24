@@ -411,9 +411,9 @@ function App() {
                 {path: "pos", element: <PosRootLayout/>, children: [
                     {index: true, element: <UnderConstruction/>},
                     {path: "opay", element: <OPaymentRootLayout/>, children: [
-                        {index: true, element: <OPayments key="activeOPayments"/>, loader: () => opaymentsLoader(false, token)},
-                        {path: "active", element: <OPayments key="activeOPayments"/>, loader: () => opaymentsLoader(false, token)},
-                        {path: "archived", element: <OPayments archived={true} key="archivedOPayments"/>, loader: () => opaymentsLoader(true, token)},
+                        {index: true, element: <OPayments key="activeOPayments"/>},
+                        {path: "active", element: <OPayments key="activeOPayments"/>},
+                        {path: "archived", element: <OPayments archived={true} key="archivedOPayments"/>},
             
                         {path: "new", element: <AddOPayment/>},
                         {path: ":id", element: <ViewOPayment/>},

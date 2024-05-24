@@ -20,7 +20,7 @@ function OPaymentRootLayout() {
             'path': 'archived',
         },
         {
-            'name': 'Новый чек',
+            'name': 'Новый Платеж',
             'path': 'new',
         },
     ];
@@ -41,7 +41,7 @@ function OPaymentRootLayout() {
                 <Button
                     color="white"
                     bgColor={currentColor}
-                    text="+ чек"
+                    text="+ Платеж"
                     onClick={() => navigate('/pos/opay/new')}
                     borderRadius="10px"
                     className="m-2 font-bold py-2 px-4 rounded"

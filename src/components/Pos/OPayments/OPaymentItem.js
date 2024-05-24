@@ -5,16 +5,13 @@ import { gridOrderStatus } from '../../../data/utils';
 import { MdRefresh } from 'react-icons/md';
 
 const OPaymentItem = ({ opayment }) => {
-  const { token } = useStateContext();
+  const { token, showToast } = useStateContext();
   const formatDate = (date) => new Date(date).toLocaleDateString();
   const formatTime = (time) =>
     new Date(time).toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit",
     });
-
-    const navigate = useNavigate();
-  const { showToast } = useStateContext();
   const archiveOPayment = async (id, is_archived) => {
       const confirmArchive = window.confirm("Are you sure you want to archive this banner?");
       if (confirmArchive) {
@@ -35,7 +32,7 @@ const OPaymentItem = ({ opayment }) => {
     
           if (response.ok) {
             showToast({ title: 'Success!', content: 'OPayment has been successfully archived.', cssClass: 'e-toast-success', icon: 'e-success toast-icons' });
-            navigate(is_archived ? "/money/opay/archived" : "/money/opay/"); 
+            navigate(is_archived ? "/pos/opay/" : "/pos/opay/archived"); 
           } else {
             const errorData = await response.json();
             showToast({ title: 'Error!', content: errorData.message || 'Could not archive banner.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
@@ -84,7 +81,6 @@ const OPaymentItem = ({ opayment }) => {
             icon: "e-success toast-icons",
           });
         }
-        navigate('/pos/opay/active');
       } catch (error) {
         showToast({
           title: "Error!",

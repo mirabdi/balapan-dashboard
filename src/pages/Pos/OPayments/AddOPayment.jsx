@@ -3,7 +3,6 @@ import { Header } from '../../../components';
 import { BASE_URL } from 'data/config';
 import { useStateContext } from 'contexts/ContextProvider';
 
-
 const AddOPayment = () => {
   const { showToast, token, user } = useStateContext();
   const [formData, setFormData] = useState({
@@ -21,7 +20,6 @@ const AddOPayment = () => {
     }));
   };
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -35,12 +33,12 @@ const AddOPayment = () => {
       });
       if (!response.ok) {
         const data = await response.json();
-        showToast({ title: 'Error!', content: data.detail, cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
+        showToast({ title: 'Ошибка!', content: data.detail, cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
         return;
       }
       const data = await response.json();
       if (data.status === 0) {
-        showToast({ title: 'Success!', content: 'Payment submitted successfully.', cssClass: 'e-toast-success', icon: 'e-success toast-icons' });
+        showToast({ title: 'Успех!', content: 'Платеж успешно отправлен.', cssClass: 'e-toast-success', icon: 'e-success toast-icons' });
         setFormData({
           order_id: '',
           desc: '',
@@ -49,16 +47,16 @@ const AddOPayment = () => {
         setPaymentResponse(data.response);
       }
     } catch (error) {
-      showToast({ title: 'Error!', content: 'Failed to submit payment.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
+      showToast({ title: 'Ошибка!', content: 'Не удалось отправить платеж.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
     }
   };
 
   return (
     <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
-      <Header category="Page" title="Payment" />
+      <Header category="Страница" title="Платеж" />
       <form onSubmit={handleSubmit} className="mt-4">
         <div className="mb-4">
-          <label htmlFor="order_id" className="block text-sm font-medium text-gray-700">Order ID</label>
+          <label htmlFor="order_id" className="block text-sm font-medium text-gray-700">ID Заказа</label>
           <input
             type="text"
             name="order_id"
@@ -70,7 +68,7 @@ const AddOPayment = () => {
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="desc" className="block text-sm font-medium text-gray-700">Description</label>
+          <label htmlFor="desc" className="block text-sm font-medium text-gray-700">Описание</label>
           <input
             type="text"
             name="desc"
@@ -82,7 +80,7 @@ const AddOPayment = () => {
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="amount" className="block text-sm font-medium text-gray-700">Amount</label>
+          <label htmlFor="amount" className="block text-sm font-medium text-gray-700">Сумма</label>
           <input
             type="number"
             name="amount"
@@ -97,13 +95,13 @@ const AddOPayment = () => {
           type="submit"
           className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
         >
-          Submit Payment
+          Отправить платеж
         </button>
       </form>
       {paymentResponse && (
         <div className="flex flex-col items-center mt-5">
-          <p className="text-lg font-medium mb-2">Scan QR Code to Pay</p>
-          <img src={paymentResponse.qr} alt="QR Code" className="w-56 h-56 border border-gray-300 p-2" />
+          <p className="text-lg font-medium mb-2">Сканируйте QR-код для оплаты</p>
+          <img src={paymentResponse.qr} alt="QR Код" className="w-56 h-56 border border-gray-300 p-2" />
         </div>
       )}
     </div>
