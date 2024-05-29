@@ -122,8 +122,8 @@ function App() {
                     [
                         {index: true, element: <UnderConstruction/>},
                         {path: "employees", element: <EmployeesRootLayout/>, children: [
-                            {index: true, element: <Employees key="activeEmployees"/>, loader: () => employeesLoader(false, token)},
-                            {path: "archived", element: <Employees key="archivedEmployees"/>, loader: () => employeesLoader(true, token)},
+                            {index: true, element: <Employees key="activeEmployees"/>},
+                            {path: "archived", element: <Employees key="archivedEmployees"/>},
                             {path: "new", element: <AddEmployee/>},
                             {path: ":id", id: "employee-detail", loader: ({ params, request }) => employeeDetailLoader({ request, params, token }), children: [
                                 {index: true, element: <ViewEmployee/>},
@@ -261,24 +261,20 @@ function App() {
                                     index: true, 
                                     id: 'active-assortments-list',
                                     element: <Assortments status="active"  key="activeAssortments"/>, 
-                                    // loader: () => assortmentsLoader("active", token)
                                 },
                                 {   
                                     path: "active",
                                     element: <Assortments status="active" key="activeAssortments"/>, 
-                                    loader: () => assortmentsLoader("active", token)
                                 },
                                 {   
                                     path: "catalog",
                                     id: 'catalog-assortments-list',
                                     element: <Assortments status="catalog" key="catalogAssortments"/>, 
-                                    loader: () => assortmentsLoader("catalog", token)
                                 },
                                 {   
                                     path: "archived",
                                     id: 'archived-assortments-list',
                                     element: <Assortments status="archived" key="archivedAssortments"/>, 
-                                    loader: () => assortmentsLoader("archived", token)
                                 },
                                 {path: "new", element: <AddAssortment/>},
                                 {

@@ -4,16 +4,16 @@ import { useStateContext } from 'contexts/ContextProvider';
 import { Button } from 'components';
 import { BASE_URL } from 'data/config';
 import { AssortmentCard } from 'components';
+import { FiTrash2, FiRefreshCw  } from 'react-icons/fi';
 
-function AssortmentForm({assortment, parent_assortment, afterAction}) {
+function AssortmentForm({ assortment, parent_assortment, afterAction }) {
   const navigate = useNavigate();
   const { showToast, currentColor, token } = useStateContext();
   const [isCatalog, setIsCatalog] = useState(assortment ? assortment.is_catalog : false);
   const [isEditing, setIsEditing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  if (!isCatalog && (parent_assortment || assortment.is_catalog)) {
-    setIsCatalog(true);
-  }
+  const [deleteImage, setDeleteImage] = useState(false);
+  const [deleteIcon, setDeleteIcon] = useState(false);
 
   if (!assortment && !isEditing) {
     setIsEditing(true);
@@ -27,12 +27,13 @@ function AssortmentForm({assortment, parent_assortment, afterAction}) {
     navigate('/app/assortments/');
   };
 
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData(event.target);
     formData.append('id', assortment ? assortment.id : '');
     formData.append('parent_id', parent_assortment ? parent_assortment.id : null);
+    if (deleteImage) formData.append('delete_image', 'true');
+    if (deleteIcon) formData.append('delete_icon', 'true');
     setIsSubmitting(true);
 
     try {
@@ -47,12 +48,22 @@ function AssortmentForm({assortment, parent_assortment, afterAction}) {
 
       if (!response.ok) {
         const errorData = await response.json();
-        showToast({ title: 'Ошибка!', content: errorData.message || 'Не удалось сохранить ассортимент.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
+        showToast({
+          title: 'Ошибка!',
+          content: errorData.message || 'Не удалось сохранить ассортимент.',
+          cssClass: 'e-toast-danger',
+          icon: 'e-error toast-icons',
+        });
         setIsSubmitting(false);
         return;
       }
 
-      showToast({ title: 'Успех!', content: 'Ассортимент успешно сохранен.', cssClass: 'e-toast-success', icon: 'e-success toast-icons' });
+      showToast({
+        title: 'Успех!',
+        content: 'Ассортимент успешно сохранен.',
+        cssClass: 'e-toast-success',
+        icon: 'e-success toast-icons',
+      });
       setIsSubmitting(false);
       setIsEditing(false);
       if (afterAction) {
@@ -60,16 +71,17 @@ function AssortmentForm({assortment, parent_assortment, afterAction}) {
         return;
       }
       if (parent_assortment) {
-        if(afterAction){
-          afterAction();
-          return;
-        }
         navigate(`/app/assortments/${parent_assortment.id}/edit`);
       } else {
         navigate('/app/assortments/');
       }
     } catch (error) {
-      showToast({ title: 'Ошибка!', content: 'Сетевая ошибка или недействительный ответ.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
+      showToast({
+        title: 'Ошибка!',
+        content: 'Сетевая ошибка или недействительный ответ.',
+        cssClass: 'e-toast-danger',
+        icon: 'e-error toast-icons',
+      });
       console.error('Fetch error:', error);
       setIsSubmitting(false);
     }
@@ -77,79 +89,105 @@ function AssortmentForm({assortment, parent_assortment, afterAction}) {
 
   return (
     <>
-      {!isEditing ?
-      <AssortmentCard assortment={assortment} onEdit={() => setIsEditing(true)} />
-      :
-      <form onSubmit={handleSubmit} className="w-full max-w-xl px-8" encType="multipart/form-data">
-        <div className="mb-4">
-          <label htmlFor="title" className="block text-gray-700 text-sm font-bold mb-2">Название</label>
-          <input
-            id="title"
-            type="text"
-            name="title"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            required
-            defaultValue={assortment ? assortment.title : ''}
-          />
-        </div>
-        <div className='mb-4 flex items-center'>
-          <label htmlFor="image" className="block text-gray-700 text-sm font-bold mb-2 mr-2">Изображение</label>
-          <input
-            type="file"
-            id="image"
-            name="image"
-            className="shadow w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            accept="image/*"
-          />
-          {(assortment && assortment.image_url) && <img src={assortment.image_url} alt="Изображение ассортимента" className="w-24 h-24 object-cover rounded-md" />}
-        </div>
-        <div className='mb-4'>
-          <label htmlFor="description" className="block text-gray-700 text-sm font-bold mb-2">Описание</label>
-          <textarea
-            id="description"
-            name="description"
-            rows="5"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            defaultValue={assortment ? assortment.description : ''}
-          />
-          <div className='mb-4 flex items-center'>
-              <label htmlFor="catalog" className="block text-gray-700 text-sm font-bold mb-2 mr-2">Каталог</label>
-              <input type="checkbox" id="catalog" name="is_catalog" checked={isCatalog} onChange={() => setIsCatalog((prevIsCatalog)=>!prevIsCatalog)} />
-
+      {!isEditing ? (
+        <AssortmentCard assortment={assortment} onEdit={() => setIsEditing(true)} />
+      ) : (
+        <form onSubmit={handleSubmit} className="w-full max-w-xl px-8" encType="multipart/form-data">
+          <div className="mb-4">
+            <label htmlFor="title" className="block text-gray-700 text-sm font-bold mb-2">
+              Название
+            </label>
+            <input
+              id="title"
+              type="text"
+              name="title"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              required
+              defaultValue={assortment ? assortment.title : ''}
+            />
           </div>
-          {isCatalog &&
-            <div className='mb-4 flex items-center'>
-                <label htmlFor="catalog_icon" className="block text-gray-700 text-sm font-bold mb-2 mr-2">Значок каталога</label>
-                <input
-                  type="file"
-                  id="catalog_icon"
-                  name="catalog_icon"
-                  className="shadow w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  accept="image/*"
-                />
-                {assortment && assortment.icon_url && <img src={assortment.icon_url} alt="Значок каталога ассортимента" className="w-24 h-24 object-cover rounded-md" />}
+          <div className="mb-4 flex items-center">
+            <label htmlFor="image" className="block text-gray-700 text-sm font-bold mb-2 mr-2">
+              Изображение
+            </label>
+            <input
+              type="file"
+              id="image"
+              name="image"
+              className="shadow w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              accept="image/*"
+            />
+            {(assortment && assortment.image_url) && 
+                deleteImage 
+                ? <button type="button" onClick={() => setDeleteImage(false)} className="ml-2"><FiRefreshCw  size={24}/></button> 
+                : 
+                <>
+                  <img src={assortment.image_url} alt="Изображение ассортимента" className="w-24 h-24 object-cover rounded-md" />
+                  <button type="button" onClick={() => setDeleteImage(true)} className="ml-2">
+                    <FiTrash2 size={24}/>
+                  </button>
+                </>
+                }
+          </div>
+          <div className="mb-4">
+            <label htmlFor="description" className="block text-gray-700 text-sm font-bold mb-2">
+              Описание
+            </label>
+            <textarea
+              id="description"
+              name="description"
+              rows="5"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              defaultValue={assortment ? assortment.description : ''}
+            />
+          </div>
+          <div className="mb-4 flex items-center">
+            <label htmlFor="catalog" className="block text-gray-700 text-sm font-bold mb-2 mr-2">
+              Каталог
+            </label>
+            <input type="checkbox" id="catalog" name="is_catalog" checked={isCatalog} onChange={() => setIsCatalog((prevIsCatalog) => !prevIsCatalog)} />
+          </div>
+          {isCatalog && (
+            <div className="mb-4 flex items-center">
+              <label htmlFor="catalog_icon" className="block text-gray-700 text-sm font-bold mb-2 mr-2">
+                Значок каталога
+              </label>
+              <input
+                type="file"
+                id="catalog_icon"
+                name="catalog_icon"
+                className="shadow w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                accept="image/*"
+              />
+              {assortment && assortment.icon_url && (
+                deleteIcon 
+                ? <button type="button" onClick={() => setDeleteIcon(false)} className="ml-2"><FiRefreshCw  size={24}/></button>
+                : 
+                <>
+                  <img src={assortment.icon_url} alt="Значок каталога ассортимента" className="w-24 h-24 object-cover rounded-md" />
+                  <button type="button" onClick={() => setDeleteIcon(true)} className="ml-2">
+                   <FiTrash2 size={24}/>
+                  </button>
+                </>
+              )}
             </div>
-          }
-        </div>
-        {/* buttons VVV */}
-        <div className="float-right">
-        
-          <button type="button" onClick={cancelHandler} disabled={isSubmitting} className='mr-3'>
-            Отмена
-          </button>
-          <Button
-            color="white"
-            bgColor={currentColor}
-            disabled={isSubmitting}
-            text={isSubmitting ? 'Отправка...' : 'Сохранить'}
-            type="submit"
-            borderRadius="10px"
-            className="m-2"
-          />
-        </div>
-        
-      </form>
-      }
+          )}
+          <div className="float-right">
+            <button type="button" onClick={cancelHandler} disabled={isSubmitting} className="mr-3">
+              Отмена
+            </button>
+            <Button
+              color="white"
+              bgColor={currentColor}
+              disabled={isSubmitting}
+              text={isSubmitting ? 'Отправка...' : 'Сохранить'}
+              type="submit"
+              borderRadius="10px"
+              className="m-2"
+            />
+          </div>
+        </form>
+      )}
     </>
   );
 }

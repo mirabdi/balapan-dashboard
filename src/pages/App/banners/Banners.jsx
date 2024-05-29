@@ -7,7 +7,7 @@ import { BASE_URL } from 'data/config';
 
 function Banners({ status = 'active' }) {
   const [selectedBanner, setSelectedBanner] = useState(null);
-  const [banners, setBanners] = useState(null);
+  const [banners, setBanners] = useState([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [query, setQuery] = useState("");

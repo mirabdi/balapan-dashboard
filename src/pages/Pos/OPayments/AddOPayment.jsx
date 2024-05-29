@@ -22,6 +22,8 @@ const AddOPayment = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // amount x100
+    formData.amount = formData.amount * 100;
     try {
       const response = await fetch(`${BASE_URL}/money/admin-api/opay`, {
         method: 'POST',
