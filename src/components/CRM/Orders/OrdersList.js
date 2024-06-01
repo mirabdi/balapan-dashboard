@@ -63,7 +63,7 @@ const OrdersList = ({orders, title, selectHandler}) => {
   if(!orders || orders.length === 0) {
     return <div className="bg-white py-8">
         <h1 className="text-3xl font-bold text-center text-gray-800 mb-10">{title}</h1>
-        <p className="text-center text-gray-400 text-lg font-semibold">{orders  ? 'Ассортиментов не найдено' :  'Загрузка...'}</p>
+        <p className="text-center text-gray-400 text-lg font-semibold">{orders  ? 'Заказов не найдено' :  'Загрузка...'}</p>
     </div>
   }
   return (

@@ -94,7 +94,7 @@ const StatusIndicator = ({ defaultStatus, orderId, afterStatusUpdate}) => {
   const [currentStatus, setCurrentStatus] = useState(defaultStatus);
 
   const updateOrderStatus = async (status) => {
-    const confirm = window.confirm(`Are you sure you want to update the order status to ${status}?`);
+    const confirm = window.confirm(`Вы уверены, что хотите обновить статус заказа на ${status}?`);
     if (!confirm) return;
     try {
       await axios.put(`${BASE_URL}/crm/admin-api/orders/${orderId}`, {status});
@@ -102,7 +102,7 @@ const StatusIndicator = ({ defaultStatus, orderId, afterStatusUpdate}) => {
       setCurrentStatus(status);
       if(afterStatusUpdate) afterStatusUpdate(orderId, status);
     } catch (error) {
-      console.error('Failed to update order status:', error);
+      console.error('Не удалось обновить статус заказа:', error);
     }
 };
   const statusToRussian = {
@@ -141,4 +141,4 @@ const StatusIndicator = ({ defaultStatus, orderId, afterStatusUpdate}) => {
     </div>
   );
   
-  };
+};
