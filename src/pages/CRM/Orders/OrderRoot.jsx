@@ -43,6 +43,8 @@ function OrderRootLayout() {
             });
         }
     };
+
+    
     useEffect(async () => {
         if (token) {
             loadStats();

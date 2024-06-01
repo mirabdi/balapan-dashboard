@@ -117,17 +117,16 @@ function AssortmentForm({ assortment, parent_assortment, afterAction }) {
               className="shadow w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               accept="image/*"
             />
-            {(assortment && assortment.image_url) && 
-                deleteImage 
-                ? <button type="button" onClick={() => setDeleteImage(false)} className="ml-2"><FiRefreshCw  size={24}/></button> 
-                : 
+            {assortment && assortment.image_url && (
+              deleteImage ? (
+                <button type="button" onClick={() => setDeleteImage(false)} className="ml-2"><FiRefreshCw size={24} /></button>
+              ) : (
                 <>
                   <img src={assortment.image_url} alt="Изображение ассортимента" className="w-24 h-24 object-cover rounded-md" />
-                  <button type="button" onClick={() => setDeleteImage(true)} className="ml-2">
-                    <FiTrash2 size={24}/>
-                  </button>
+                  <button type="button" onClick={() => setDeleteImage(true)} className="ml-2"><FiTrash2 size={24} /></button>
                 </>
-                }
+              )
+            )}
           </div>
           <div className="mb-4">
             <label htmlFor="description" className="block text-gray-700 text-sm font-bold mb-2">

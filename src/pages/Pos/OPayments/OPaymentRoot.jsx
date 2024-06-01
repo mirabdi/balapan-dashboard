@@ -20,7 +20,7 @@ function OPaymentRootLayout() {
             'path': 'archived',
         },
         {
-            'name': 'Новый Платеж',
+            'name': 'Новый Счет',
             'path': 'new',
         },
     ];
@@ -37,11 +37,11 @@ function OPaymentRootLayout() {
         <>
             <div className="mx-auto max-w-screen-xl bg-white">
                 <div className="flex justify-between items-center">
-                <Header category="Страница" title="Оплаты" />
+                <Header category="Страница" title="Счета" />
                 <Button
                     color="white"
                     bgColor={currentColor}
-                    text="+ Платеж"
+                    text="+ Счет"
                     onClick={() => navigate('/pos/opay/new')}
                     borderRadius="10px"
                     className="m-2 font-bold py-2 px-4 rounded"

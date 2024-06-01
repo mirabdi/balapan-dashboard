@@ -6,7 +6,6 @@ import { useStateContext } from 'contexts/ContextProvider';
 const AddOPayment = () => {
   const { showToast, token, user } = useStateContext();
   const [formData, setFormData] = useState({
-    order_id: '',
     desc: '',
     amount: ''
   });
@@ -22,8 +21,6 @@ const AddOPayment = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // amount x100
-    formData.amount = formData.amount * 100;
     try {
       const response = await fetch(`${BASE_URL}/money/admin-api/opay`, {
         method: 'POST',
@@ -40,35 +37,23 @@ const AddOPayment = () => {
       }
       const data = await response.json();
       if (data.status === 0) {
-        showToast({ title: 'Успех!', content: 'Платеж успешно отправлен.', cssClass: 'e-toast-success', icon: 'e-success toast-icons' });
+        showToast({ title: 'Успех!', content: 'Счет успешно отправлен.', cssClass: 'e-toast-success', icon: 'e-success toast-icons' });
         setFormData({
-          order_id: '',
           desc: '',
           amount: ''
         });
         setPaymentResponse(data.response);
       }
     } catch (error) {
-      showToast({ title: 'Ошибка!', content: 'Не удалось отправить платеж.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
+      showToast({ title: 'Ошибка!', content: 'Не удалось отправить счет.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
     }
   };
 
   return (
     <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
-      <Header category="Страница" title="Платеж" />
+      <Header category="Страница" title="Счет" />
       <form onSubmit={handleSubmit} className="mt-4">
-        <div className="mb-4">
-          <label htmlFor="order_id" className="block text-sm font-medium text-gray-700">ID Заказа</label>
-          <input
-            type="text"
-            name="order_id"
-            id="order_id"
-            value={formData.order_id}
-            onChange={handleChange}
-            className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            required
-          />
-        </div>
+        
         <div className="mb-4">
           <label htmlFor="desc" className="block text-sm font-medium text-gray-700">Описание</label>
           <input
@@ -97,7 +82,7 @@ const AddOPayment = () => {
           type="submit"
           className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
         >
-          Отправить платеж
+          Отправить счет
         </button>
       </form>
       {paymentResponse && (
