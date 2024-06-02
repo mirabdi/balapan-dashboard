@@ -1,9 +1,11 @@
 export { default as Dashboard } from "./Dashboard";
-export { default as Kanban } from "./Kanban";
-export { default as Editor } from "./Editor";
-export { default as Customers } from "./Customers";
-export { default as ColorPicker } from "./ColorPicker";
-export { default as Calendar } from "./Calendar";
+export { default as Kanban } from "./Old/Kanban";
+export { default as Editor } from "./Old/Editor";
+export { default as Customers } from "./Old/Customers";
+export { default as ColorPicker } from "./Old/ColorPicker";
+export { default as Calendar } from "./Old/Calendar";
+export { default as OrdersTemplate } from "./Old/OrdersTemplate";
+
 export { default as Area } from "./Charts/Area.jsx";
 export { default as Bar } from "./Charts/Bar";
 export { default as ColorMapping } from "./Charts/ColorMapping";
@@ -12,7 +14,6 @@ export { default as Line } from "./Charts/Line";
 export { default as Pie } from "./Charts/Pie";
 export { default as Pyramid } from "./Charts/Pyramid";
 export { default as Stacked } from "./Charts/Stacked";
-export { default as OrdersTemplate } from "./OrdersTemplate";
 
 // !Utils:
 export { default as UnderConstruction } from "./UnderConstruction";
@@ -42,6 +43,15 @@ export { default as AddEmployeeGroup } from "./Company/EmployeeGroups/AddEmploye
 export { default as EditEmployeeGroup } from "./Company/EmployeeGroups/EditEmployeeGroup";
 export { default as ViewEmployeeGroup } from "./Company/EmployeeGroups/ViewEmployeeGroup";
 export { employeeGroupsLoader,  employeeGroupDetailLoader } from './Company/EmployeeGroups/Services';
+
+
+// !Dashboard
+export { default as DevRootLayout } from "./Dev/DevRoot";
+export { default as SectionRootLayout } from "./Dev/sections/SectionRoot";
+export { default as Sections } from "./Dev/sections/Sections";
+export { default as AddSection } from "./Dev/sections/AddSection";
+export { default as EditSection } from "./Dev/sections/EditSection";
+export { default as ViewSection } from "./Dev/sections/ViewSection";
 
 // !Products
 export { default as ProductRootLayout } from './Products/ProductRoot';

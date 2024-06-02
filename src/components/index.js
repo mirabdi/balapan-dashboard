@@ -42,6 +42,12 @@ export { default as EmployeeGroupsList } from "./Company/EmployeeGroups/Employee
 export { default as EmployeeGroupItem } from "./Company/EmployeeGroups/EmployeeGroupItem";
 export { default as EmployeeGroupForm } from "./Company/EmployeeGroups/EmployeeGroupForm";
 
+
+// Dev
+export { default as SectionsList } from "./Dev/sections/SectionsList";
+export { default as SectionItem } from "./Dev/sections/SectionItem";
+export { default as SectionForm } from "./Dev/sections/SectionForm";
+
 // Products
 export { default as ProductsNavigation } from "./Products/ProductsNavigation";
 

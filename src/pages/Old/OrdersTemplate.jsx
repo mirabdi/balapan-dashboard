@@ -14,9 +14,9 @@ import {
   Inject,
 } from "@syncfusion/ej2-react-grids";
 
-import { ordersData, contextMenuItems } from "../data/dummy";
-import { gridOrderImage, gridOrderStatus } from "../data/utils";
-import { Header } from "../components";
+import { ordersData, contextMenuItems } from "data/dummy";
+import { gridOrderImage, gridOrderStatus } from "data/utils";
+import { Header } from "components";
 
 const OrdersTemplate = () => {
   const editing = { allowDeleting: true, allowEditing: true };

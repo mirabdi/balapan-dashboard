@@ -6,7 +6,7 @@ import { BASE_URL } from 'data/config';
 
 function EmployeeGroupForm({ method = 'POST', employeeGroup }) {
   const navigate = useNavigate();
-  const { showToast, currentColor } = useStateContext();
+  const { showToast, currentColor, token } = useStateContext();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [sections, setSections] = useState(employeeGroup ? employeeGroup.sections : null);
   
@@ -15,7 +15,7 @@ function EmployeeGroupForm({ method = 'POST', employeeGroup }) {
       try {
         const response = await fetch(`${BASE_URL}/dashboard/admin-api/sections`, {
           headers: {
-            Authorization: 'Token token', 
+            Authorization: `Token ${token}`, 
           },
         });
         if (!response.ok) {

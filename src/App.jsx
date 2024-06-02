@@ -14,10 +14,13 @@ import {
 
     // Company pages
     CompanyRootLayout,
-    EmployeesRootLayout,
-    Employees, AddEmployee, ViewEmployee, EditEmployee, employeesLoader, employeeDetailLoader,
-    EmployeeGroupsRootLayout,
-    EmployeeGroups, AddEmployeeGroup, EditEmployeeGroup, ViewEmployeeGroup, employeeGroupsLoader, employeeGroupDetailLoader,
+    EmployeesRootLayout, Employees, AddEmployee, ViewEmployee, EditEmployee, employeeDetailLoader,
+    EmployeeGroupsRootLayout, EmployeeGroups, AddEmployeeGroup, EditEmployeeGroup, ViewEmployeeGroup, employeeGroupsLoader, employeeGroupDetailLoader,
+
+
+    // Dev pages
+    DevRootLayout, 
+    SectionRootLayout, Sections, AddSection, ViewSection, EditSection,
 
     // Product pages
     ProductRootLayout,
@@ -118,6 +121,18 @@ function App() {
             children: [
                 // {index: true, element: <ErrorPage/>},
                 {index: true, element: <UnderConstruction/>},
+                {path: "dev", element: <DevRootLayout/>, children: [
+                    {path: "sections", element: <SectionRootLayout/>, children: [
+                        {index: true, element: <Sections/>},
+                        {path: "archived", element: <Sections archived={true}/>},
+                        {path: "new", element: <AddSection/>},
+                        {path: ":id", children: [
+                            {index: true, element: <ViewSection/>},
+                            {path: "edit", element: <EditSection/>},
+                        ]},
+                    ]},
+
+                ]},
                 {path: "company", element: <CompanyRootLayout/>, children:
                     [
                         {index: true, element: <UnderConstruction/>},
