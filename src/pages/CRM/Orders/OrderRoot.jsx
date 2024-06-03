@@ -5,9 +5,10 @@ import { useStateContext } from "contexts/ContextProvider";
 import { BASE_URL } from "data/config";
 
 function OrderRootLayout() {
+    const zeroStats = {ordered: 0, preparing: 0, ready: 0, delivering: 0, completed: 0, canceled: 0};
     const { currentColor, showToast, token } = useStateContext();
     const [hoveredLink, setHoveredLink] = useState(null);
-    const [ stats, setStats ] = useState({ordered: 0, preparing: 0, ready: 0, delivering: 0, completed: 0, canceled: 0});
+    const [ stats, setStats ] = useState(zeroStats);
     const getNavLinkStyle = ({ isActive, name }) => ({
         borderBottomColor: isActive || hoveredLink === name ? currentColor : 'transparent',
         color: isActive || hoveredLink === name ? currentColor : '#4B5563',

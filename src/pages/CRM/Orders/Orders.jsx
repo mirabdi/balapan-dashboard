@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react';
-import { Suspense} from 'react';
+import { useEffect, useState,Suspense } from 'react';
 import { RightModal, OrdersList, OrderItem } from 'components';
-import { useLoaderData, Await } from 'react-router-dom';
+import { useNavigate, Await } from 'react-router-dom';
 import { useStateContext} from '../../../contexts/ContextProvider';
 import { BASE_URL } from 'data/config';
 const  statsToRussian = (status) => {
@@ -27,7 +26,7 @@ function Orders({status="ordered"}) {
   const [query, setQuery] = useState("");
   const { rightModal, setRightModal, showToast, token} = useStateContext();
   const title = statsToRussian(status);
-  
+  const navigate = useNavigate();
   
   
   const loadMoreOrders = async () => {
@@ -68,13 +67,7 @@ function Orders({status="ordered"}) {
   }, [token, status]);
 
   const afterStatusUpdate = (orderId, status) => {
-    const updatedOrders = orders.map((order) => {
-      if(order.id === orderId){
-        order.status = status;
-      }
-      return order;
-    });
-    setOrders(updatedOrders);
+    navigate('/crm/orders/' + status, { replace: true });
   };
 
   return (

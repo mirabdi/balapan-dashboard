@@ -7,7 +7,7 @@ import {
     Dashboard,
     UnderConstruction,
     ErrorPage,
-    TestRootLayout, Test1Page, Test2Page, Test3Page,
+    TestRootLayout, Test1Page, Test2Page, Test3Page, Test4Page,
     OrdersTemplate,
     RootLayout,
     AuthenticationPage,
@@ -437,6 +437,7 @@ function App() {
                     {path: "1", element: <Test1Page/>},
                     {path: "2", element: <Test2Page/>},
                     {path: "3", element: <Test3Page/>},
+                    {path: "4", element: <Test4Page/>},
                 ]},
     
                 {path: "kanban", element: <Kanban/>},

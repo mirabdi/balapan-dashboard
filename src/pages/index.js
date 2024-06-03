@@ -26,6 +26,7 @@ export { default as TestRootLayout } from "./Test/TestRoot";
 export { default as Test1Page } from "./Test/Test1";
 export { default as Test2Page } from "./Test/Test2";
 export { default as Test3Page } from "./Test/Test3";
+export { default as Test4Page } from "./Test/Test4";
 
 // !Company 
 export { default as CompanyRootLayout } from "./Company/CompanyRoot";

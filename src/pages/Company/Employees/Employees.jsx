@@ -31,7 +31,7 @@ function Employees() {
   const lastSegment = url.pathname.split('/').pop();
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [employees, setEmployees] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setЗагрузка] = useState(true);
   const { rightModal, setRightModal, showToast } = useStateContext();
 
   if (lastSegment === 'archived') {
@@ -51,7 +51,7 @@ function Employees() {
           icon: 'e-error toast-icons' 
         });
       } finally {
-        setLoading(false);
+        setЗагрузка(false);
       }
     }
     fetchEmployees();
@@ -60,7 +60,7 @@ function Employees() {
   return (
     <>
       {loading ? (
-        <p className="flex flex-wrap">Loading...</p>
+        <p className="flex flex-wrap">Загрузка...</p>
       ) : (
         <EmployeesList employees={employees} title={title} selectHandler={(employee) => {
           console.log("selectHandler");
@@ -70,7 +70,7 @@ function Employees() {
       )}
       {rightModal && selectedEmployee && (
         <RightModal title={"Cотрудник: " + selectedEmployee.name} afterClose={() => setSelectedEmployee(null)}>
-          <Suspense fallback={<p style={{ textAlign: 'center' }}>Loading...</p>}>
+          <Suspense fallback={<p style={{ textAlign: 'center' }}>Загрузка...</p>}>
             <EmployeeItem employee={selectedEmployee} />
           </Suspense>
           <h1 className="flex md:flex-row flex-col">Here will be related statistics and more info...</h1>

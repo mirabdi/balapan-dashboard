@@ -26,7 +26,7 @@ function TestRootLayout(){
                 end
             >Test 3</NavLink>
             <NavLink 
-                to="/test/groups/4" 
+                to="/test/4" 
                 className={({ isActive }) =>
                     isActive ? 'mx-2 px-4 py-2 text-balapanBlue font-bold border-b-2 border-balapanBlue' : 'mx-2 px-4 py-2 text-gray-600 hover:text-balapanBlue'
                 }

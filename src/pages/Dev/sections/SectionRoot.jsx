@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
-import { Outlet, NavLink } from "react-router-dom";
+import { Outlet, NavLink, useNavigate } from "react-router-dom";
 import { Header, Button } from "components";
 import { useStateContext } from "contexts/ContextProvider";
-import { BASE_URL } from "data/config";
+
+
 
 function SectionRootLayout() {
-    const { currentColor, showToast, token } = useStateContext();
+    const { currentColor } = useStateContext();
     const [hoveredLink, setHoveredLink] = useState(null);
-    const [ stats, setStats ] = useState({ordered: 0, preparing: 0, ready: 0, delivering: 0, completed: 0, canceled: 0});
+    const navigate = useNavigate();
+
+
     const getNavLinkStyle = ({ isActive, name }) => ({
         borderBottomColor: isActive || hoveredLink === name ? currentColor : 'transparent',
         color: isActive || hoveredLink === name ? currentColor : '#4B5563',

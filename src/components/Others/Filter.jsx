@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { DatePickerComponent, DateRangePickerComponent } from '@syncfusion/ej2-react-calendars';
-import { DropDownListComponent, MultiSelectComponent } from '@syncfusion/ej2-react-dropdowns';
+import { DateRangePickerComponent } from '@syncfusion/ej2-react-calendars';
+import { MultiSelectComponent } from '@syncfusion/ej2-react-dropdowns';
 import { BASE_URL } from 'data/config';
 
 

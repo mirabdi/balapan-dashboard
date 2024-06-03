@@ -92,9 +92,29 @@ export default OrderItem;
 const StatusIndicator = ({ defaultStatus, orderId, afterStatusUpdate}) => {
   const { showToast } = useStateContext();
   const [currentStatus, setCurrentStatus] = useState(defaultStatus);
+  const statusToRussian = {
+    'cart': 'Корзина',
+    'ordered': 'Оформлен',
+    'preparing': 'Сборка',
+    'ready': 'Готов',
+    'delivering': 'Доставка',
+    'completed': 'Завершен',
+    'canceled': 'Отменен',
+  };
+  const statusDetails = {
+    cart: { label: 'Корзина', Icon: BsCart4 },
+    ordered: { label: 'Оформлен', Icon: BsBoxSeam },
+    preparing: { label: 'Сборка', Icon: BsTools },
+    ready: { label: 'Готов', Icon: BsCheckCircle },
+    delivering: { label: 'Доставка', Icon: BsTruck },
+    completed: { label: 'Завершен', Icon: BsCheckCircle },
+    canceled: { label: 'Отменен', Icon: BsXCircle },
+  };
+  const statusOrder = Object.keys(statusDetails);
 
   const updateOrderStatus = async (status) => {
-    const confirm = window.confirm(`Вы уверены, что хотите обновить статус заказа на ${status}?`);
+    
+    const confirm = window.confirm(`Вы уверены, что хотите обновить статус заказа на "${statusToRussian[status]}"?`);
     if (!confirm) return;
     try {
       await axios.put(`${BASE_URL}/crm/admin-api/orders/${orderId}`, {status});
@@ -105,17 +125,8 @@ const StatusIndicator = ({ defaultStatus, orderId, afterStatusUpdate}) => {
       console.error('Не удалось обновить статус заказа:', error);
     }
 };
-  const statusToRussian = {
-    cart: { label: 'Корзина', Icon: BsCart4 },
-    ordered: { label: 'Оформлен', Icon: BsBoxSeam },
-    preparing: { label: 'Сборка', Icon: BsTools },
-    ready: { label: 'Готов', Icon: BsCheckCircle },
-    delivering: { label: 'Доставка', Icon: BsTruck },
-    completed: { label: 'Завершен', Icon: BsCheckCircle },
-    canceled: { label: 'Отменен', Icon: BsXCircle },
-  };
-
-  const statusOrder = Object.keys(statusToRussian);
+  
+  
 
   const getStatusClasses = (status) => {
     const isActive = statusOrder.indexOf(status) <= statusOrder.indexOf(currentStatus);
@@ -127,7 +138,7 @@ const StatusIndicator = ({ defaultStatus, orderId, afterStatusUpdate}) => {
   return (
     <div className="flex space-x-2 justify-center text-sm">
       {statusOrder.map((status) => {
-        const { label, Icon } = statusToRussian[status];
+        const { label, Icon } = statusDetails[status];
         return (
           <button
             onClick={() => updateOrderStatus(status)}

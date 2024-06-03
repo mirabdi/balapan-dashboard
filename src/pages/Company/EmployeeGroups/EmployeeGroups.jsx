@@ -31,7 +31,7 @@ function EmployeeGroups() {
   const lastSegment = url.pathname.split('/').pop();
   const [selectedEmployeeGroup, setSelectedEmployeeGroup] = useState(null);
   const [employeeGroups, setEmployeeGroups] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setЗагрузка] = useState(true);
   const { rightModal, setRightModal, showToast } = useStateContext();
 
   if (lastSegment === 'archived') {
@@ -51,7 +51,7 @@ function EmployeeGroups() {
           icon: 'e-error toast-icons' 
         });
       } finally {
-        setLoading(false);
+        setЗагрузка(false);
       }
     }
     fetchEmployeeGroups();
@@ -60,7 +60,7 @@ function EmployeeGroups() {
   return (
     <>
       {loading ? (
-        <p className="flex flex-wrap">Loading...</p>
+        <p className="flex flex-wrap">Загрузка...</p>
       ) : (
         <EmployeeGroupsList employeeGroups={employeeGroups} title={title} selectHandler={(employee) => {
           console.log("selectHandler");
@@ -70,7 +70,7 @@ function EmployeeGroups() {
       )}
       {rightModal && selectedEmployeeGroup && (
         <RightModal title={"Группа: " + selectedEmployeeGroup.name} afterClose={() => setSelectedEmployeeGroup(null)}>
-          <Suspense fallback={<p style={{ textAlign: 'center' }}>Loading...</p>}>
+          <Suspense fallback={<p style={{ textAlign: 'center' }}>Загрузка...</p>}>
             <EmployeeGroupItem employeeGroup={selectedEmployeeGroup} />
           </Suspense>
         </RightModal>
