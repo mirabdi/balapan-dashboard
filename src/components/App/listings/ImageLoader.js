@@ -31,7 +31,9 @@ const ImageLoader = ({ images, url }) => {
                 setImageList(data.response.pictures);
                 showToast({ title: 'Успех!', content: 'Изображение успешно загружено.', cssClass: 'e-toast-success', icon: 'e-success toast-icons' });
             } else {
-                showToast({ title: 'Ошибка!', content: 'Не удалось загрузить изображение.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
+                const data = await response.json();
+                const message = data.message || 'Не удалось загрузить изображение.';
+                showToast({ title: 'Ошибка!', content: message, cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
             }
         } catch (error) {
             showToast({ title: 'Ошибка!', content: 'Сетевая ошибка или неверный ответ.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
