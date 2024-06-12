@@ -46,7 +46,12 @@ function ListingForm({ currentListing, parent_assortment, afterAction }) {
         afterAction();
         return;
       }
-      navigate('/app/listings/');
+      if(currentListing){
+        navigate('/app/listings/');
+      } else {
+        const data = await response.json();
+        navigate(`/app/listings/${data.response.id}/edit`);
+      }
     } catch (error) {
       console.log(error);
       showToast({ title: 'Ошибка!', content: 'Сетевая ошибка или неверный ответ.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });

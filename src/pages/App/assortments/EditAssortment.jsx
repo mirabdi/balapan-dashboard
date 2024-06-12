@@ -7,8 +7,9 @@ import { MdEdit, MdDelete, MdAddCircleOutline } from 'react-icons/md';
 const EditAssortment = () => {
   const navigate = useNavigate();
   const { assortment } = useRouteLoaderData('assortment-detail');
+  const [ selectedListing, setSelectedListing ] = useState(null);
   const [mode, setMode] = useState(null);
-  const { rightModal, setRightModal, showToast, currentColor } = useStateContext();
+  const { showToast, currentColor } = useStateContext();
   const refreshPage = () => {
     setMode(null);
     navigate('/app/assortments/' + assortment.id + '/edit', { replace: true });
@@ -34,13 +35,13 @@ const EditAssortment = () => {
                   color="white"
                   bgColor={currentColor}
                   icon={<MdEdit size={30} />}
-                  onClick={() => setMode('edit_children_assortment')}
+                  onClick={() => setMode('edit_children_assortments_list')}
                   borderRadius="10px"
                   className="m-2 font-bold py-2 px-4 rounded"
               />
           </div>
       </div>
-      <AssortmentsList assortments={assortment.sub_assortments || []} selectHandler={(assortment) => { setRightModal(true); }} />
+      <AssortmentsList assortments={assortment.sub_assortments || []} />
 
       <div className="flex justify-between items-center w-full mt-10">
           <p className="text-3xl font-extrabold tracking-tight text-slate-900">
@@ -59,14 +60,14 @@ const EditAssortment = () => {
                   color="white"
                   bgColor={currentColor}
                   icon={<MdEdit size={30} />}
-                  onClick={() => setMode('edit_children_listing')}
+                  onClick={() => setMode('edit_children_listings_list')}
                   borderRadius="10px"
                   className="m-2 font-bold py-2 px-4 rounded"
               />
             </div>
       </div>
 
-      <ListingsList listings={assortment.listings || []} selectHandler={(listing) => { console.log(listing); setRightModal(true); }} />
+      <ListingsList listings={assortment.listings || []}  selectHandler={(listing)=>{setSelectedListing(listing); setMode('edit_listing');}}/>
       { 
         mode === 'add_assortment' 
         && <RightModal title={"Добавить Новый Ассортимент"} afterClose={refreshPage}>
@@ -74,7 +75,7 @@ const EditAssortment = () => {
           </RightModal>
       }
       { 
-        mode === 'edit_children_assortment' 
+        mode === 'edit_children_assortments_list' 
         && <RightModal title={"Изменить Список Ассортиментов"} afterClose={refreshPage}>
             <AssortmentSelector parent_assortment={assortment} title="AssortmentSelector" afterAction={refreshPage} />
           </RightModal>
@@ -87,7 +88,14 @@ const EditAssortment = () => {
           </RightModal>
       }
       { 
-        mode === 'edit_children_listing' 
+        mode === 'edit_listing' 
+        &&
+          <RightModal title={"Изменить Листинг"} afterClose={refreshPage}>
+            <ListingForm currentListing={selectedListing} parent_assortment={assortment} afterAction={refreshPage} />
+          </RightModal>
+      }
+      { 
+        mode === 'edit_children_listings_list' 
         && <RightModal title={"Изменить Список Листингов"} afterClose={refreshPage}>
             <ListingSelector parent_assortment={assortment} title="ListingSelector" afterAction={refreshPage} />
           </RightModal>

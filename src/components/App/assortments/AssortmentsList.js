@@ -27,6 +27,12 @@ function AssortmentsList({ assortments, title, selectHandler, afterArchive }) {
   useEffect(() => {
     setCurrAssortments(assortments);
   }, [assortments]);
+
+  const onSelect = (listing) => {
+    if(selectHandler) selectHandler(listing);
+  };
+
+
   const archiveAssortment = async (id, is_archived) => {
     const confirmArchive = window.confirm("Вы уверены, что хотите архивировать этот ассортимент?");
     if (confirmArchive) {
@@ -122,7 +128,7 @@ function AssortmentsList({ assortments, title, selectHandler, afterArchive }) {
                       {currAssortments.map((assortment, index) => (
                         <Draggable key={assortment.id} draggableId={assortment.id.toString()} index={index}>
                           {(provided) => (
-                            <tr ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className="hover:bg-gray-100 hover:cursor-pointer" onClick={() => selectHandler(assortment)}>
+                            <tr ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className="hover:bg-gray-100 hover:cursor-pointer" onClick={() => onSelect(assortment)}>
                               <td className="px-6 py-4 text-md text-gray-500">{assortment.title}</td>
                               <td className="px-6 py-4 text-md text-gray-500">{assortment.description.slice(0, 100)}...</td>
                               <td className="px-6 py-4 text-md text-gray-500">{new Date(assortment.created).toLocaleDateString('ru-RU', { year: 'numeric', month: 'long', day: 'numeric' })}</td>

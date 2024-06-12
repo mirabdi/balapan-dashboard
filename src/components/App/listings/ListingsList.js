@@ -26,6 +26,9 @@ function ListingsList({ listings, title, selectHandler }) {
     setCurrListings(listings);
   }, [listings]);
 
+  const onSelect = (listing) => {
+    if(selectHandler) selectHandler(listing);
+  };
   
   const archiveListing = async (id, is_archived) => {
     let confirmMessage = is_archived ? "Вы уверены, что хотите архивировать этот листинг?" :  "Вы уверены, что хотите восстановить этот листинг?" ;
@@ -156,9 +159,9 @@ function ListingsList({ listings, title, selectHandler }) {
                </thead>
                <tbody className="bg-white divide-y divide-gray-200">
                 {currListings.map((listing, index) => (
-                  <Draggable to={`/app/listings/${listing.id}`} onClick={() => selectHandler(listing)} key={listing.id} draggableId={listing.id.toString()} index={index}>
+                  <Draggable to={`/app/listings/${listing.id}`} onClick={() => onSelect(listing)} key={listing.id} draggableId={listing.id.toString()} index={index}>
                   {(provided) => (
-                    <tr ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className="hover:bg-gray-100 hover:cursor-pointer" onClick={() => selectHandler(listing)}> 
+                    <tr ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className="hover:bg-gray-100 hover:cursor-pointer" onClick={() => onSelect(listing)}> 
                       <td className="max-w-32 px-6 py-4  text-md  text-gray-500 ">{listing.title}</td>
                       <td className="max-w-32  px-6 py-4 text-md  text-gray-500">{listing.description.slice(0, 100)}...</td>
                       <td className=" px-6 py-4 text-md  text-gray-500">{new Date(listing.created).toLocaleDateString('ru-RU', {year: 'numeric',month: 'long',day: 'numeric'})}</td>
