@@ -27,6 +27,7 @@ export { default as Test1Page } from "./Test/Test1";
 export { default as Test2Page } from "./Test/Test2";
 export { default as Test3Page } from "./Test/Test3";
 export { default as Test4Page } from "./Test/Test4";
+export { default as Test5Page } from "./Test/Test5";
 
 // !Company 
 export { default as CompanyRootLayout } from "./Company/CompanyRoot";
@@ -44,6 +45,13 @@ export { default as AddEmployeeGroup } from "./Company/EmployeeGroups/AddEmploye
 export { default as EditEmployeeGroup } from "./Company/EmployeeGroups/EditEmployeeGroup";
 export { default as ViewEmployeeGroup } from "./Company/EmployeeGroups/ViewEmployeeGroup";
 export { employeeGroupsLoader,  employeeGroupDetailLoader } from './Company/EmployeeGroups/Services';
+
+export { default as StoresRootLayout } from "./Company/Stores/StoresRoot";
+export { default as Stores } from "./Company/Stores/Stores";
+export { default as AddStore } from "./Company/Stores/AddStore";
+export { default as EditStore } from "./Company/Stores/EditStore";
+export { default as ViewStore } from "./Company/Stores/ViewStore";
+export { storesLoader,  storeDetailLoader } from './Company/Stores/Services';
 
 
 // !Dashboard

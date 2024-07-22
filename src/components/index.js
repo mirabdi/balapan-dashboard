@@ -41,6 +41,9 @@ export { default as EmployeesList } from "./Company/Employees/EmployeesList";
 export { default as EmployeeGroupsList } from "./Company/EmployeeGroups/EmployeeGroupsList";
 export { default as EmployeeGroupItem } from "./Company/EmployeeGroups/EmployeeGroupItem";
 export { default as EmployeeGroupForm } from "./Company/EmployeeGroups/EmployeeGroupForm";
+export { default as StoreForm } from "./Company/Stores/StoreForm";
+export { default as StoreItem } from "./Company/Stores/StoreItem";
+export { default as StoresList } from "./Company/Stores/StoresList";
 
 
 // Dev

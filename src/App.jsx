@@ -7,7 +7,7 @@ import {
     Dashboard,
     UnderConstruction,
     ErrorPage,
-    TestRootLayout, Test1Page, Test2Page, Test3Page, Test4Page,
+    TestRootLayout, Test1Page, Test2Page, Test3Page, Test4Page, Test5Page,
     OrdersTemplate,
     RootLayout,
     AuthenticationPage,
@@ -16,7 +16,7 @@ import {
     CompanyRootLayout,
     EmployeesRootLayout, Employees, AddEmployee, ViewEmployee, EditEmployee, employeeDetailLoader,
     EmployeeGroupsRootLayout, EmployeeGroups, AddEmployeeGroup, EditEmployeeGroup, ViewEmployeeGroup, employeeGroupsLoader, employeeGroupDetailLoader,
-
+    StoresRootLayout, Stores, AddStore, ViewStore, EditStore, storeDetailLoader,
 
     // Dev pages
     DevRootLayout, 
@@ -146,12 +146,21 @@ function App() {
                             ]},
                         ]},
                         {path: "employee-groups", element: <EmployeeGroupsRootLayout/>, children: [
-                            {index: true, element: <EmployeeGroups key="activeEmployeeGroups"/>, loader: () => employeeGroupsLoader(false, token)},
-                            {path: "archived", element: <EmployeeGroups key="archivedEmployeeGroups"/>, loader: () => employeeGroupsLoader(true, token)},
+                            {index: true, element: <EmployeeGroups key="activeEmployeeGroups"/>},
+                            {path: "archived", element: <EmployeeGroups key="archivedEmployeeGroups"/>},
                             {path: "new", element: <AddEmployeeGroup/>},
                             {path: ":id", id: "employee-group-detail", loader: ({ params, request }) => employeeGroupDetailLoader({ request, params, token }),children: [
                                 {index: true, element: <ViewEmployeeGroup/>},
                                 {path: "edit", element: <EditEmployeeGroup/>},
+                            ]},
+                        ]},
+                        {path: "stores", element: <StoresRootLayout/>, children: [
+                            {index: true, element: <Stores key="activeStores"/>},
+                            {path: "archived", element: <Stores key="archivedStores"/>},
+                            {path: "new", element: <AddStore/>},
+                            {path: ":id",id: "store-detail", loader: ({ params, request }) => storeDetailLoader({ request, params, token }), children: [
+                                {index: true, element: <ViewStore/>},
+                                {path: "edit", element: <EditStore/>},
                             ]},
                         ]},
                         {path: ":id", element: <UnderConstruction />},
@@ -438,6 +447,7 @@ function App() {
                     {path: "2", element: <Test2Page/>},
                     {path: "3", element: <Test3Page/>},
                     {path: "4", element: <Test4Page/>},
+                    {path: "5", element: <Test5Page/>},
                 ]},
     
                 {path: "kanban", element: <Kanban/>},

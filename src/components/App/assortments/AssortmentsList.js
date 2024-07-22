@@ -13,7 +13,7 @@ const reorder = (list, startIndex, endIndex) => {
   const [removed] = result.splice(startIndex, 1);
   result.splice(endIndex, 0, removed);
   const priorities = list.map((item) => item.priority);
-  priorities.sort((a, b) => a - b);
+  priorities.sort((a, b) => b - a);
   for (let i = 0; i < result.length; i++) {
     result[i].priority = priorities[i];
   }
