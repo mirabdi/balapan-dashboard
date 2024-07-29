@@ -9,13 +9,13 @@ function StoreForm({ method = 'POST', store }) {
   const { showToast, currentColor } = useStateContext();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [address, setAddress] = useState({
-    name: store?.address?.name || '',
+    address_name: store?.address?.name || '',
     longitude: store?.address?.longitude || '',
     latitude: store?.address?.latitude || ''
   });
 
   const cancelHandler = () => {
-    navigate('/app/stores/');
+    navigate('/company/stores/');
   };
 
   const handleSubmit = async (event) => {
@@ -23,17 +23,18 @@ function StoreForm({ method = 'POST', store }) {
     setIsSubmitting(true);
 
     const formData = {
+      id: store ? store.id : null,
       name: event.target.name.value,
       cloudshop_id: event.target.cloudshop_id.value,
       address
     };
 
     try {
-      const response = await fetch(`${BASE_URL}/crm/admin-api/stores${store ? `/${store.id}` : ''}`, {
+      const response = await fetch(`${BASE_URL}/admin-api/stores`, {
         method: store ? 'PUT' : 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: 'Token token', // Replace 'token' with your actual token
+          Authorization: 'Token token',
         },
         body: JSON.stringify(formData),
       });
@@ -46,7 +47,7 @@ function StoreForm({ method = 'POST', store }) {
       }
 
       showToast({ title: 'Успех!', content: 'Магазин успешно сохранён.', cssClass: 'e-toast-success', icon: 'e-success toast-icons' });
-      navigate('/app/stores/');
+      navigate('/company/stores/');
     } catch (error) {
       showToast({ title: 'Ошибка!', content: 'Сетевая ошибка или некорректный ответ.', cssClass: 'e-toast-danger', icon: 'e-error toast-icons' });
       console.error('Fetch error:', error);
@@ -88,8 +89,8 @@ function StoreForm({ method = 'POST', store }) {
         <input
           id="address_name"
           type="text"
-          name="name"
-          value={address.name}
+          name="address_name"
+          value={address.address_name}
           onChange={handleAddressChange}
           required
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"

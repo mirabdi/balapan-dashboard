@@ -37,7 +37,7 @@ export { default as Employees } from "./Company/Employees/Employees";
 export { default as AddEmployee } from "./Company/Employees/AddEmployee";
 export { default as ViewEmployee } from "./Company/Employees/ViewEmployee";
 export { default as EditEmployee } from "./Company/Employees/EditEmployee";
-export { employeesLoader,  employeeDetailLoader } from './Company/Employees/Services';
+export { loadEmployeesList,  employeeDetailLoader } from './Company/Employees/Services';
 
 export { default as EmployeeGroupsRootLayout } from "./Company/EmployeeGroups/EmployeeGroupsRoot";
 export { default as EmployeeGroups } from "./Company/EmployeeGroups/EmployeeGroups";

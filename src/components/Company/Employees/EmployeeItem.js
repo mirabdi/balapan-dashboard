@@ -1,6 +1,6 @@
 import { Link, useNavigate} from 'react-router-dom';
-import { useStateContext } from '../../../contexts/ContextProvider';
-import { BASE_URL } from '../../../data/config';
+import { useStateContext } from 'contexts/ContextProvider';
+import { BASE_URL } from 'data/config';
 
 
 const EmployeeItem = ({ employee }) => {

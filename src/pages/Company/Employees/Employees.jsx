@@ -1,29 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Suspense } from 'react';
-import { RightModal, EmployeesList, EmployeeItem } from "../../../components";
-import { useStateContext } from '../../../contexts/ContextProvider';
-import { BASE_URL } from '../../../data/config';
-
-async function loadEmployeesList(is_archived = false) {
-  const token = "token";
-  let url = BASE_URL + "/admin-api/employees";
-  if (is_archived) {
-    url += "?is_archived=" + is_archived;
-  }
-  const response = await fetch(url, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Token " + token,
-    },
-  });
-  if (!response.ok) {
-    throw new Error("Failed to load employees");
-  } else {
-    const resData = await response.json();
-    return resData.response;
-  }
-}
+import { RightModal, EmployeesList, EmployeeItem } from "components";
+import { loadEmployeesList } from './Services';
+import { useStateContext } from 'contexts/ContextProvider';
+import { BASE_URL } from 'data/config';
 
 function Employees() {
   let title = "Активные сотрудники";

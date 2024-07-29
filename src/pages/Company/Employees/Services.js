@@ -7,7 +7,7 @@ import { BASE_URL } from '../../../data/config';
 
 
 
-async function loadEmployeesList(is_archived = false) {
+export async function loadEmployeesList(is_archived = false) {
   const token = "token";
   let url = BASE_URL + "/admin-api/employees";
   if (is_archived) {

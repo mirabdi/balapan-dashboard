@@ -1,496 +1,359 @@
-import { Link } from "react-router-dom";
-
+import React, { useState, useEffect } from 'react';
+import { Clock, Settings, PlusCircle, Edit2, Trash2 } from 'lucide-react';
 
 const Test1Page = () => {
+  const [projects, setProjects] = useState([]);
+  const [tasks, setTasks] = useState([]);
+  const [currentTask, setCurrentTask] = useState(null);
+  const [timer, setTimer] = useState(25 * 60);
+  const [isActive, setIsActive] = useState(false);
+  const [mode, setMode] = useState('pomodoro');
+  const [settings, setSettings] = useState({
+    pomodoro: 25,
+    shortBreak: 5,
+    longBreak: 15,
+  });
+  const [isAddingProject, setIsAddingProject] = useState(false);
+  const [isEditingProject, setIsEditingProject] = useState(false);
+  const [isAddingTask, setIsAddingTask] = useState(false);
+  const [isEditingTask, setIsEditingTask] = useState(false);
+  const [editingProjectId, setEditingProjectId] = useState(null);
+  const [editingTaskId, setEditingTaskId] = useState(null);
+  const [newProject, setNewProject] = useState({ name: '' });
+  const [newTask, setNewTask] = useState({ title: '', projectId: '', estimatedPomodoros: 1, comment: '' });
+
+  useEffect(() => {
+    const savedProjects = JSON.parse(localStorage.getItem('projects')) || [];
+    const savedTasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    const savedSettings = JSON.parse(localStorage.getItem('settings')) || settings;
+    setProjects(savedProjects);
+    setTasks(savedTasks);
+    setSettings(savedSettings);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('projects', JSON.stringify(projects));
+  }, [projects]);
+
+  useEffect(() => {
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+  }, [tasks]);
+
+  useEffect(() => {
+    localStorage.setItem('settings', JSON.stringify(settings));
+  }, [settings]);
+
+  useEffect(() => {
+    let interval = null;
+    if (isActive && timer > 0) {
+      interval = setInterval(() => {
+        setTimer((timer) => timer - 1);
+      }, 1000);
+    } else if (timer === 0) {
+      handleTimerComplete();
+    }
+    return () => clearInterval(interval);
+  }, [isActive, timer]);
+
+  const handleTimerComplete = () => {
+    setIsActive(false);
+    if (mode === 'pomodoro') {
+      if (currentTask) {
+        const updatedTasks = tasks.map(task =>
+          task.id === currentTask.id
+            ? { ...task, completedPomodoros: (task.completedPomodoros || 0) + 1 }
+            : task
+        );
+        setTasks(updatedTasks);
+      }
+      setMode('shortBreak');
+      setTimer(settings.shortBreak * 60);
+    } else {
+      setMode('pomodoro');
+      setTimer(settings.pomodoro * 60);
+    }
+  };
+
+  const toggleTimer = () => {
+    setIsActive(!isActive);
+  };
+
+  const resetTimer = () => {
+    setIsActive(false);
+    setTimer(settings[mode] * 60);
+  };
+
+  const addProject = () => {
+    const newProjectWithId = { ...newProject, id: Date.now() };
+    setProjects([...projects, newProjectWithId]);
+    setNewProject({ name: '' });
+    setIsAddingProject(false);
+  };
+
+  const editProject = (id) => {
+    const projectToEdit = projects.find(project => project.id === id);
+    setNewProject({ ...projectToEdit });
+    setEditingProjectId(id);
+    setIsEditingProject(true);
+  };
+
+  const updateProject = () => {
+    setProjects(projects.map(project => 
+      project.id === editingProjectId ? { ...project, ...newProject } : project
+    ));
+    setNewProject({ name: '' });
+    setEditingProjectId(null);
+    setIsEditingProject(false);
+  };
+
+  const deleteProject = (id) => {
+    setProjects(projects.filter(project => project.id !== id));
+    setTasks(tasks.filter(task => task.projectId !== id));
+  };
+
+  const addTask = () => {
+    const newTaskWithId = { ...newTask, id: Date.now(), completedPomodoros: 0 };
+    setTasks([...tasks, newTaskWithId]);
+    setNewTask({ title: '', projectId: '', estimatedPomodoros: 1, comment: '' });
+    setIsAddingTask(false);
+  };
+
+  const editTask = (id) => {
+    const taskToEdit = tasks.find(task => task.id === id);
+    setNewTask({ ...taskToEdit });
+    setEditingTaskId(id);
+    setIsEditingTask(true);
+  };
+
+  const updateTask = () => {
+    setTasks(tasks.map(task => 
+      task.id === editingTaskId ? { ...task, ...newTask } : task
+    ));
+    setNewTask({ title: '', projectId: '', estimatedPomodoros: 1, comment: '' });
+    setEditingTaskId(null);
+    setIsEditingTask(false);
+  };
+
+  const deleteTask = (id) => {
+    setTasks(tasks.filter(task => task.id !== id));
+  };
+
+  const selectTask = (task) => {
+    setCurrentTask(task);
+    resetTimer();
+  };
+
+  const updateSettings = (newSettings) => {
+    setSettings(newSettings);
+    setTimer(newSettings[mode] * 60);
+  };
+
+  const formatTime = (time) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
+    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  };
+
   return (
-    <>
-      <div class="flex flex-col justify-center items-center h-[100vh]">
-            <div
-                class="relative flex max-w-[500px] w-full flex-col rounded-[20px] border-[1px] border-gray-200 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] dark:border-[#ffffff33] dark:!bg-navy-800 dark:text-white dark:shadow-none"
-            >
-                <div class="!z-5 relative flex h-full w-full flex-col rounded-[20px] bg-white bg-clip-border p-4 shadow-3xl shadow-shadow-500 dark:!bg-navy-800 dark:text-white dark:shadow-none">
-                    <div class="mb-8 w-full">
-                        <h4 class="text-xl font-bold text-navy-700 dark:text-white">
-                        All projects
-                        </h4>
-                        <p class="mt-2 text-base text-gray-600">
-                        Here you can find more details about your projects. Keep you user
-                        engaged by providing meaningful information.
-                        </p>
-                    </div>
-                    <div class="mt-3 flex w-full items-center justify-between rounded-2xl bg-gray-100  p-3 shadow-3xl shadow-shadow-500 dark:!bg-navy-700 dark:shadow-none">
-                        <div class="flex items-center">
-                        <div class="">
-                            <img
-                            class="h-[83px] w-[83px] rounded-lg"
-                            src="http://pic.cloudshop.ru/v1/l8blk1kwbqh6ezxmsxmd.jpg"
-                            alt=""
-                            />
-                        </div>
-                        <div class="ml-4">
-                            <p class="text-base font-medium text-navy-700 dark:text-white">
-                            2-Pack Babysoft Pants (12m)
-                            </p>
-                            <p class="mt-2 text-sm text-gray-600">
-                            Project #1 .
-                            <a
-                                class="ml-1 font-medium text-brand-500 hover:text-brand-500 dark:text-white"
-                                href=" "
-                            >
-                                See product details
-                            </a>
-                            </p>
-                        </div>
-                        </div>
-                        <div class="mr-4 flex items-center justify-center text-gray-600 dark:text-white">
-                        <svg
-                            stroke="currentColor"
-                            fill="currentColor"
-                            stroke-width="0"
-                            viewBox="0 0 24 24"
-                            height="1em"
-                            width="1em"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <path fill="none" d="M0 0h24v24H0z"></path>
-                            <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75zM20.71 5.63l-2.34-2.34a.996.996 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83a.996.996 0 000-1.41z"></path>
-                        </svg>
-                        </div>
-                    </div>
-                    <div class="mt-3 flex w-full items-center justify-between rounded-2xl bg-gray-100  p-3 shadow-3xl shadow-shadow-500 dark:!bg-navy-700 dark:shadow-none">
-                        <div class="flex items-center">
-                        <div class="">
-                            <img
-                            class="h-[83px] w-[83px] rounded-lg"
-                            src="https://github.com/horizon-ui/horizon-tailwind-react-ts-corporate/blob/main/src/assets/img/profile/image2.png?raw=true"
-                            alt=""
-                            />
-                        </div>
-                        <div class="ml-4">
-                            <p class="text-base font-medium text-navy-700 dark:text-white">
-                            Technology behind the Blockchain
-                            </p>
-                            <p class="mt-2 text-sm text-gray-600">
-                            Project #1 .
-                            <a
-                                class="ml-1 font-medium text-brand-500 hover:text-brand-500 dark:text-white"
-                                href=" "
-                            >
-                                See product details
-                            </a>
-                            </p>
-                        </div>
-                        </div>
-                        <div class="mr-4 flex items-center justify-center text-gray-600 dark:text-white">
-                        <svg
-                            stroke="currentColor"
-                            fill="currentColor"
-                            stroke-width="0"
-                            viewBox="0 0 24 24"
-                            height="1em"
-                            width="1em"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <path fill="none" d="M0 0h24v24H0z"></path>
-                            <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75zM20.71 5.63l-2.34-2.34a.996.996 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83a.996.996 0 000-1.41z"></path>
-                        </svg>
-                        </div>
-                    </div>
-                    <div class="mt-3 flex w-full items-center justify-between rounded-2xl bg-gray-100  p-3 shadow-3xl shadow-shadow-500 dark:!bg-navy-700 dark:shadow-none">
-                        <div class="flex items-center">
-                        <div class="">
-                            <img
-                            class="h-[83px] w-[83px] rounded-lg"
-                            src="https://github.com/horizon-ui/horizon-tailwind-react-ts-corporate/blob/main/src/assets/img/profile/image3.png?raw=true"
-                            alt=""
-                            />
-                        </div>
-                        <div class="ml-4">
-                            <p class="text-base font-medium text-navy-700 dark:text-white">
-                            Technology behind the Blockchain
-                            </p>
-                            <p class="mt-2 text-sm text-gray-600">
-                            Project #1 .
-                            <a
-                                class="ml-1 font-medium text-brand-500 hover:text-brand-500 dark:text-white"
-                                href=" "
-                            >
-                                See product details
-                            </a>
-                            </p>
-                        </div>
-                        </div>
-                        <div class="mr-4 flex items-center justify-center text-gray-600 dark:text-white">
-                        <svg
-                            stroke="currentColor"
-                            fill="currentColor"
-                            stroke-width="0"
-                            viewBox="0 0 24 24"
-                            height="1em"
-                            width="1em"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <path fill="none" d="M0 0h24v24H0z"></path>
-                            <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75zM20.71 5.63l-2.34-2.34a.996.996 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83a.996.996 0 000-1.41z"></path>
-                        </svg>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <p class="font-normal text-navy-700 mt-20 mx-auto w-max">Profile Card component from <a href="https://horizon-ui.com?ref=tailwindcomponents.com" target="_blank" class="text-brand-500 font-bold">Horizon UI Tailwind React</a></p>  
-        </div>
-
-    {/* Order List 1 */}
-    <div className="mx-auto max-w-screen-xl bg-white">
-            <h1 className="mt-20 mb-10 ml-5 text-2xl font-bold text-gray-900">Order Management</h1>
-            <div className="bg-white py-2 px-3">
-                <nav className="flex flex-wrap gap-4">
-                    <Link to="/account" className="inline-flex whitespace-nowrap border-b-2 border-transparent py-2 px-3 text-sm font-medium text-gray-600 transition-all duration-200 ease-in-out hover:border-b-purple-600 hover:text-purple-600">Account</Link>
-                    <Link to="/settings" className="inline-flex whitespace-nowrap border-b-2 border-transparent py-2 px-3 text-sm font-medium text-gray-600 transition-all duration-200 ease-in-out hover:border-b-purple-600 hover:text-purple-600">Settings</Link>
-                    <Link to="/orders" className="inline-flex whitespace-nowrap border-b-2 border-transparent border-b-purple-600 py-2 px-3 text-sm font-semibold text-purple-600 transition-all duration-200 ease-in-out">Orders</Link>
-                    <Link to="/sales" className="inline-flex whitespace-nowrap border-b-2 border-transparent py-2 px-3 text-sm font-medium text-gray-600 transition-all duration-200 ease-in-out hover:border-b-purple-600 hover:text-purple-600">Sales</Link>
-                    <Link to="/suppliers" className="inline-flex whitespace-nowrap border-b-2 border-transparent py-2 px-3 text-sm font-medium text-gray-600 transition-all duration-200 ease-in-out hover:border-b-purple-600 hover:text-purple-600">Suppliers</Link>
-                </nav>
-            </div>
-            <div className="w-screen bg-gray-50">
-                <div className="mx-auto max-w-screen-xl px-2 py-10">
-                    <div className="mt-4 w-full">
-                        <div className="flex w-full flex-col items-center justify-between space-y-2 sm:flex-row sm:space-y-0">
-                            <form className="relative flex w-full max-w-2xl items-center">
-                                <svg className="absolute left-2 block h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                    <circle cx="11" cy="11" r="8"></circle>
-                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                                </svg>
-                                <input type="search" name="search" className="h-12 w-full border-b-gray-400 bg-transparent py-4 pl-12 text-sm outline-none focus:border-b-2" placeholder="Search by Order ID, Date, Customer" />
-                            </form>
-
-                            <button type="button" className="relative mr-auto inline-flex cursor-pointer items-center rounded-full border border-gray-200 bg-white px-5 py-2 text-center text-sm font-medium text-gray-800 hover:bg-gray-100 focus:shadow sm:mr-0">
-                                <span className="absolute top-0 right-0 h-2 w-2 rounded-full bg-red-500"></span>
-                                <svg className="mr-2 h-3 w-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-                                </svg>
-                                Filter
-                            </button>
-                        </div>
-                    </div>
-
-                    <div className="mt-6 overflow-hidden rounded-xl bg-white px-6 shadow lg:px-4">
-                        <table className="min-w-full border-collapse border-spacing-y-2 border-spacing-x-2">
-                            <thead className="border-b lg:table-header-group">
-                                <tr>
-                                    <td className="whitespace-normal py-4 text-sm font-semibold text-gray-800 sm:px-3">Order Date</td>
-                                    <td className="whitespace-normal py-4 text-sm font-medium text-gray-500 sm:px-3">Order ID</td>
-                                    <td className="whitespace-normal py-4 text-sm font-medium text-gray-500 sm:px-3">Description</td>
-                                    <td className="whitespace-normal py-4 text-sm font-medium text-gray-500 sm:px-3">Shop</td>
-                                    <td className="whitespace-normal py-4 text-sm font-medium text-gray-500 sm:px-3">Customer</td>
-                                    <td className="whitespace-normal py-4 text-sm font-medium text-gray-500 sm:px-3">Dimensions</td>
-                                    <td className="whitespace-normal py-4 text-sm font-medium text-gray-500 sm:px-3">Weight</td>
-                                    <td className="whitespace-normal py-4 text-sm font-medium text-gray-500 sm:px-3">Price</td>
-                                    <td className="whitespace-normal py-4 text-sm font-medium text-gray-500 sm:px-3">Status</td>
-                                </tr>
-                            </thead>
-                            <tbody className="bg-white lg:border-gray-300">
-                                <tr>
-                                    <td className="whitespace-no-wrap py-4 text-sm text-gray-600 sm:px-3">07 February, 2022</td>
-                                    <td className="whitespace-no-wrap py-4 text-sm text-gray-600 sm:px-3">62345231143</td>
-                                    <td className="whitespace-no-wrap py-4 text-sm text-gray-600 sm:px-3">Desktop Computer</td>
-                                    <td className="whitespace-no-wrap py-4 text-sm text-gray-600 sm:px-3"><img className="h-8 w-8 overflow-hidden rounded-full border p-1" src="data:image/png;base64," alt="Shop" /></td>
-                                    <td className="whitespace-no-wrap py-4 text-sm text-gray-600 sm:px-3">Jane Doeson</td>
-                                    <td className="whitespace-no-wrap py-4 text-sm text-gray-600 sm:px-3">24 x 10 x 5 cm</td>
-                                    <td className="whitespace-no-wrap py-4 text-sm text-gray-600 sm:px-3">1.0 Kg</td>
-                                    <td className="whitespace-no-wrap py-4 text-sm text-gray-600 sm:px-3">$59.00</td>
-                                    <td className="whitespace-no-wrap py-4 text-sm text-gray-600 sm:px-3">Pending</td>
-                                </tr>
-                                {/* Additional rows can be added here in the same format */}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-    <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
+    <div className="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-xl">
+      <h1 className="text-3xl font-bold mb-6 text-center">Pomodoro App</h1>
       
-
-      {/* Filter  */}
-      <div className="m-2">
-        <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-lg">
-          <h2 className="text-stone-700 text-xl font-bold">Apply filters</h2>
-          <p className="mt-1 text-sm">Use filters to further refine search</p>
-          <form onSubmit={()=>{}} className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            <div className="flex flex-col">
-              <label htmlFor="name" className="text-stone-600 text-sm font-medium">Name</label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                placeholder="raspberry juice"
-                className="mt-2 block w-full rounded-md border border-gray-200 px-2 py-2 shadow-sm outline-none focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                value={0}
-                onChange={()=>{}}
-                required
-              />
-            </div>
-
-            <div className="flex flex-col">
-              <label htmlFor="manufacturer" className="text-stone-600 text-sm font-medium">Manufacturer</label>
-              <input
-                type="text"
-                id="manufacturer"
-                name="manufacturer"
-                placeholder="cadbery"
-                className="mt-2 block w-full rounded-md border border-gray-200 px-2 py-2 shadow-sm outline-none focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                value={0}
-                onChange={()=>{}}
-                required
-              />
-            </div>
-
-            <div className="flex flex-col">
-              <label htmlFor="date" className="text-stone-600 text-sm font-medium">Date of Entry</label>
-              <input
-                type="date"
-                id="date"
-                name="date"
-                className="mt-2 block w-full rounded-md border border-gray-200 px-2 py-2 shadow-sm outline-none focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                value={0}
-                onChange={()=>{}}
-                required
-              />
-            </div>
-
-            <div className="flex flex-col">
-              <label htmlFor="status" className="text-stone-600 text-sm font-medium">Status</label>
-              <select
-                id="status"
-                name="status"
-                className="mt-2 block w-full rounded-md border border-gray-200 px-2 py-2 shadow-sm outline-none focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                value={0}
-                onChange={()=>{}}
-                required
-              >
-                <option value="">Select Status</option>
-                <option value="Dispached Out">Dispached Out</option>
-                <option value="In Warehouse">In Warehouse</option>
-                <option value="Being Brought In">Being Brought In</option>
-              </select>
-            </div>
-
-            <div className="mt-6 grid w-full grid-cols-2 justify-end space-x-4 md:flex">
-              <button type="button" onClick={()=>{}} className="active:scale-95 rounded-lg bg-gray-200 px-8 py-2 font-medium text-gray-600 outline-none focus:ring hover:opacity-90">Reset</button>
-              <button type="submit" className="active:scale-95 rounded-lg bg-blue-600 px-8 py-2 font-medium text-white outline-none focus:ring hover:opacity-90">Search</button>
-            </div>
-          </form>
+      {/* Timer Section */}
+      <div className="mb-6">
+        <div className="flex justify-center space-x-4 mb-4">
+          <button
+            className={`px-4 py-2 rounded ${mode === 'pomodoro' ? 'bg-red-500 text-white' : 'bg-gray-200'}`}
+            onClick={() => { setMode('pomodoro'); setTimer(settings.pomodoro * 60); }}
+          >
+            Pomodoro
+          </button>
+          <button
+            className={`px-4 py-2 rounded ${mode === 'shortBreak' ? 'bg-green-500 text-white' : 'bg-gray-200'}`}
+            onClick={() => { setMode('shortBreak'); setTimer(settings.shortBreak * 60); }}
+          >
+            Short Break
+          </button>
+          <button
+            className={`px-4 py-2 rounded ${mode === 'longBreak' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+            onClick={() => { setMode('longBreak'); setTimer(settings.longBreak * 60); }}
+          >
+            Long Break
+          </button>
+        </div>
+        <div className="text-6xl font-bold text-center mb-4">
+          {formatTime(timer)}
+        </div>
+        <div className="flex justify-center space-x-4">
+          <button
+            className={`px-6 py-2 rounded ${isActive ? 'bg-red-500' : 'bg-green-500'} text-white`}
+            onClick={toggleTimer}
+          >
+            {isActive ? 'Pause' : 'Start'}
+          </button>
+          <button
+            className="px-6 py-2 rounded bg-gray-500 text-white"
+            onClick={resetTimer}
+          >
+            Reset
+          </button>
         </div>
       </div>
-
-
-        {/* Order List 2 */}
-      <div className="container mx-auto p-4">
-        <div className="flex flex-col">
-          <div className="mb-4">
-            <div className="flex justify-between items-center">
-              <h1 className="text-xl font-semibold">Orders List</h1>
-              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                Create order
-              </button>
-            </div>
-
-            <div className="mt-4 grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div className="bg-green-100 p-4 rounded-lg shadow-lg">
-                <p className="text-green-800">Active Orders</p>
-                <p className="font-bold text-lg">1,046</p>
-              </div>
-              <div className="bg-yellow-100 p-4 rounded-lg shadow-lg">
-                <p className="text-yellow-800">Unfulfilled</p>
-                <p className="font-bold text-lg">159</p>
-              </div>
-              <div className="bg-purple-100 p-4 rounded-lg shadow-lg">
-                <p className="text-purple-800">Pending Receipt</p>
-                <p className="font-bold text-lg">624</p>
-              </div>
-              <div className="bg-blue-100 p-4 rounded-lg shadow-lg">
-                <p className="text-blue-800">Fulfilled</p>
-                <p className="font-bold text-lg">263</p>
-              </div>
-            </div>
-
-
-              <div className="mt-4 flex space-x-2 mb-4 border-b">
-                <button className="px-4 py-2 text-blue-600 border-b-2 border-blue-600 font-medium">
-                    All orders
+      
+      {/* Projects Section */}
+      <div className="mb-6">
+        <h2 className="text-2xl font-bold mb-2">Projects</h2>
+        <ul>
+          {projects.map(project => (
+            <li key={project.id} className="flex items-center justify-between mb-2 p-2 bg-gray-100 rounded">
+              <span className="font-semibold">{project.name}</span>
+              <div>
+                <button onClick={() => editProject(project.id)} className="mr-2 text-yellow-500">
+                  <Edit2 size={18} />
                 </button>
-                <button className="px-4 py-2 text-gray-600 hover:text-blue-600 hover:border-blue-600 font-medium">
-                    Active
-                </button>
-                <button className="px-4 py-2 text-gray-600 hover:text-blue-600 hover:border-blue-600 font-medium">
-                    Unpaid
-                </button>
-                <button className="px-4 py-2 text-gray-600 hover:text-blue-600 hover:border-blue-600 font-medium">
-                    Unfulfilled
+                <button onClick={() => deleteProject(project.id)} className="text-red-500">
+                  <Trash2 size={18} />
                 </button>
               </div>
+            </li>
+          ))}
+        </ul>
+        {isAddingProject || isEditingProject ? (
+          <div className="mt-2">
+            <input
+              type="text"
+              value={newProject.name}
+              onChange={(e) => setNewProject({ ...newProject, name: e.target.value })}
+              className="border rounded px-2 py-1 mr-2"
+              placeholder="Project name"
+            />
+            <button
+              onClick={isEditingProject ? updateProject : addProject}
+              className="bg-green-500 text-white px-4 py-1 rounded"
+            >
+              {isEditingProject ? 'Update' : 'Add'}
+            </button>
           </div>
-
-          <div className="overflow-x-auto">
-            <div className="py-2 align-middle inline-block min-w-full">
-              <div className="shadow-lg overflow-hidden border-b border-gray-400 sm:rounded-lg">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        Order ID
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        Created
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        Customer
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        Fulfillment
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        Total
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        Profit
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        Status
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        Updated
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    <tr>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        121091
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        Aug 1, 2019
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        Harriet Santiago
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                          Unfulfilled
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        $604.50
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        $182.50
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                          Authorized
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        Today
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        121091
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        Aug 1, 2019
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        Harriet Santiago
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                          Unfulfilled
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        $604.50
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        $182.50
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                          Authorized
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        Today
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        121091
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        Aug 1, 2019
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        Harriet Santiago
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                          Unfulfilled
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        $604.50
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        $182.50
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                          Authorized
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        Today
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+        ) : (
+          <button
+            className="mt-2 flex items-center text-green-500"
+            onClick={() => setIsAddingProject(true)}
+          >
+            <PlusCircle size={18} className="mr-1" /> Add Project
+          </button>
+        )}
+      </div>
+      
+      {/* Tasks Section */}
+      <div className="mb-6">
+        <h2 className="text-2xl font-bold mb-2">Tasks</h2>
+        <ul>
+          {tasks.map(task => (
+            <li key={task.id} className="flex items-center justify-between mb-2 p-2 bg-gray-100 rounded">
+              <div>
+                <span className="font-semibold">{task.title}</span>
+                <span className="ml-2 text-sm text-gray-600">
+                  ({task.completedPomodoros || 0}/{task.estimatedPomodoros})
+                </span>
+                <p className="text-sm text-gray-500">{task.comment}</p>
               </div>
-            </div>
+              <div>
+                <button onClick={() => selectTask(task)} className="mr-2 text-blue-500">
+                  <Clock size={18} />
+                </button>
+                <button onClick={() => editTask(task.id)} className="mr-2 text-yellow-500">
+                  <Edit2 size={18} />
+                </button>
+                <button onClick={() => deleteTask(task.id)} className="text-red-500">
+                  <Trash2 size={18} />
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+        {isAddingTask || isEditingTask ? (
+          <div className="mt-2">
+            <input
+              type="text"
+              value={newTask.title}
+              onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
+              className="border rounded px-2 py-1 mr-2 mb-2"
+              placeholder="Task title"
+            />
+            <select
+              value={newTask.projectId}
+              onChange={(e) => setNewTask({ ...newTask, projectId: e.target.value })}
+              className="border rounded px-2 py-1 mr-2 mb-2"
+            >
+              <option value="">Select Project</option>
+              {projects.map(project => (
+                <option key={project.id} value={project.id}>{project.name}</option>
+              ))}
+            </select>
+            <input
+              type="number"
+              value={newTask.estimatedPomodoros}
+              onChange={(e) => setNewTask({ ...newTask, estimatedPomodoros: parseInt(e.target.value) })}
+              className="border rounded px-2 py-1 mr-2 mb-2 w-16"
+              placeholder="Pomodoros"
+            />
+            <textarea
+              value={newTask.comment}
+              onChange={(e) => setNewTask({ ...newTask, comment: e.target.value })}
+              className="border rounded px-2 py-1 mr-2 mb-2 w-full"
+              placeholder="Comment"
+            />
+            <button
+              onClick={isEditingTask ? updateTask : addTask}
+              className="bg-green-500 text-white px-4 py-1 rounded"
+            >
+              {isEditingTask ? 'Update' : 'Add'}
+            </button>
           </div>
-
-          
+        ) : (
+          <button
+            className="mt-2 flex items-center text-green-500"
+            onClick={() => setIsAddingTask(true)}
+          >
+            <PlusCircle size={18} className="mr-1" /> Add Task
+          </button>
+        )}
+      </div>
+      
+      {/* Settings Section */}
+      <div>
+        <h2 className="text-2xl font-bold mb-2">Settings</h2>
+        <div className="flex items-center mb-2">
+          <label className="mr-2">Pomodoro:</label>
+          <input
+            type="number"
+            value={settings.pomodoro}
+            onChange={(e) => updateSettings({ ...settings, pomodoro: parseInt(e.target.value) })}
+            className="border rounded px-2 py-1 w-16"
+          />
+          <span className="ml-1">min</span>
+        </div>
+        <div className="flex items-center mb-2">
+          <label className="mr-2">Short Break:</label>
+          <input
+            type="number"
+            value={settings.shortBreak}
+            onChange={(e) => updateSettings({ ...settings, shortBreak: parseInt(e.target.value) })}
+            className="border rounded px-2 py-1 w-16"
+          />
+          <span className="ml-1">min</span>
+        </div>
+        <div className="flex items-center">
+          <label className="mr-2">Long Break:</label>
+          <input
+            type="number"
+            value={settings.longBreak}
+            onChange={(e) => updateSettings({ ...settings, longBreak: parseInt(e.target.value) })}
+            className="border rounded px-2 py-1 w-16"
+          />
+          <span className="ml-1">min</span>
         </div>
       </div>
-
     </div>
-    </>
   );
 };
 

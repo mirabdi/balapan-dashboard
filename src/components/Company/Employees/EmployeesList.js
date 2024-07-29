@@ -1,8 +1,3 @@
-import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { useStateContext } from "contexts/ContextProvider";
-import { BASE_URL } from "data/config";
 
 const EmployeesList = ({employees, title, selectHandler}) => {
   const formatDate = (date) => new Date(date).toLocaleDateString();
