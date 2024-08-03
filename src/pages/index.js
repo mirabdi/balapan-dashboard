@@ -28,6 +28,7 @@ export { default as Test2Page } from "./Test/Test2";
 export { default as Test3Page } from "./Test/Test3";
 export { default as Test4Page } from "./Test/Test4";
 export { default as Test5Page } from "./Test/Test5";
+export { default as Test6Page } from "./Test/Test6";
 
 // !Company 
 export { default as CompanyRootLayout } from "./Company/CompanyRoot";
@@ -44,7 +45,7 @@ export { default as EmployeeGroups } from "./Company/EmployeeGroups/EmployeeGrou
 export { default as AddEmployeeGroup } from "./Company/EmployeeGroups/AddEmployeeGroup";
 export { default as EditEmployeeGroup } from "./Company/EmployeeGroups/EditEmployeeGroup";
 export { default as ViewEmployeeGroup } from "./Company/EmployeeGroups/ViewEmployeeGroup";
-export { employeeGroupsLoader,  employeeGroupDetailLoader } from './Company/EmployeeGroups/Services';
+export { loadEmployeeGroupsList,  employeeGroupDetailLoader } from './Company/EmployeeGroups/Services';
 
 export { default as StoresRootLayout } from "./Company/Stores/StoresRoot";
 export { default as Stores } from "./Company/Stores/Stores";
@@ -115,7 +116,7 @@ export { default as NotificationReport } from "./CRM/Notifications/NotificationR
 // !App
 export { default as AppRootLayout } from "./App/AppRoot";
 export { default as QA } from "./App/QA";
-
+export { default as ContactLinks } from "./App/ContactLinks";
 
 // !Assortments
 export { default as AssortmentsRootLayout } from "./App/assortments/AssortmentRoot";
@@ -169,3 +170,4 @@ export { default as ViewOPayment } from "./Pos/OPayments/ViewOPayment";
 export { default as OPayments } from "./Pos/OPayments/OPayments";
 export { default as OPaymentRootLayout } from "./Pos/OPayments/OPaymentRoot";
 export { opaymentDetailLoader,  opaymentsLoader } from './Pos/OPayments/Services';
+export { default as Shifts } from "./Pos/Shifts/Shifts";

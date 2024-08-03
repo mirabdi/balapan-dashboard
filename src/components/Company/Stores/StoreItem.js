@@ -45,7 +45,7 @@ const StoreItem = ({ store }) => {
       <div className="p-4 flex flex-col justify-between">
         <div>
           <div className="text-lg font-semibold">{store.name}</div>
-          <div className="text-sm text-gray-600">{store.address}</div>
+          <div className="text-sm text-gray-600">{store.address ? store.address.name : " - "}</div>
           <div className="text-sm text-gray-600">Cloudshop ID: {store.cloudshop_id}</div>
           <div className="text-sm text-gray-600">
             Created: {formatDate(store.created)}

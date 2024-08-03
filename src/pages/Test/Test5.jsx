@@ -3,7 +3,7 @@ import { FiChevronUp, FiChevronDown } from 'react-icons/fi';
 import { FaPrint } from 'react-icons/fa';
 
 
-const Test5 = () => {
+const Shifts = () => {
     const [selectedShift, setSelectedShift] = useState('3019');
   
     const shifts = [
@@ -247,4 +247,4 @@ const SaleItem = ({ id, amount, date, user, store, customer, comment, itemCount,
   );
 };
 
-export default Test5 ;
+export default Shifts ;

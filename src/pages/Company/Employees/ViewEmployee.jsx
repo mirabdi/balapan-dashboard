@@ -1,8 +1,13 @@
 import React from 'react'
+import { useRouteLoaderData } from 'react-router-dom';
+import { EmployeeItem } from 'components'
+
 
 const ViewEmployee = () => {
+  const data = useRouteLoaderData('employee-detail');
   return (
-    <div>ViewEmployee</div>
+    <EmployeeItem employee={data.employee} />
+    
   )
 }
 

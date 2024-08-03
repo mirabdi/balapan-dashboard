@@ -3,6 +3,8 @@ import { useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useStateContext } from "contexts/ContextProvider";
 import { BASE_URL } from "data/config";
+import {Edit2 } from 'lucide-react';
+
 
 const StoresList = ({ stores, title, selectHandler }) => {
   const formatDate = (date) => new Date(date).toLocaleDateString();
@@ -33,19 +35,20 @@ const StoresList = ({ stores, title, selectHandler }) => {
                 >
                   Адрес
                 </th>
-                <th
-                  scope="col"
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                >
-                  Создан
-                </th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
                 <th
                   scope="col"
                   className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                 >
                   Обновлен
                 </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Создан
+                </th>
+                
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
@@ -58,22 +61,22 @@ const StoresList = ({ stores, title, selectHandler }) => {
                     {store.name}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {store.address ? store.address.name: " - "}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {formatDate(store.created)}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {formatDate(store.updated)}
+                    {store.address ? store.address.name.slice(0, 50) + "...": " - "}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     <Link
                       onClick={(event) => event.stopPropagation()}
                       to={`/company/stores/${store.id}/edit/`}
-                      className="text-white bg-blue-500 hover:bg-blue-700 rounded px-3 py-1"
+                      className="text-blue-500"
                     >
-                      Изменить
+                      <Edit2/>
                     </Link>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {formatDate(store.updated)}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {formatDate(store.created)}
                   </td>
                 </tr>
               ))}

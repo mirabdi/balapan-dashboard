@@ -13,7 +13,7 @@ const EmployeesList = ({employees, title, selectHandler}) => {
                 scope="col"
                 className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
-                ID
+                
               </th>
               <th
                 scope="col"
@@ -25,7 +25,7 @@ const EmployeesList = ({employees, title, selectHandler}) => {
                 scope="col"
                 className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
-                Имя пользователя
+                Логин
               </th>
               <th
                 scope="col"
@@ -37,13 +37,13 @@ const EmployeesList = ({employees, title, selectHandler}) => {
                 scope="col"
                 className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
-                Недавняя активность
+                Магазины
               </th>
               <th
                 scope="col"
                 className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
-                Создан
+                Недавняя активность
               </th>
               <th
                 scope="col"
@@ -69,10 +69,10 @@ const EmployeesList = ({employees, title, selectHandler}) => {
                   {employee.first_name} {employee.last_name}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {formatDate(employee.last_seen)}
+                  {employee.stores[0] ? employee.stores[0].name + "..." : '-'}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {formatDate(employee.created)}
+                  {formatDate(employee.last_seen)}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {formatDate(employee.updated)}

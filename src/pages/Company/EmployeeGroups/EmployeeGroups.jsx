@@ -3,27 +3,8 @@ import { Suspense } from 'react';
 import { RightModal, EmployeeGroupsList, EmployeeGroupItem } from "../../../components";
 import { useStateContext } from '../../../contexts/ContextProvider';
 import { BASE_URL } from '../../../data/config';
+import {loadEmployeeGroupsList} from './Services';
 
-async function loadEmployeeGroupsList(is_archived = false) {
-  const token = "token";
-  let url = BASE_URL + "/admin-api/employee-groups";
-  if (is_archived) {
-    url += "?is_archived=" + is_archived;
-  }
-  const response = await fetch(url, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Token " + token,
-    },
-  });
-  if (!response.ok) {
-    throw new Error("Failed to load employee groups");
-  } else {
-    const resData = await response.json();
-    return resData.response;
-  }
-}
 
 function EmployeeGroups() {
   let title = "Активные Группы Сотрудников";

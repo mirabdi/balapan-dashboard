@@ -56,12 +56,6 @@ async function loadEmployeeDetail(id) {
     }
   }
 
-// Loaders
-export function employeesLoader(is_archived = false) {
-  return defer({
-    employees: loadEmployeesList(is_archived),
-  });
-}
 
 
 export async function employeeDetailLoader({ request, params }) {

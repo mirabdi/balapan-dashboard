@@ -7,7 +7,7 @@ import {
     Dashboard,
     UnderConstruction,
     ErrorPage,
-    TestRootLayout, Test1Page, Test2Page, Test3Page, Test4Page, Test5Page,
+    TestRootLayout, Test1Page, Test2Page, Test3Page, Test4Page, Test5Page, Test6Page,
     OrdersTemplate,
     RootLayout,
     AuthenticationPage,
@@ -15,7 +15,7 @@ import {
     // Company pages
     CompanyRootLayout,
     EmployeesRootLayout, Employees, AddEmployee, ViewEmployee, EditEmployee, employeeDetailLoader,
-    EmployeeGroupsRootLayout, EmployeeGroups, AddEmployeeGroup, EditEmployeeGroup, ViewEmployeeGroup, employeeGroupsLoader, employeeGroupDetailLoader,
+    EmployeeGroupsRootLayout, EmployeeGroups, AddEmployeeGroup, EditEmployeeGroup, ViewEmployeeGroup, employeeGroupDetailLoader,
     StoresRootLayout, Stores, AddStore, ViewStore, EditStore, storeDetailLoader,
 
     // Dev pages
@@ -57,7 +57,7 @@ import {
     CRMRootLayout,
 
     // App pages
-    AppRootLayout, QA,
+    AppRootLayout, QA,ContactLinks,
     AssortmentsRootLayout, Assortments, AddAssortment, ViewAssortment, EditAssortment, assortmentsLoader, assortmentDetailLoader,
     BannersRootLayout, Banners, AddBanner, ViewBanner, EditBanner, bannersLoader, bannerDetailLoader,
     BrandsRootLayout, Brands, AddBrand, ViewBrand, EditBrand,
@@ -83,7 +83,7 @@ import {
     // POS pages
     PosRootLayout,
     OPaymentRootLayout,ViewOPayment, AddOPayment, EditOPayment, OPayments, opaymentDetailLoader, opaymentsLoader,
-
+    Shifts,
 
 
     // Other pages
@@ -423,6 +423,10 @@ function App() {
                         {
                             path: "qas",
                             element: <QA/>
+                        },
+                        {
+                            path: "contact-links",
+                            element: <ContactLinks/>
                         }
                         
                         // Add other app pages here
@@ -438,6 +442,7 @@ function App() {
                         {path: "new", element: <AddOPayment/>},
                         {path: ":id", element: <ViewOPayment/>},
                     ]},
+                    {path: "shifts", element: <Shifts/>},
                 ]},
                 {path: "dashboard", element: <UnderConstruction/>},
                 {path: "orders-template", element: <OrdersTemplate/>},
@@ -448,6 +453,7 @@ function App() {
                     {path: "3", element: <Test3Page/>},
                     {path: "4", element: <Test4Page/>},
                     {path: "5", element: <Test5Page/>},
+                    {path: "6", element: <Test6Page/>},
                 ]},
     
                 {path: "kanban", element: <Kanban/>},

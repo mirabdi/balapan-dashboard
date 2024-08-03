@@ -3,7 +3,6 @@ import { Link, NavLink, useLocation } from "react-router-dom";
 import { MdOutlineCancel, MdKeyboardArrowRight, MdKeyboardArrowDown } from "react-icons/md";
 import { TooltipComponent } from "@syncfusion/ej2-react-popups";
 import { useStateContext } from "../../contexts/ContextProvider";
-import { links } from "../../data/dummy";
 import { convertLinks } from "../../data/utils";
 
 const Sidebar = () => {
@@ -99,8 +98,7 @@ const Sidebar = () => {
                     }
                     end
                   >
-                    {link.icon}
-                    <span className="capitalize ">{link.name}</span>
+                    <span className="capitalize ml-4"> - {link.name}</span>
                   </NavLink>
                 ))}
               </div>
